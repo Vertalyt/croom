@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" enable-background="new 0 0 48 48" version="1.1" xml:space="preserve">
+ <g class="layer">
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <circle cx="23.5" cy="24" fill="#2b79cd" id="svg_2" r="18.74"/>
+   <path d="m14.1,24.96l9.4,9.04l9.4,-9.04l0.05,-0.05c1.31,-1.24 1.95,-2.88 1.95,-4.51c0,-1.63 -0.64,-3.27 -1.95,-4.53c-2.6,-2.5 -6.8,-2.5 -9.4,0l-0.05,0.05l-0.07,-0.05c-2.58,-2.5 -6.8,-2.5 -9.38,0c-1.31,1.26 -1.95,2.89 -1.95,4.53c0,1.63 0.64,3.27 1.95,4.51l0.05,0.05l9.4,9.04l9.4,-9.04" fill="#FFFFFF" id="svg_3"/>
+   <path d="m14.1,24.96l9.4,9.04l9.4,-9.04l0.05,-0.05c1.31,-1.24 1.95,-2.88 1.95,-4.51c0,-1.63 -0.64,-3.27 -1.95,-4.53c-2.6,-2.5 -6.8,-2.5 -9.4,0l-0.05,0.05l-0.07,-0.05c-2.58,-2.5 -6.8,-2.5 -9.38,0c-1.31,1.26 -1.95,2.89 -1.95,4.53c0,1.63 0.64,3.27 1.95,4.51l0.05,0.05l9.4,9.04l9.4,-9.04" fill="none" id="svg_4" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="0.7"/>
+   <circle cx="23.5" cy="24" fill="none" id="svg_5" r="18.74" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="0.7"/>
+  </g>
+ </g>
+</svg>
