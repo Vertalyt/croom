@@ -1,536 +1,205 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+import AppHeader from './components/AppHeader.vue';
+import AppManeken from './components/AppManeken.vue'
+import AppManekenRezult from './components/AppManekenRezult.vue'
+
+
+const dummy = [
+  { location: 'dummyPartLeft', name: 'helmet', link: 'src/assets/img/helmet.png' },
+  { location: 'dummyPartLeft', name: 'armor', link: 'src/assets/img/armor.png' },
+  { location: 'dummyPartLeft', name: 'belt', link: 'src/assets/img/belt.png' },
+  { location: 'dummyPartLeft', name: 'boots', link: 'src/assets/img/boots.png' },
+  { location: 'dummyPartLeft', name: 'earring', link: 'src/assets/img/earring.png' },
+  { location: 'dummyPartLeft', name: 'ring', link: 'src/assets/img/ring.png' },
+  { location: 'dummyPartLeft', name: 'ring', link: 'src/assets/img/ring.png' },
+  { location: 'dummyPartRight', name: 'necklace', link: 'src/assets/img/necklace.png' },
+  { location: 'dummyPartRight', name: 'bracers', link: 'src/assets/img/bracers.png' },
+  { location: 'dummyPartRight', name: 'gloves', link: 'src/assets/img/gloves.png' },
+  { location: 'dummyPartRight', name: 'leggings', link: 'src/assets/img/leggings.png' },
+  { location: 'dummyPartRight', name: 'earring', link: 'src/assets/img/earring.png' },
+  { location: 'dummyPartRight', name: 'ring', link: 'src/assets/img/ring.png' },
+  { location: 'dummyPartRight', name: 'ring', link: 'src/assets/img/ring.png' },
+  { location: 'dummyPartCenterTop', name: 'relic', link: 'src/assets/img/relic.png' },
+  { location: 'dummyPartCenterTop', name: 'relic', link: 'src/assets/img/relic.png' },
+  { location: 'dummyPartCenterTop', name: 'relic', link: 'src/assets/img/relic.png' },
+  { location: 'dummyPartCenterTop', name: 'relic', link: 'src/assets/img/relic.png' },
+  { location: 'dummyPartCenterBottom', name: 'weapons', link: 'src/assets/img/weapons.png' },
+  { location: 'dummyPartCenterBottom', name: 'weapons', link: 'src/assets/img/weapons.png' },
+]
+
+const baseParamArr = ref([
+        { key: 'strong', name: 'Сила', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/strong.svg' },
+        { key: 'agility', name: 'Ловкость', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/agility.svg' },
+        { key: 'intelledgy', name: 'Интеллект', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/intelledgy.svg' },
+        { key: 'luck', name: 'Удача', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/luck.svg' },
+        { key: 'reaction', name: 'Реакция', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/reaction.svg' },
+        { key: 'wisdom', name: 'Мудрость', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/wisdom.svg' },
+        { key: 'constitution', name: 'Сложение', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/constitution.svg' },
+      ])
+
+const paramArr = ref([
+        { key: 'strong', name: 'Сила', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/strong.svg' },
+        { key: 'agility', name: 'Ловкость', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/agility.svg' },
+        { key: 'intelledgy', name: 'Интеллект', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/intelledgy.svg' },
+        { key: 'luck', name: 'Удача', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/luck.svg' },
+        { key: 'reaction', name: 'Реакция', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/reaction.svg' },
+        { key: 'wisdom', name: 'Мудрость', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/wisdom.svg' },
+        { key: 'constitution', name: 'Сложение', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/constitution.svg' },
+      ])
+
+  const statPlus = (statName) => {
+  paramArr.value.map(p => {
+    if(p.name === statName) {
+      p.nameModel += 1
+      p.summStatBase += 1
+    }
+  })
+}
+
+const statMinus = (statName) => {
+  paramArr.value.map(p => {
+    if(p.nameModel < 2) {
+      console.log('Значение не может быть меньше эдиницы');
+      return
+    }
+    if(p.name === statName ) {
+      p.nameModel -= 1
+      p.summStatBase -= 1
+    } 
+  })
+}
+
+  const basickParams = [
+        {
+          rase: 'human', date: [
+            {key: 'strong', count: 3 },
+            {key: 'agility', count: 3 },
+            {key: 'intelledgy', count: 3 },
+            {key: 'luck', count: 3 },
+            {key: 'reaction', count: 3 },
+            {key: 'wisdom', count: 3 },
+            {key: 'constitution', count: 3 },
+          ]
+        },
+        {
+          rase: 'gnom', date: [
+            {key: 'strong', count: 4 },
+            {key: 'agility', count: 2 },
+            {key: 'intelledgy', count: 2 },
+            {key: 'luck', count: 3 },
+            {key: 'reaction', count: 2 },
+            {key: 'wisdom', count: 4 },
+            {key: 'constitution', count: 4 },
+          ]
+        },
+        {
+          rase: 'elf', date: [
+            {key: 'strong', count: 3 },
+            {key: 'agility', count: 5 },
+            {key: 'intelledgy', count: 3 },
+            {key: 'luck', count: 2 },
+            {key: 'reaction', count: 2 },
+            {key: 'wisdom', count: 3 },
+            {key: 'constitution', count: 3 },
+          ]
+        },
+        {
+          rase: 'vampire', date: [
+            {key: 'strong', count: 3 },
+            {key: 'agility', count: 3 },
+            {key: 'intelledgy', count: 3 },
+            {key: 'luck', count: 4 },
+            {key: 'reaction', count: 2 },
+            {key: 'wisdom', count: 3 },
+            {key: 'constitution', count: 3 },
+          ]
+        },
+        {
+          rase: 'ork', date: [
+            {key: 'strong', count: 4 },
+            {key: 'agility', count: 3 },
+            {key: 'intelledgy', count: 2 },
+            {key: 'luck', count: 4 },
+            {key: 'reaction', count: 3 },
+            {key: 'wisdom', count: 1 },
+            {key: 'constitution', count: 4 },
+          ]
+        },
+        {
+          rase: 'trol', date: [
+            {key: 'strong', count: 5 },
+            {key: 'agility', count: 2 },
+            {key: 'intelledgy', count: 1 },
+            {key: 'luck', count: 3 },
+            {key: 'reaction', count: 3 },
+            {key: 'wisdom', count: 2 },
+            {key: 'constitution', count: 5 },
+          ]
+        },
+  ]
+
+        // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
+  const paramsPlus = ref([
+            {key: 'strong', count: 0 },
+            {key: 'agility', count: 0 },
+            {key: 'intelledgy', count: 0 },
+            {key: 'luck', count: 0 },
+            {key: 'reaction', count: 0 },
+            {key: 'wisdom', count: 0 },
+            {key: 'constitution', count: 0 },
+  ])
+
+
+  const changeRase = (raseEmit) => {
+  const raseParams = basickParams.find(r => r.rase === raseEmit);
+
+  if (raseParams) {
+    const updatedParamArr = baseParamArr.value.map(p => {
+      const matchingParam = raseParams.date.find(rp => rp.key === p.key);
+      const matchingPlusParam = paramsPlus.value.find(pp => pp.key === p.key);
+
+      let { nameModel, summStatBase } = p;
+
+      if (matchingParam) {
+        nameModel = matchingParam.count;
+        summStatBase = matchingParam.count;
+      }
+
+      if (matchingPlusParam) {
+        summStatBase += matchingPlusParam.count;
+      }
+
+      return { ...p, nameModel, summStatBase };
+    });
+
+    paramArr.value = updatedParamArr;
+  }
+}
+
+
+
+// eslint-disable-next-line no-unused-vars
+const components = {
+  AppHeader
+}
+</script>
 <template>
   <div class="room-container">
     <div class="wrapper">
       <div class="conteiner">
-        <header class="header">
-          <div class="header__left">
-            <button class="tab-button">
-              <p class="p__tab-button">Манекен 1</p>
-            </button>
-            <button class="tab-button">
-              <p class="p__tab-button">Манекен 2</p>
-              <div class="delete-tab-icon"></div>
-            </button>
-            <button class="add-tab-button" />
-          </div>
-          <div class="header__right">
-            <button class="tab-button">
-              <p class="p__tab-button">Сводная таблица</p>
-            </button>
-          </div>
 
-        </header>
-
+        <AppHeader />
         <main class="main-wrapper">
-          <div class="dummy">
-            <div class="dummy__part">
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/helmet.png" alt="helmet">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/armor.png" alt="armor">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/belt.png" alt="belt">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/boots.png" alt="boots">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/earring.png" alt="earring">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/ring.png" alt="ring">
-                </div>
-
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/ring.png" alt="ring">
-                </div>
-
-            </div>
-            <div class="dummy__center">
-              <div class="dummy__center__top">
-
-                  <div class="parameter__mat__img parameter__mat__small">
-                    <img src="./assets/img/relic.png" alt="relic">
-                  </div>
-
-
-                  <div class="parameter__mat__img parameter__mat__small">
-                    <img src="./assets/img/relic.png" alt="relic">
-                  </div>
-
-
-                  <div class="parameter__mat__img parameter__mat__small">
-                    <img src="./assets/img/relic.png" alt="relic">
-                  </div>
-
-
-                  <div class="parameter__mat__img parameter__mat__small">
-                    <img src="./assets/img/relic.png" alt="relic">
-                  </div>
-
-              </div>
-
-              <div class="dummy__center__center">
-                <div class="options">
-                  <div class="options__itemBlock">
-                    <table class="table">
-                      <thead>
-                        <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
-                      </thead>
-                      <tbody class="options__tbody">
-                        <tr>
-                          <td>Параметры</td>
-                          <td>Сумма</td>
-                          <td>Базовые</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/strong.svg" alt="strong">
-                            Сила</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/agility.svg" alt="agility">
-                            Ловкость</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/intelledgy.svg" alt="intelledgy">
-                            Интелект</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/luck.svg" alt="luck">
-                            Удача</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/reaction.svg" alt="reaction">
-                            Реакция</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/wisdom.svg" alt="wisdom">
-                            Мудрость</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src="./assets/img/icon/svg/constitution.svg" alt="constitution">
-                            Сложение</td>
-                          <td>3</td>
-                          <td><input value="3" placeholder="3" class="options__input" /></td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_2</span>
-                            </button>
-                          </td>
-                          <td>
-                            <button class="button__reset">
-                              <span class="material-symbols-outlined">stat_minus_2</span>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="options__itemBlock">
-                    <div class="form">
-                      <form action="">
-                        <div class="form__items">
-                          <select class="form__input_rase select-css">
-                            <option disabled selected>Выбери расу</option>
-                            <option class="option">Человек</option>
-                            <option>Гном</option>
-                            <option>Эльф</option>
-                            <option>Вампир</option>
-                            <option>Орк</option>
-                            <option>Троль</option>
-                          </select>
-
-                          <select class="form__input_lvl select-css">
-                            <option disabled selected>Выбери уровень</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                            <option>13</option>
-                            <option>14</option>
-                            <option>15</option>
-                            <option>16</option>
-                            <option>17</option>
-                            <option>18</option>
-                            <option>19</option>
-                            <option>20</option>
-                            <option>21</option>
-                            <option>22</option>
-                            <option>23</option>
-                            <option>24</option>
-                            <option>25</option>
-                            <option>26</option>
-                            <option>27</option>
-                            <option>28</option>
-                            <option>29</option>
-                            <option>30</option>
-                          </select>
-                        </div>
-
-                        <div class="form__items">
-                          <select class="form__input_rase select-css">
-                            <option disabled selected>Крепость</option>
-                            <option>Нет</option>
-                            <option>Новичок</option>
-                            <option>Продвинутый</option>
-                            <option>Эксперт</option>
-                            <option>Мастер</option>
-                            <option>Грандмастер</option>
-                          </select>
-                        </div>
-                        <div class="form__items">
-                          <a href="#" class="form__link">Выпить эликсир</a>
-                          <p>Выпито: 0</p>
-                        </div>
-                      </form>
-
-                      <div class="form__items">
-                        <input id="html" type="checkbox" />
-                        <label for="html">То что можно одеть</label>
-                        <a href="#" class="form__link">Сбросить все</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="dummy__center__buttom">
-
-                  <div class="parameter__mat__img parameter__mat__Armor__img">
-                    <img src="./assets/img/weapons.png" alt="weapons">
-                  </div>
-
-
-                  <div class="parameter__mat__img parameter__mat__Armor__img">
-                    <img src="./assets/img/weapons.png" alt="weapons">
-                  </div>
-
-              </div>
-            </div>
-            <div class="dummy__part">
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/necklace.png" alt="">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/bracers.png" alt="">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/gloves.png" alt="">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/leggings.png" alt="">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/earring.png" alt="earring">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/ring.png" alt="ring">
-                </div>
-
-                <div class="parameter__mat__img">
-                  <img src="./assets/img/ring.png" alt="ring">
-                </div>
-
-            </div>
-          </div>
-          <div class="dummy__buttom">
-            <div class="options__itemBlock options__itemBlock_button">
-              <table class="table">
-                <thead>
-                  <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
-                </thead>
-                <tbody class="options__tbody">
-                  <tr>
-                    <td>Параметры</td>
-                    <td>Сумма</td>
-                    <td>Базовые</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/strong.svg" alt="strong">
-                      Сила</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/agility.svg" alt="agility">
-                      Ловкость</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/intelledgy.svg" alt="intelledgy">
-                      Интелект</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/luck.svg" alt="luck">
-                      Удача</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/reaction.svg" alt="reaction">
-                      Реакция</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/wisdom.svg" alt="wisdom">
-                      Мудрость</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/constitution.svg" alt="constitution">
-                      Сложение</td>
-                    <td>3</td>
-                    <td>3</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="options__itemBlock options__itemBlock_button">
-              <table class="table">
-                <thead>
-                  <td class="options__table__title" colspan="4"><h3>Броня</h3></td>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/armor_head.svg" alt="armor_head">
-                      Голова</td>
-                    <td>0</td>
-                    <td>
-                      <img src="./assets/img/icon/svg/armor.svg" alt="armor">
-                      Туловище</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/leftHend.svg" alt="leftHend">
-                      Левая рука</td>
-                    <td>0</td>
-
-                    <td>
-                      <img src="./assets/img/icon/svg/rightHend.svg" alt="rightHend">
-                      Правая рука</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/leg-armor.svg" alt="leg-armor">
-                      Ноги</td>
-                    <td>0</td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-
-              <table class="table">
-                <thead>
-                  <td class="options__table__title" colspan="2"><h3>Защита от магии</h3></td>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/dawn.svg" alt="dawn">
-                      Рассвет</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/full-moon.svg" alt="full-moon">
-                      Полнолуние</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/astral.svg" alt="astral">
-                      Астрал</td>
-                    <td>0</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="options__itemBlock options__itemBlock_button">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/health.svg" alt="health">
-                      Жизнь</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/mana.svg" alt="mana">
-                      Мана</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/power.svg" alt="power">
-                      Энергия</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="./assets/img/icon/svg/rating.svg" alt="rating">
-                      Рейтинг</td>
-                    <td>0</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="options__itemBlock options__itemBlock_button">
-                
-                <table class="table">
-                  <thead>
-                      <td class="options__table__title" colspan="5"><h3>Стоимость</h3></td>
-                    </thead>
-                <tbody>
-                  <tr>
-                        <td>Талы</td>
-                        <td>Золотые талы</td>
-                        <td>Ратник</td>
-                        <td>Обмены</td>
-                        <td>Реликты</td>
-                      </tr>
-                      <tr>
-                        <td>1000000</td>
-                        <td>1000</td>
-                        <td>300</td>
-                        <td>5</td>
-                        <td>500</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-          </div>
+          <AppManeken 
+          v-if="dummy" 
+          :dummy="dummy" 
+          :paramArr="paramArr"
+          @statPlus="statPlus"
+          @statMinus="statMinus"
+          @changeRase="changeRase"
+          />
+          <AppManekenRezult />
         </main>
       </div>
     </div>

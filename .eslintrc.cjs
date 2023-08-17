@@ -10,5 +10,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    'no-unused-vars': 'error' // Добавляем правило no-unused-vars с уровнем ошибки
   }
 }
