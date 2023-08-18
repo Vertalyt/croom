@@ -1,20 +1,25 @@
-import { URL } from 'node:url'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+export default ({ command }) => {
+  const isProduction = command === 'build';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-  ],
-  server: {
-    host: true,
-    port: 5173,
-  },
-  resolve: {
-    alias: {
-      '@': new URL('./src', import.meta.url).pathname
+  const base = isProduction ? './croomTemplate/' : '/';
+
+  return defineConfig({
+    base,
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        '@': new URL('./src', import.meta.url).pathname
+      }
+    },
+    build: {
+      rollupOptions: {
+        input: {
+          main: './index.html'
+        }
+      }
     }
-  }
-})
+  });
+};

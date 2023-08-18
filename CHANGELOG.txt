@@ -1,0 +1,13 @@
+## [1.0.3] - 2023-08-18
+### Added
+- Added base values ​​for the number of distribution points by level
+- Added logic for changing base stats from allocation points
+- Added display of the number of distribution points
+- Added race and stat reset without losing progress
+
+### Changed
+- Moved the basic starting parameters to a separate folder
+
+### Fixed
+- Fixed issue with login
+
