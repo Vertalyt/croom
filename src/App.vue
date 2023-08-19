@@ -3,15 +3,16 @@ import { ref } from 'vue'
 import AppHeader from './components/AppHeader.vue';
 import AppManeken from './components/AppManeken.vue'
 import AppManekenRezult from './components/AppManekenRezult.vue'
-import { baseDummyParams } from './initialization/baseParams'
-import { baseParam } from './initialization/baseParams'
-import { basickParamsRase } from './initialization/baseParams'
+import { baseDummyParams, basickParamsRase, baseParam, classParams } from './initialization/baseParams'
+
 
 
 const dummy = baseDummyParams
 const baseParamArr = ref(baseParam) // базовое значение конкретной расы, и их переменные, стартовое люди
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const paramArr = ref(baseParam) // передаю в таблицу итоговый суммарный результат
+
+
         // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
 const paramsPlus = ref([
             {key: 'strong', count: 0 },
@@ -44,16 +45,12 @@ function combinationParam(addParam) {
   //     summStatBase: baseItem.summStatBase + matchingAddParamPlus.count,
   //   };
   // }
-
-
   return baseItem;
 });
 }
-
 const statChange = (addParam) => {
   paramArr.value = combinationParam(addParam)
 }
-
 const changeRase = ({ raseModel, addParam }) => {
   const raseParams = basickParams.value.find(r => r.rase === raseModel);
 
@@ -80,7 +77,6 @@ const changeRase = ({ raseModel, addParam }) => {
     paramArr.value = combinationParam(addParam)
   }
 }
-
 
 // eslint-disable-next-line no-unused-vars
 const components = {

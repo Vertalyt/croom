@@ -128,3 +128,78 @@ export const basickParamsRase = [
     ]
   },
 ]
+
+export const classParams = [
+  { class: 'ranger',
+  subclass: 'shooter', 
+  lvl: 8, 
+  addStat: [
+    {key: 'strong', count: 4 },
+    {key: 'reaction', count: 2 },
+    {key: 'constitution', count: 4 },
+  ],
+  requiredStat: [
+    {key: 'strong', count: 11 },
+    {key: 'agility', count: 27 },
+    {key: 'luck', count: 22 },
+  ],
+  forbiddenSkills: [
+   {skills: 'fortress' }
+  ]
+},
+{ class: 'ranger', 
+subclass: 'archer', 
+lvl: 11, 
+addStat: [
+  {key: 'strong', count: 9 },
+  {key: 'reaction', count: 4 },
+  {key: 'constitution', count: 6 },
+  {key: 'armorHead', count: 3 },
+],
+requiredStat: [
+  {key: 'strong', count: 18 },
+  {key: 'agility', count: 41 },
+  {key: 'luck', count: 32 },
+],
+forbiddenSkills: [
+ {skills: 'fortress' }
+]
+}
+]
+
+export const classParams2 = [
+  { class: 'ranger', date: [{ 
+    
+  subclass: 'shooter',
+  lvl: 8, 
+  addStat: [
+    {key: 'strong', count: 4 },
+    {key: 'reaction', count: 2 },
+    {key: 'constitution', count: 4 },
+  ],
+  requiredStat: [
+    {key: 'strong', count: 11 },
+    {key: 'agility', count: 27 },
+    {key: 'luck', count: 22 },
+  ],
+  forbiddenSkills: [
+   {skills: 'fortress' }
+  ],}],
+
+  subclass: 'archer',
+  lvl: 11, 
+  addStat: [
+    {key: 'strong', count: 9 },
+    {key: 'reaction', count: 4 },
+    {key: 'constitution', count: 6 },
+    {key: 'armorHead', count: 3 },
+  ],
+  requiredStat: [
+    {key: 'strong', count: 18 },
+    {key: 'agility', count: 41 },
+    {key: 'luck', count: 32 },
+  ],
+  forbiddenSkills: [
+   {skills: 'fortress' }
+  ]
+}]

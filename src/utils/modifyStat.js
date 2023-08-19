@@ -10,10 +10,11 @@
     }
 
     if (increment > 0) {
-       if (accessibleStats > 2) {
+
+       if (accessibleStats > 0) {
         foundParam.count += increment;
-        accessibleStats -= increment * 3;
-      } else if (accessibleStats > 0 && accessibleStats < 2) {
+        accessibleStats -= increment;
+      } else {
         console.log(`Не достаточно очков`);
       }
     } else {
@@ -21,9 +22,9 @@
         if (foundParam.count === 0) {
           console.log(`Значение ${foundParam.key} не может быть меньше базового`);
         }
-      } else if (accessibleStats >= increment * 3) {
+      } else {
         foundParam.count += increment;
-        accessibleStats -= increment * 3;
+        accessibleStats -= increment;
       }
     }
   

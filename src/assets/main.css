@@ -232,13 +232,15 @@ select {
   border-radius: 10px;
   margin-bottom: 10px;
 }
-
-.form__input_rase {
+.form__input_left {
   width: 130px;
 }
-.form__input_lvl {
+
+
+.form__input {
   width: 150px;
 }
+
 
 .option {
   font-size: 13px; 

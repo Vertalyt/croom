@@ -31,11 +31,6 @@
                 <tr>
                   <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
                 </tr>
-                <tr v-if="accessibleStats !== null">
-                  <td class="options__table__title" colspan="5">
-                    <small>Очки розподілу:</small> {{ accessibleStats }}
-                  </td>
-                </tr>
               </thead>
               <tbody class="options__tbody">
                 <tr>
@@ -68,16 +63,20 @@
                     </button>
                   </td>
                 </tr>
+                <tr v-if="accessibleStats !== null">
+                  <td class="options__table__title" colspan="5">
+                    <small>Очки розподілу:</small> {{ accessibleStats }}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
 
           <div class="options__itemBlock">
-            <div class="form">
-              <form action="">
+
                 <div class="form__items">
                   <select
-                    class="form__input_rase select-css"
+                    class="form__input_left select-css"
                     v-model="raseModel"
                     @change="changeRaseSelect"
                   >
@@ -93,7 +92,7 @@
                   <select
                     v-model="lvlSelect"
                     @change="lvlSelectChange"
-                    class="form__input_lvl select-css"
+                    class="form__input select-css"
                   >
                     <option value="change" disabled selected>Выберіть рівень</option>
                     <option v-for="l in optionLvl" :key="l">{{ l }}</option>
@@ -101,7 +100,22 @@
                 </div>
 
                 <div class="form__items">
-                  <select class="form__input_rase select-css">
+
+                  <!-- <select 
+                    v-model="classModel"
+                    @change="changeClass"
+                  class="form__input_left select-css"
+                  >
+                    <option value="none" selected>Нема</option>
+                    <option value="barbarian" >Варвар</option>
+                    <option value="juggernaut" >Джагернаут</option>
+                    <option value="priest" >Жрець</option>
+                    <option value="magician" >Маг</option>
+                    <option value="shieldmaster" >Мастер щита</option>
+                    <option value="ranger" >Рейнджер</option>
+                  </select> -->
+
+                  <select class="form__input select-css">
                     <option disabled selected>Крепость</option>
                     <option>Нема</option>
                     <option>Новичок</option>
@@ -111,11 +125,12 @@
                     <option>Грандмастер</option>
                   </select>
                 </div>
+
+
                 <div class="form__items">
                   <a href="#" class="form__link">Випити еліксир</a>
                   <p>Випито: 0</p>
                 </div>
-              </form>
 
               <div class="form__items">
                 <input id="html" type="checkbox" />
@@ -126,7 +141,7 @@
                 class="form__link">Скинути все</a>
               </div>
             </div>
-          </div>
+
         </div>
       </div>
       <div class="dummy__center__buttom">
@@ -158,6 +173,7 @@
 import { ref, computed } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
+import { classParams } from '../initialization/baseParams'
 
 const props = defineProps({
   dummy: {
@@ -172,8 +188,6 @@ const props = defineProps({
 const emits = defineEmits({
   statChange: Array,
   changeRase: String,
-  accessibleStats: Number,
-  rezet: null
 })
 
 const raseModel = ref('human')
@@ -181,6 +195,8 @@ const lvlSelect = ref('change')
 const accessibleStats = ref(null)
 const optionLvl = 30
 const baseStat = baseStatFromLvl()
+const classModel = ref('none')
+const OllParamClass = classParams 
 
 // массив с изменениями параметров базовых стат
 const addParam = ref([
@@ -196,8 +212,6 @@ const addParam = ref([
   { key: 'astral', count: 0 }
 ])
 
-
-
 //props
 const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
 const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
@@ -208,7 +222,7 @@ const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPar
 // сдежение за изменением суммарного массива paramArr
 const paramStatArr =  computed(() => props.paramArr.filter((d) => d.type === 'stat') )  
 
-
+// emits
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   accessibleStats.value = baseStat.find((l) => l.lvl === Number(lvlSelect.value)).stat
@@ -216,7 +230,6 @@ const lvlSelectChange = () => {
   emits('statChange', addParam.value)
 }
 
-// emits
 const changeRaseSelect = () => {
   emits('changeRase', {
     raseModel: raseModel.value,
@@ -244,11 +257,10 @@ const statMinus = (statKey) => {
 };
 
 const statInputShange = (stat) => {
-  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBase // ищу предідущие значение стата 
+  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBase // ищу предыдущие значение стата 
   let statChange = Number(stat.nameModel) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
-  const check = Math.floor(accessibleStats.value / 3)
-  if(check < statChange) {
-    statChange = check // при избыточной разнице
+  if(accessibleStats.value < statChange) {
+    statChange = accessibleStats.value // при избыточной разнице
   }
   modifyStatAndEmit(stat.key, statChange);
 }
@@ -262,6 +274,22 @@ const rezetManecken = () => {
   raseModel.value = 'human'
   lvlSelect.value = 'change'
   accessibleStats.value = null
+  classModel.value = 'none'
+}
+
+const changeClass = () => {
+  const gameClass = OllParamClass.find(c => c.class === classModel.value)
+  if(!gameClass) {
+    console.log('Клас не выбран');
+    return
+  }
+  console.log(gameClass);
+  if(lvlSelect.value < gameClass.lvl) {
+    console.log(`Минимальный укровень для подкласса ${gameClass.subclass} ${gameClass.lvl}`);
+  } else {
+     emits('statChange', gameClass.addStat)
+  }
+
 }
 
 
