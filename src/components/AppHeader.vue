@@ -13,7 +13,7 @@
           </div>
           <div class="header__right">
             <button class="tab-button">
-              <p class="p__tab-button">Сводная таблица</p>
+              <p class="p__tab-button">Сводна таблица</p>
             </button>
           </div>
         </header>

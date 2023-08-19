@@ -12,10 +12,23 @@ const dummy = baseDummyParams
 const baseParamArr = ref(baseParam) // базовое значение конкретной расы, и их переменные, стартовое люди
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const paramArr = ref(baseParam) // передаю в таблицу итоговый суммарный результат
+        // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
+const paramsPlus = ref([
+            {key: 'strong', count: 0 },
+            {key: 'agility', count: 0 },
+            {key: 'intelledgy', count: 0 },
+            {key: 'luck', count: 0 },
+            {key: 'reaction', count: 0 },
+            {key: 'wisdom', count: 0 },
+            {key: 'constitution', count: 0 },
+  ])
+
+
 
 function combinationParam(addParam) {
   return baseParamArr.value.map(baseItem => {
   const matchingAddParam = addParam.find(addItem => addItem.key === baseItem.key);
+  // const matchingAddParamPlus = paramsPlus.value.find(addItem => addItem.key === baseItem.key);
 
   if (matchingAddParam) {
     return {
@@ -24,6 +37,15 @@ function combinationParam(addParam) {
       summStatBase: baseItem.summStatBase + matchingAddParam.count,
     };
   }
+
+  // if (matchingAddParamPlus) { //заглушка на добавление стат от шмота
+  //   return {
+  //     ...baseItem,
+  //     summStatBase: baseItem.summStatBase + matchingAddParamPlus.count,
+  //   };
+  // }
+
+
   return baseItem;
 });
 }
@@ -58,16 +80,6 @@ const changeRase = ({ raseModel, addParam }) => {
     paramArr.value = combinationParam(addParam)
   }
 }
-        // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
-  const paramsPlus = ref([
-            {key: 'strong', count: 0 },
-            {key: 'agility', count: 0 },
-            {key: 'intelledgy', count: 0 },
-            {key: 'luck', count: 0 },
-            {key: 'reaction', count: 0 },
-            {key: 'wisdom', count: 0 },
-            {key: 'constitution', count: 0 },
-  ])
 
 
 // eslint-disable-next-line no-unused-vars

@@ -394,6 +394,12 @@ td img {
 
 @media screen and (max-width: 600px) {
 
+  .wrapper {
+    background-image: url(/src/assets/img/AL_mobail.png);
+    background-size: contain;
+}
+
+
   .header__left {
     display: grid;
     justify-items: center;

@@ -11,3 +11,10 @@
 ### Fixed
 - Fixed issue with login
 
+
+## [1.0.31] - 2023-08-19
+### Added 
+- Added change of stat through select.
+- Added Added when choosing an excess sysle in the select reset to the maximum possible
+- Added reset stat, race, level
+- Added Blocking the select when there are no promotion stats

@@ -31,28 +31,32 @@
                 <tr>
                   <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
                 </tr>
-                <tr v-if="accessibleStats !== 0">
+                <tr v-if="accessibleStats !== null">
                   <td class="options__table__title" colspan="5">
-                    <small>Очки распределения:</small> {{ accessibleStats }}
+                    <small>Очки розподілу:</small> {{ accessibleStats }}
                   </td>
                 </tr>
               </thead>
               <tbody class="options__tbody">
                 <tr>
-                  <td>Параметры</td>
-                  <td>Сумма</td>
-                  <td>Базовые</td>
+                  <td>Параметри</td>
+                  <td>Сума</td>
+                  <td>Базові</td>
                   <td></td>
                   <td></td>
                 </tr>
 
-                <tr v-for="p in paramArr" :key="p.name">
+                <tr v-for="p in paramStatArr" :key="p.name">
                   <td>
                     <img :src="p.link" :alt="p.name" />
                     {{ p.name }}
                   </td>
                   <td>{{ p.summStatBase }}</td>
-                  <td><input v-model="p.nameModel" class="options__input" /></td>
+                  <td><input
+                    :disabled="accessibleStats === null"
+                    @change="statInputShange(p)"
+                    v-model="p.nameModel" 
+                    class="options__input" /></td>
                   <td>
                     <button @click="statPlus(p.key)" class="button__reset">
                       <span class="material-symbols-outlined">stat_2</span>
@@ -91,7 +95,7 @@
                     @change="lvlSelectChange"
                     class="form__input_lvl select-css"
                   >
-                    <option value="change" disabled selected>Выбери уровень</option>
+                    <option value="change" disabled selected>Выберіть рівень</option>
                     <option v-for="l in optionLvl" :key="l">{{ l }}</option>
                   </select>
                 </div>
@@ -99,24 +103,27 @@
                 <div class="form__items">
                   <select class="form__input_rase select-css">
                     <option disabled selected>Крепость</option>
-                    <option>Нет</option>
+                    <option>Нема</option>
                     <option>Новичок</option>
-                    <option>Продвинутый</option>
-                    <option>Эксперт</option>
+                    <option>Продвинутий</option>
+                    <option>Експерт</option>
                     <option>Мастер</option>
                     <option>Грандмастер</option>
                   </select>
                 </div>
                 <div class="form__items">
-                  <a href="#" class="form__link">Выпить эликсир</a>
-                  <p>Выпито: 0</p>
+                  <a href="#" class="form__link">Випити еліксир</a>
+                  <p>Випито: 0</p>
                 </div>
               </form>
 
               <div class="form__items">
                 <input id="html" type="checkbox" />
-                <label for="html">То что можно одеть</label>
-                <a href="#" class="form__link">Сбросить все</a>
+                <label for="html">Те, що можна одягнути</label>
+                <a 
+                @click="rezetManecken"
+                href="#" 
+                class="form__link">Скинути все</a>
               </div>
             </div>
           </div>
@@ -148,7 +155,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
 
@@ -165,15 +172,17 @@ const props = defineProps({
 const emits = defineEmits({
   statChange: Array,
   changeRase: String,
-  accessibleStats: Number
+  accessibleStats: Number,
+  rezet: null
 })
 
 const raseModel = ref('human')
 const lvlSelect = ref('change')
-const accessibleStats = ref(0)
+const accessibleStats = ref(null)
 const optionLvl = 30
 const baseStat = baseStatFromLvl()
 
+// массив с изменениями параметров базовых стат
 const addParam = ref([
   { key: 'strong', count: 0 },
   { key: 'agility', count: 0 },
@@ -187,6 +196,8 @@ const addParam = ref([
   { key: 'astral', count: 0 }
 ])
 
+
+
 //props
 const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
 const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
@@ -194,6 +205,11 @@ const dummyPartCenterTop = props.dummy.filter((d) => d.location === 'dummyPartCe
 const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPartCenterBottom')
 //
 
+// сдежение за изменением суммарного массива paramArr
+const paramStatArr =  computed(() => props.paramArr.filter((d) => d.type === 'stat') )  
+
+
+// сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   accessibleStats.value = baseStat.find((l) => l.lvl === Number(lvlSelect.value)).stat
   addParam.value.map((p) => (p.count = 0))
@@ -221,14 +237,34 @@ const modifyStatAndEmit = (statKey, increment) => {
 };
 
 const statPlus = (statKey) => {
-  modifyStatAndEmit(statKey, 1);
+  modifyStatAndEmit(statKey, Number(1));
 };
 const statMinus = (statKey) => {
-  modifyStatAndEmit(statKey, -1);
+  modifyStatAndEmit(statKey, Number(-1));
 };
 
+const statInputShange = (stat) => {
+  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBase // ищу предідущие значение стата 
+  let statChange = Number(stat.nameModel) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
+  const check = Math.floor(accessibleStats.value / 3)
+  if(check < statChange) {
+    statChange = check // при избыточной разнице
+  }
+  modifyStatAndEmit(stat.key, statChange);
+}
 
-//
+const rezetManecken = () => {
+  addParam.value.map((p) => (p.count = 0))
+  emits('changeRase', {
+    raseModel: 'human',
+    addParam: addParam.value,
+  })
+  raseModel.value = 'human'
+  lvlSelect.value = 'change'
+  accessibleStats.value = null
+}
+
+
 </script>
 
 <script>

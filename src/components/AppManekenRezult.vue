@@ -8,9 +8,9 @@
                 </thead>
                 <tbody class="options__tbody">
                   <tr>
-                    <td>Параметры</td>
-                    <td>Сумма</td>
-                    <td>Базовые</td>
+                    <td>Параметри</td>
+                    <td>Сума</td>
+                    <td>Базові</td>
                   </tr>
                   <tr>
                     <td>
@@ -22,14 +22,14 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/agility.svg" alt="agility">
-                      Ловкость</td>
+                      Спритність</td>
                     <td>3</td>
                     <td>3</td>
                   </tr>
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/intelledgy.svg" alt="intelledgy">
-                      Интелект</td>
+                      Інтелект</td>
                     <td>3</td>
                     <td>3</td>
                   </tr>
@@ -43,21 +43,21 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/reaction.svg" alt="reaction">
-                      Реакция</td>
+                      Реакція</td>
                     <td>3</td>
                     <td>3</td>
                   </tr>
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/wisdom.svg" alt="wisdom">
-                      Мудрость</td>
+                      Мудрість</td>
                     <td>3</td>
                     <td>3</td>
                   </tr>
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/constitution.svg" alt="constitution">
-                      Сложение</td>
+                      Статура</td>
                     <td>3</td>
                     <td>3</td>
                   </tr>
@@ -84,12 +84,12 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/leftHend.svg" alt="leftHend">
-                      Левая рука</td>
+                      Ліва рука</td>
                     <td>0</td>
 
                     <td>
                       <img src="../assets/img/icon/svg/rightHend.svg" alt="rightHend">
-                      Правая рука</td>
+                      Права рука</td>
                     <td>0</td>
                   </tr>
                   <tr>
@@ -112,13 +112,13 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/dawn.svg" alt="dawn">
-                      Рассвет</td>
+                      Расвет</td>
                     <td>0</td>
                   </tr>
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/full-moon.svg" alt="full-moon">
-                      Полнолуние</td>
+                      Полнолуння</td>
                     <td>0</td>
                   </tr>
                   <tr>
@@ -137,7 +137,7 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/health.svg" alt="health">
-                      Жизнь</td>
+                      Житя</td>
                     <td>0</td>
                   </tr>
                   <tr>
@@ -149,7 +149,7 @@
                   <tr>
                     <td>
                       <img src="../assets/img/icon/svg/power.svg" alt="power">
-                      Энергия</td>
+                      Енергія</td>
                     <td>0</td>
                   </tr>
                   <tr>
@@ -170,11 +170,11 @@
                     </thead>
                 <tbody>
                   <tr>
-                        <td>Талы</td>
-                        <td>Золотые талы</td>
+                        <td>Тали</td>
+                        <td>Золоті тали</td>
                         <td>Ратник</td>
-                        <td>Обмены</td>
-                        <td>Реликты</td>
+                        <td>Обміни</td>
+                        <td>Реликти</td>
                       </tr>
                       <tr>
                         <td>1000000</td>
