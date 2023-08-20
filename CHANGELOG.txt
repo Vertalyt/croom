@@ -18,3 +18,12 @@
 - Added Added when choosing an excess sysle in the select reset to the maximum possible
 - Added reset stat, race, level
 - Added Blocking the select when there are no promotion stats
+
+
+## [1.0.31] - 2023-08-20
+### Added 
+- Divided the mannequin into a separate table component. Implemented data loading by slots.
+- Animated, component of the results of the dummy.
+
+### Changed
+- Changed the display of the armor table to div in the resulting component

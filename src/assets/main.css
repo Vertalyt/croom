@@ -16,22 +16,35 @@ h3 {
   font-size: 1.3rem;
   line-height: 1.4rem;
 }
-
+.armor_Item:nth-child(1),
+.armor_Item:nth-child(2),
+.armor_Item:nth-child(5),
 tr:nth-child(odd) {
 
   background-color: #b9c2c963;/* фон нечетных столбцов */
 
 }
 
+.armor_Item, 
 tr:nth-child(even) {
 
   background-color: #81797969;/* фон четных столбцов */
 
 }
 
-td {
+.armor_Wrapper {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  border: 1px solid rgb(85, 79, 79);
+  border-top: none;
+}
+
+.armor_Item, td {
   min-width: 15px;
   border: 1px solid #72737826;
+
 }
 
 
@@ -364,6 +377,40 @@ td img {
   margin-right: 1rem;
 }
 
+.options__itemBlock_button {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.armor_Item {
+  display: flex;
+  width: 49%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.armor__info {
+  display: flex;
+  height: 20px;
+  justify-content: space-between;
+}
+
+.armor__info > img {
+  margin-right: 20px;
+}
+
+.armor__result {
+  margin-right: 10px;
+}
+
+.armor__title {
+  width: 100%;
+  text-align: center;
+  background-color: #b9c2c963;
+  border: 1px solid rgb(85, 79, 79);
+  border-bottom: none;
+}
 
 @media screen and (max-width: 899px) {
 
@@ -392,6 +439,7 @@ td img {
         justify-content: space-between;
     }
 }
+
 
 
 @media screen and (max-width: 600px) {

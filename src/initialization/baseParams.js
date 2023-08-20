@@ -24,21 +24,21 @@ export const baseDummyParams = [
 
 
 export const baseParam = [
-  { type: 'stat', key: 'strong', name: 'Сила', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/strong.svg' },
-  { type: 'stat', key: 'agility', name: 'Ловкість', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/agility.svg' },
-  { type: 'stat', key: 'intelledgy', name: 'Інтелект', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/intelledgy.svg' },
-  { type: 'stat', key: 'luck', name: 'Удача', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/luck.svg' },
-  { type: 'stat', key: 'reaction', name: 'Реакція', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/reaction.svg' },
-  { type: 'stat', key: 'wisdom', name: 'Мудрість', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/wisdom.svg' },
-  { type: 'stat', key: 'constitution', name: 'Статура', nameModel: 3, summStatBase: 3, link: 'src/assets/img/icon/svg/constitution.svg' },
-  { type: 'protectionMagick', key: 'dawn', name: 'Расвіт', summStatBase: 6, link: 'src/assets/img/icon/svg/dawn.svg' },
-  { type: 'protectionMagick', key: 'fullMoon', name: 'Полнолуння', summStatBase: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
-  { type: 'protectionMagick', key: 'astral', name: 'Астрал', summStatBase: 4, link: 'src/assets/img/icon/svg/astral.svg' },
-  { type: 'armor', key: 'armorHead', name: 'Голова', summStatBase: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },
-  { type: 'armor', key: 'armor', name: 'Тулуб', summStatBase: 0, link: 'src/assets/img/icon/svg/armor.svg' },
-  { type: 'armor', key: 'leftHend', name: 'Ліва рука', summStatBase: 0, link: 'src/assets/img/icon/svg/leftHend.svg' },
-  { type: 'armor', key: 'rightHend', name: 'Права рука', summStatBase: 0, link: 'src/assets/img/icon/svg/rightHend.svg' },
-  { type: 'armor', key: 'legArmor', name: 'Ноги', summStatBase: 0, link: 'src/assets/img/icon/svg/leg-armor.svg' },
+  { type: 'stat', key: 'strong', name: 'Сила', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/strong.svg' },
+  { type: 'stat', key: 'agility', name: 'Ловкість', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/agility.svg' },
+  { type: 'stat', key: 'intelledgy', name: 'Інтелект', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/intelledgy.svg' },
+  { type: 'stat', key: 'luck', name: 'Удача', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/luck.svg' },
+  { type: 'stat', key: 'reaction', name: 'Реакція', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/reaction.svg' },
+  { type: 'stat', key: 'wisdom', name: 'Мудрість', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/wisdom.svg' },
+  { type: 'stat', key: 'constitution', name: 'Статура', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/constitution.svg' },
+  { type: 'protectionMagick', key: 'dawn', name: 'Расвіт', summStatBaseOll: 6, link: 'src/assets/img/icon/svg/dawn.svg' },
+  { type: 'protectionMagick', key: 'fullMoon', name: 'Полнолуння', summStatBaseOll: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
+  { type: 'protectionMagick', key: 'astral', name: 'Астрал', summStatBaseOll: 4, link: 'src/assets/img/icon/svg/astral.svg' },
+  { type: 'armor', key: 'armorHead', name: 'Голова', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },
+  { type: 'armor', key: 'armor', name: 'Тулуб', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/armor.svg' },
+  { type: 'armor', key: 'leftHend', name: 'Ліва рука', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/leftHend.svg' },
+  { type: 'armor', key: 'rightHend', name: 'Права рука', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/rightHend.svg' },
+  { type: 'armor', key: 'legArmor', name: 'Ноги', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/leg-armor.svg' },
 ]
 
 export const basickParamsRase = [

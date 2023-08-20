@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import AppHeader from './components/AppHeader.vue';
 import AppManeken from './components/AppManeken.vue'
 import AppManekenRezult from './components/AppManekenRezult.vue'
-import { baseDummyParams, basickParamsRase, baseParam, classParams } from './initialization/baseParams'
+import { baseDummyParams, basickParamsRase, baseParam } from './initialization/baseParams'
 
 
 
@@ -25,7 +25,6 @@ const paramsPlus = ref([
   ])
 
 
-
 function combinationParam(addParam) {
   return baseParamArr.value.map(baseItem => {
   const matchingAddParam = addParam.find(addItem => addItem.key === baseItem.key);
@@ -34,15 +33,15 @@ function combinationParam(addParam) {
   if (matchingAddParam) {
     return {
       ...baseItem,
-      nameModel: baseItem.nameModel + matchingAddParam.count,
       summStatBase: baseItem.summStatBase + matchingAddParam.count,
+      summStatBaseOll: baseItem.summStatBaseOll + matchingAddParam.count,
     };
   }
 
   // if (matchingAddParamPlus) { //заглушка на добавление стат от шмота
   //   return {
   //     ...baseItem,
-  //     summStatBase: baseItem.summStatBase + matchingAddParamPlus.count,
+  //     summStatBaseOll: baseItem.summStatBaseOll + matchingAddParamPlus.count,
   //   };
   // }
   return baseItem;
@@ -59,18 +58,18 @@ const changeRase = ({ raseModel, addParam }) => {
       const matchingParam = raseParams.date.find(rp => rp.key === p.key);
       const matchingPlusParam = paramsPlus.value.find(pp => pp.key === p.key);
 
-      let { nameModel, summStatBase } = p;
+      let { summStatBase, summStatBaseOll } = p;
 
       if (matchingParam) {
-        nameModel = matchingParam.count;
         summStatBase = matchingParam.count;
+        summStatBaseOll = matchingParam.count;
       }
 
       if (matchingPlusParam) {
-        summStatBase += matchingPlusParam.count;
+        summStatBaseOll += matchingPlusParam.count;
       }
 
-      return { ...p, nameModel, summStatBase };
+      return { ...p, summStatBase, summStatBaseOll };
     });
 
     baseParamArr.value = updatedParamArr;
@@ -89,6 +88,7 @@ const components = {
       <div class="conteiner">
 
         <AppHeader />
+        
         <main class="main-wrapper">
           <AppManeken 
           v-if="dummy" 
@@ -97,7 +97,10 @@ const components = {
           @statChange="statChange"
           @changeRase="changeRase"
           />
-          <AppManekenRezult />
+          <AppManekenRezult 
+          v-if="paramArr" 
+          :paramArr="paramArr"
+          />
         </main>
       </div>
     </div>

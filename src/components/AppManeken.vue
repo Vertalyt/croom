@@ -26,51 +26,25 @@
       <div class="dummy__center__center">
         <div class="options">
           <div class="options__itemBlock">
-            <table class="table">
-              <thead>
-                <tr>
-                  <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
-                </tr>
-              </thead>
-              <tbody class="options__tbody">
-                <tr>
-                  <td>Параметри</td>
-                  <td>Сума</td>
-                  <td>Базові</td>
-                  <td></td>
-                  <td></td>
-                </tr>
 
-                <tr v-for="p in paramStatArr" :key="p.name">
-                  <td>
-                    <img :src="p.link" :alt="p.name" />
-                    {{ p.name }}
-                  </td>
-                  <td>{{ p.summStatBase }}</td>
-                  <td><input
-                    :disabled="accessibleStats === null"
-                    @change="statInputShange(p)"
-                    v-model="p.nameModel" 
-                    class="options__input" /></td>
-                  <td>
-                    <button @click="statPlus(p.key)" class="button__reset">
-                      <span class="material-symbols-outlined">stat_2</span>
-                    </button>
-                  </td>
-                  <td>
-                    <button @click="statMinus(p.key)" class="button__reset">
-                      <span class="material-symbols-outlined">stat_minus_2</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr v-if="accessibleStats !== null">
+            <ManekenStatParams :paramStatArr="paramStatArr" :accessibleStats="accessibleStats">
+              <template #statManeken="{ summBase }">
+                <ManekenSlot 
+                :statParam="summBase" 
+                :accessibleStats="accessibleStats"
+                @statMinus="statMinus"
+                @statPlus="statPlus"
+                @statInputShange="statInputShange"
+                />
+              </template>
+              <tr v-if="accessibleStats !== null">
                   <td class="options__table__title" colspan="5">
                     <small>Очки розподілу:</small> {{ accessibleStats }}
                   </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
+              </ManekenStatParams>
+
+        </div>
 
           <div class="options__itemBlock">
 
@@ -174,6 +148,8 @@ import { ref, computed } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
 import { classParams } from '../initialization/baseParams'
+import ManekenStatParams from './ManekenStatParams.vue'
+import ManekenSlot from './use/ManekenSlot.vue'
 
 const props = defineProps({
   dummy: {
@@ -257,8 +233,8 @@ const statMinus = (statKey) => {
 };
 
 const statInputShange = (stat) => {
-  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBase // ищу предыдущие значение стата 
-  let statChange = Number(stat.nameModel) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
+  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBaseOll // ищу предыдущие значение стата 
+  let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
   if(accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице
   }
@@ -277,6 +253,7 @@ const rezetManecken = () => {
   classModel.value = 'none'
 }
 
+// eslint-disable-next-line no-unused-vars
 const changeClass = () => {
   const gameClass = OllParamClass.find(c => c.class === classModel.value)
   if(!gameClass) {
@@ -292,6 +269,11 @@ const changeClass = () => {
 
 }
 
+// eslint-disable-next-line no-unused-vars
+const components = {
+  ManekenStatParams,
+  ManekenSlot
+}
 
 </script>
 
