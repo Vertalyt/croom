@@ -10,35 +10,11 @@
 
     <div class="options__itemBlock options__itemBlock_button">
       <div class="armor__title"><h3>Броня</h3></div>
-      
-      <div class="armor_Wrapper">
 
-        <div class="armor_Item" v-for="p in paramArmorArr" :key="p.key">
-          <div class="armor__info">
+      <ParamItemsManeken :paramItems="paramArmorArr" :withItemsManecken="true"/>
 
-            <img :src="p.link" :alt="p.name" />
-            {{ p.name }}
-          </div>
-          <div class="armor__result">{{ p.summStatBaseOll }}</div>
-        </div>
-      </div>
+      <ParamItemsManeken :paramItems="paramMagicArr" :withItemsManecken="false"/>
 
-      <table class="table">
-        <thead>
-          <td class="options__table__title" colspan="2"><h3>Защита от магии</h3></td>
-        </thead>
-        <tbody>
-
-          <tr v-for="p in paramMagicArr" :key="p.key">
-            <td>
-              <img :src="p.link" :alt="p.name" />
-              {{ p.name }}
-            </td>
-            <td>{{ p.summStatBaseOll }}</td>
-          </tr>
-
-        </tbody>
-      </table>
     </div>
 
     <div class="options__itemBlock options__itemBlock_button">
@@ -106,6 +82,8 @@
 import { computed } from 'vue'
 import ManekenStatParams from './ManekenStatParams.vue'
 import ManekenRezultSlot from './use/ManekenRezultSlot.vue'
+import ParamItemsManeken from './use/ParamItemsManeken.vue'
+
 
 const props = defineProps({
   paramArr: {
@@ -113,6 +91,7 @@ const props = defineProps({
     requared: true
   }
 })
+
 
 // слежение за изменением суммарного массива paramArr
 const paramStatArr = computed(() => props.paramArr.filter((d) => d.type === 'stat'))
@@ -122,7 +101,8 @@ const paramMagicArr = computed(() => props.paramArr.filter((d) => d.type === 'pr
 // eslint-disable-next-line no-unused-vars
 const components = {
   ManekenStatParams,
-  ManekenRezultSlot
+  ManekenRezultSlot,
+  ParamItemsManeken
 }
 </script>
 

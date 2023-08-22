@@ -144,12 +144,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
 import { classParams } from '../initialization/baseParams'
 import ManekenStatParams from './ManekenStatParams.vue'
 import ManekenSlot from './use/ManekenSlot.vue'
+import { fetchAPIData } from '../api/fetchApi'
+
 
 const props = defineProps({
   dummy: {
@@ -173,7 +175,7 @@ const optionLvl = 30
 const baseStat = baseStatFromLvl()
 const classModel = ref('none')
 const OllParamClass = classParams 
-
+const className = ref([])
 // массив с изменениями параметров базовых стат
 const addParam = ref([
   { key: 'strong', count: 0 },
@@ -187,13 +189,23 @@ const addParam = ref([
   { key: 'fullMoon', count: 0 },
   { key: 'astral', count: 0 }
 ])
-
 //props
 const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
 const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
 const dummyPartCenterTop = props.dummy.filter((d) => d.location === 'dummyPartCenterTop')
 const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPartCenterBottom')
 //
+
+const filtersClasses = {
+        // Ваши фильтры, например:
+        category: 'classes',
+        parent: 8
+      };
+
+onMounted(async () => {
+  className.value = await fetchAPIData(filtersClasses)
+  console.log(className.value);
+} )
 
 // сдежение за изменением суммарного массива paramArr
 const paramStatArr =  computed(() => props.paramArr.filter((d) => d.type === 'stat') )  

@@ -31,7 +31,7 @@ export const baseParam = [
   { type: 'stat', key: 'reaction', name: 'Реакція', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/reaction.svg' },
   { type: 'stat', key: 'wisdom', name: 'Мудрість', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/wisdom.svg' },
   { type: 'stat', key: 'constitution', name: 'Статура', summStatBase: 3, summStatBaseOll: 3, link: 'src/assets/img/icon/svg/constitution.svg' },
-  { type: 'protectionMagick', key: 'dawn', name: 'Расвіт', summStatBaseOll: 6, link: 'src/assets/img/icon/svg/dawn.svg' },
+  { type: 'protectionMagick', key: 'dawn', name: 'Світанок', summStatBaseOll: 6, link: 'src/assets/img/icon/svg/dawn.svg' },
   { type: 'protectionMagick', key: 'fullMoon', name: 'Полнолуння', summStatBaseOll: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
   { type: 'protectionMagick', key: 'astral', name: 'Астрал', summStatBaseOll: 4, link: 'src/assets/img/icon/svg/astral.svg' },
   { type: 'armor', key: 'armorHead', name: 'Голова', summStatBaseOll: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },

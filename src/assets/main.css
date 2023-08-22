@@ -20,16 +20,12 @@ h3 {
 .armor_Item:nth-child(2),
 .armor_Item:nth-child(5),
 tr:nth-child(odd) {
-
   background-color: #b9c2c963;/* фон нечетных столбцов */
-
 }
 
 .armor_Item, 
 tr:nth-child(even) {
-
   background-color: #81797969;/* фон четных столбцов */
-
 }
 
 .armor_Wrapper {
@@ -385,10 +381,28 @@ td img {
 
 .armor_Item {
   display: flex;
-  width: 49%;
   justify-content: space-between;
   align-items: center;
 }
+
+.armor_Item_full {
+  width: 100%;
+}
+
+.armor_Item_half {
+  width: 49%;
+}
+
+
+.armor_Item_full:nth-child(odd) {
+  background-color: #b9c2c963;/* фон нечетных столбцов */
+}
+
+.armor_Item_full:nth-child(even) {
+  background-color: #81797969;/* фон четных столбцов */
+}
+
+
 
 .armor__info {
   display: flex;
@@ -407,7 +421,7 @@ td img {
 .armor__title {
   width: 100%;
   text-align: center;
-  background-color: #b9c2c963;
+  background-color: transparent;
   border: 1px solid rgb(85, 79, 79);
   border-bottom: none;
 }
