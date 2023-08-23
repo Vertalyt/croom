@@ -172,7 +172,7 @@ const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPar
 
 const filtersClasses = ref({
   category: 'classes',
-  parent: 8
+  // parent: 8
 })
 
 onMounted(async () => {
@@ -275,7 +275,6 @@ const rezetManecken = () => {
 }
 
 const choiceClothes = async (name) => {
-
 //   filtersClasses.value = ref({
 //   category: 'items',
 //   typeid : 1,

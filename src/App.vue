@@ -79,6 +79,10 @@ const changeRase = ({ raseModel, addParam }) => {
 const modalOpen = () => {
   isOpen.value = true
 }
+
+const isClose = () => {
+  isOpen.value = false
+}
 // eslint-disable-next-line no-unused-vars
 const components = {
   AppHeader,
@@ -91,7 +95,7 @@ const components = {
   <div class="room-container">
     <div class="wrapper">
       <div class="conteiner">
-        <ManeckenModal v-if="isOpen"/>
+        <ManeckenModal v-if="isOpen" @isClose="isClose"/>
         <AppHeader />
         
         <main class="main-wrapper">

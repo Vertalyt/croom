@@ -436,18 +436,66 @@ td img {
   border-bottom: none;
 }
 
-.modal-overlay {
-  position: fixed;
-  z-index: 999;
+.modal {
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 0 !important;
+  margin: auto !important;
+  overflow-y: auto !important;
+  border-radius: 2px;
+  will-change: top, opacity;
+  width: 100% !important;
+  max-height: fit-content !important;
+  height: 100% !important;
+  background-color: #1718189e !important;
+}
+
+.modal-content {
+  z-index: 2;
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  position: absolute;
   top: -25%;
   left: 0;
   bottom: 0;
   right: 0;
-  height: 125%;
-  width: 100%;
-  background: #000 !important;
-  will-change: opacity;
+  height: fit-content;
+  min-width: 360px;
+  width: min-content;
 }
+
+/* Styles for the close button */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hover effect for the close button */
+.close:hover {
+  color: red;
+}
+
+/* Styles for the open modal button */
+#openModalBtn {
+  margin-top: 20px;
+}
+
+/* Prevent scrolling of the background when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+
+
+
 
 @media screen and (max-width: 899px) {
   .main-wrapper {
