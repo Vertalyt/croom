@@ -26,96 +26,89 @@
       <div class="dummy__center__center">
         <div class="options">
           <div class="options__itemBlock">
-
             <ManekenStatParams :paramStatArr="paramStatArr" :accessibleStats="accessibleStats">
               <template #statManeken="{ summBase }">
-                <ManekenSlot 
-                :statParam="summBase" 
-                :accessibleStats="accessibleStats"
-                @statMinus="statMinus"
-                @statPlus="statPlus"
-                @statInputShange="statInputShange"
+                <ManekenSlot
+                  :statParam="summBase"
+                  :accessibleStats="accessibleStats"
+                  @statMinus="statMinus"
+                  @statPlus="statPlus"
+                  @statInputShange="statInputShange"
                 />
               </template>
               <tr v-if="accessibleStats !== null">
-                  <td class="options__table__title" colspan="5">
-                    <small>Очки розподілу:</small> {{ accessibleStats }}
-                  </td>
-                </tr>
-              </ManekenStatParams>
-
-        </div>
+                <td class="options__table__title" colspan="5">
+                  <small>Очки розподілу:</small> {{ accessibleStats }}
+                </td>
+              </tr>
+            </ManekenStatParams>
+          </div>
 
           <div class="options__itemBlock">
+            <div class="form__items">
+              <select
+                class="form__input_left select-css"
+                v-model="raseModel"
+                @change="changeRaseSelect"
+              >
+                <option value="change" disabled selected>Выбери расу</option>
+                <option value="human">Человек</option>
+                <option value="gnom">Гном</option>
+                <option value="elf">Эльф</option>
+                <option value="vampire">Вампир</option>
+                <option value="ork">Орк</option>
+                <option value="trol">Троль</option>
+              </select>
 
-                <div class="form__items">
-                  <select
-                    class="form__input_left select-css"
-                    v-model="raseModel"
-                    @change="changeRaseSelect"
-                  >
-                    <option value="change" disabled selected>Выбери расу</option>
-                    <option value="human">Человек</option>
-                    <option value="gnom">Гном</option>
-                    <option value="elf">Эльф</option>
-                    <option value="vampire">Вампир</option>
-                    <option value="ork">Орк</option>
-                    <option value="trol">Троль</option>
-                  </select>
-
-                  <select
-                    v-model="lvlSelect"
-                    @change="lvlSelectChange"
-                    class="form__input select-css"
-                  >
-                    <option value="change" disabled selected>Выберіть рівень</option>
-                    <option v-for="l in optionLvl" :key="l">{{ l }}</option>
-                  </select>
-                </div>
-
-                <div class="form__items">
-
-                  <!-- <select 
-                    v-model="classModel"
-                    @change="changeClass"
-                  class="form__input_left select-css"
-                  >
-                    <option value="none" selected>Нема</option>
-                    <option value="barbarian" >Варвар</option>
-                    <option value="juggernaut" >Джагернаут</option>
-                    <option value="priest" >Жрець</option>
-                    <option value="magician" >Маг</option>
-                    <option value="shieldmaster" >Мастер щита</option>
-                    <option value="ranger" >Рейнджер</option>
-                  </select> -->
-
-                  <select class="form__input select-css">
-                    <option disabled selected>Крепость</option>
-                    <option>Нема</option>
-                    <option>Новичок</option>
-                    <option>Продвинутий</option>
-                    <option>Експерт</option>
-                    <option>Мастер</option>
-                    <option>Грандмастер</option>
-                  </select>
-                </div>
-
-
-                <div class="form__items">
-                  <a href="#" class="form__link">Випити еліксир</a>
-                  <p>Випито: 0</p>
-                </div>
-
-              <div class="form__items">
-                <input id="html" type="checkbox" />
-                <label for="html">Те, що можна одягнути</label>
-                <a 
-                @click="rezetManecken"
-                href="#" 
-                class="form__link">Скинути все</a>
-              </div>
+              <select v-model="lvlSelect" @change="lvlSelectChange" class="form__input select-css">
+                <option value="change" disabled selected>Выберіть рівень</option>
+                <option v-for="l in optionLvl" :key="l">{{ l }}</option>
+              </select>
             </div>
 
+            <div class="form__items">
+              <ManeckenSelectItems
+                v-if="lvlSelect >= 8"
+                v-model="classModel"
+                :items="parentClasses"
+                :itemsName="'Выбери класс'"
+                :left="true"
+                :lvlSelect="Number(lvlSelect)"
+                @update:modelValue="changeClassSelect"
+              />
+              <ManeckenSelectItems
+                v-if="parentClassItems && lvlSelect >= 8"
+                v-model="parentClassModel"
+                :items="parentClassItems"
+                :itemsName="'Выбери подкласс'"
+                :lvlSelect="Number(lvlSelect)"
+                @update:modelValue="parentClassSelect"
+              />
+            </div>
+
+            <div class="form__items">
+              <select class="form__input select-css">
+                <option disabled selected>Крепость</option>
+                <option>Нема</option>
+                <option>Новичок</option>
+                <option>Продвинутий</option>
+                <option>Експерт</option>
+                <option>Мастер</option>
+                <option>Грандмастер</option>
+              </select>
+            </div>
+
+            <div class="form__items">
+              <a href="#" class="form__link">Випити еліксир</a>
+              <p>Випито: 0</p>
+            </div>
+
+            <div class="form__items">
+              <input id="html" type="checkbox" />
+              <label for="html">Те, що можна одягнути</label>
+              <a @click="rezetManecken" href="#" class="form__link">Скинути все</a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="dummy__center__buttom">
@@ -147,25 +140,25 @@
 import { ref, computed, onMounted } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
-import { classParams } from '../initialization/baseParams'
 import ManekenStatParams from './ManekenStatParams.vue'
 import ManekenSlot from './use/ManekenSlot.vue'
 import { fetchAPIData } from '../api/fetchApi'
-
+import ManeckenSelectItems from './use/ManeckenSelectItems.vue'
+import { baseStatClasses } from '../initialization/baseParams'
 
 const props = defineProps({
   dummy: {
     type: Array,
-    requared: true
+    required: true
   },
   paramArr: {
     type: Array,
-    requared: true
+    required: true
   }
 })
 const emits = defineEmits({
   statChange: Array,
-  changeRase: String,
+  changeRase: String
 })
 
 const raseModel = ref('human')
@@ -174,21 +167,24 @@ const accessibleStats = ref(null)
 const optionLvl = 30
 const baseStat = baseStatFromLvl()
 const classModel = ref('none')
-const OllParamClass = classParams 
-const className = ref([])
-// массив с изменениями параметров базовых стат
+const OllParamClass = ref([])
+const parentClassItems = ref(null)
+const parentClassModel = ref('none')
+const parentClasses = ref([])
+// массив с изменениями параметров
 const addParam = ref([
-  { key: 'strong', count: 0 },
-  { key: 'agility', count: 0 },
-  { key: 'intelledgy', count: 0 },
-  { key: 'luck', count: 0 },
-  { key: 'reaction', count: 0 },
-  { key: 'wisdom', count: 0 },
-  { key: 'constitution', count: 0 },
-  { key: 'dawn', count: 0 },
-  { key: 'fullMoon', count: 0 },
-  { key: 'astral', count: 0 }
+  { key: 'strength_bonus', count: 0 },
+  { key: 'dexterity_bonus', count: 0 },
+  { key: 'intelligence_bonus', count: 0 },
+  { key: 'luck_bonus', count: 0 },
+  { key: 'reaction_bonus', count: 0 },
+  { key: 'wisdom_bonus', count: 0 },
+  { key: 'constitution_bonus', count: 0 },
+  { key: 'dawn_bonus', count: 0 },
+  { key: 'fullMoon_bonus', count: 0 },
+  { key: 'astral_bonus', count: 0 }
 ])
+
 //props
 const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
 const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
@@ -196,33 +192,66 @@ const dummyPartCenterTop = props.dummy.filter((d) => d.location === 'dummyPartCe
 const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPartCenterBottom')
 //
 
-const filtersClasses = {
-        // Ваши фильтры, например:
-        category: 'classes',
-        parent: 8
-      };
+// const filtersClasses = {
+//   // Ваши фильтры, например:
+//   category: 'classes'
+//   // parent: 8
+// }
 
 onMounted(async () => {
-  className.value = await fetchAPIData(filtersClasses)
-  console.log(className.value);
-} )
+  // OllParamClass.value = await fetchAPIData(filtersClasses)
+  OllParamClass.value = baseStatClasses
+  parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
+})
 
-// сдежение за изменением суммарного массива paramArr
-const paramStatArr =  computed(() => props.paramArr.filter((d) => d.type === 'stat') )  
+// слежение за изменением суммарного массива paramArr
+const paramStatArr = computed(() => props.paramArr.filter((d) => d.type === 'stat'))
 
 // emits
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   accessibleStats.value = baseStat.find((l) => l.lvl === Number(lvlSelect.value)).stat
   addParam.value.map((p) => (p.count = 0))
-  emits('statChange', addParam.value)
+  emits('statChange', { addParam: addParam.value })
 }
 
 const changeRaseSelect = () => {
   emits('changeRase', {
     raseModel: raseModel.value,
-    addParam: addParam.value,
+    addParam: addParam.value
   })
+}
+
+const changeClassSelect = (className) => {
+  parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
+}
+
+const parentClassSelect = (parent) => {
+  // массив с бонусами от класа
+  const addClassParam = [
+    { key: 'strength_bonus', count: 0 },
+    { key: 'dexterity_bonus', count: 0 },
+    { key: 'intelligence_bonus', count: 0 },
+    { key: 'luck_bonus', count: 0 },
+    { key: 'reaction_bonus', count: 0 },
+    { key: 'wisdom_bonus', count: 0 },
+    { key: 'constitution_bonus', count: 0 },
+    { key: 'dawn_bonus', count: 0 },
+    { key: 'fullMoon_bonus', count: 0 },
+    { key: 'astral_bonus', count: 0 }
+  ]
+  const parentClassItem = OllParamClass.value.filter((p) => p.name_en === parent)
+  // Перебираем элементы parentClassItem массива
+  for (const item of parentClassItem) {
+    // Перебираем элементы addClassParam массива
+    for (const param of addClassParam) {
+      // Если значения ключей совпадают и значение не равно null
+      if (item[param.key] !== null) {
+        param.count = parseInt(item[param.key]) // Преобразуем значение в число и записываем в count
+      }
+    }
+  }
+  emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'oll' })
 }
 
 const modifyStatAndEmit = (statKey, increment) => {
@@ -231,33 +260,34 @@ const modifyStatAndEmit = (statKey, increment) => {
     addParam: addParam.value,
     statKey,
     increment
-  });
-  addParam.value = updatedAddParam;
-  accessibleStats.value = updatedAccessibleStats;
-  emits('statChange', addParam.value);
-};
+  })
+  addParam.value = updatedAddParam
+  accessibleStats.value = updatedAccessibleStats
+  emits('statChange', { addParam: addParam.value })
+}
 
 const statPlus = (statKey) => {
-  modifyStatAndEmit(statKey, Number(1));
-};
+  modifyStatAndEmit(statKey, Number(1))
+}
 const statMinus = (statKey) => {
-  modifyStatAndEmit(statKey, Number(-1));
-};
+  modifyStatAndEmit(statKey, Number(-1))
+}
 
 const statInputShange = (stat) => {
-  const oldBaseStat = paramStatArr.value.find(s => s.key === stat.key).summStatBaseOll // ищу предыдущие значение стата 
+  // изменение стат через инпут
+  const oldBaseStat = paramStatArr.value.find((s) => s.key === stat.key).summStatBaseOll // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
-  if(accessibleStats.value < statChange) {
+  if (accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице
   }
-  modifyStatAndEmit(stat.key, statChange);
+  modifyStatAndEmit(stat.key, statChange)
 }
 
 const rezetManecken = () => {
   addParam.value.map((p) => (p.count = 0))
   emits('changeRase', {
     raseModel: 'human',
-    addParam: addParam.value,
+    addParam: addParam.value
   })
   raseModel.value = 'human'
   lvlSelect.value = 'change'
@@ -266,27 +296,11 @@ const rezetManecken = () => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const changeClass = () => {
-  const gameClass = OllParamClass.find(c => c.class === classModel.value)
-  if(!gameClass) {
-    console.log('Клас не выбран');
-    return
-  }
-  console.log(gameClass);
-  if(lvlSelect.value < gameClass.lvl) {
-    console.log(`Минимальный укровень для подкласса ${gameClass.subclass} ${gameClass.lvl}`);
-  } else {
-     emits('statChange', gameClass.addStat)
-  }
-
-}
-
-// eslint-disable-next-line no-unused-vars
 const components = {
   ManekenStatParams,
-  ManekenSlot
+  ManekenSlot,
+  ManeckenSelectItems
 }
-
 </script>
 
 <script>

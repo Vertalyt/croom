@@ -27,3 +27,11 @@
 
 ### Changed
 - Changed the display of the armor table to div in the resulting component
+
+
+## [1.0.32] - 2023-08-23
+
+### Added 
+Added display of classes and subclasses
+The database table is filled according to classes and subclasses
+Added display of stats from subclass

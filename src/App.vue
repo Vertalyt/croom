@@ -15,40 +15,40 @@ const paramArr = ref(baseParam) // передаю в таблицу итогов
 
         // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
 const paramsPlus = ref([
-            {key: 'strong', count: 0 },
-            {key: 'agility', count: 0 },
-            {key: 'intelledgy', count: 0 },
-            {key: 'luck', count: 0 },
-            {key: 'reaction', count: 0 },
-            {key: 'wisdom', count: 0 },
-            {key: 'constitution', count: 0 },
+            {key: 'strength_bonus', count: 0 },
+            {key: 'dexterity_bonus', count: 0 },
+            {key: 'intelligence_bonus', count: 0 },
+            {key: 'luck_bonus', count: 0 },
+            {key: 'reaction_bonus', count: 0 },
+            {key: 'wisdom_bonus', count: 0 },
+            {key: 'constitution_bonus', count: 0 },
   ])
 
 
-function combinationParam(addParam) {
+function combinationParam(addParam, baseAndCommonStats) {
   return baseParamArr.value.map(baseItem => {
   const matchingAddParam = addParam.find(addItem => addItem.key === baseItem.key);
   // const matchingAddParamPlus = paramsPlus.value.find(addItem => addItem.key === baseItem.key);
 
+
   if (matchingAddParam) {
-    return {
-      ...baseItem,
+      if(baseAndCommonStats === 'areCommon') {
+        return {  ...baseItem,
       summStatBase: baseItem.summStatBase + matchingAddParam.count,
       summStatBaseOll: baseItem.summStatBaseOll + matchingAddParam.count,
-    };
+        }
+      } else {
+        return {  ...baseItem,
+      summStatBaseOll: baseItem.summStatBaseOll + matchingAddParam.count,
+        }
+      }
   }
 
-  // if (matchingAddParamPlus) { //заглушка на добавление стат от шмота
-  //   return {
-  //     ...baseItem,
-  //     summStatBaseOll: baseItem.summStatBaseOll + matchingAddParamPlus.count,
-  //   };
-  // }
   return baseItem;
 });
 }
-const statChange = (addParam) => {
-  paramArr.value = combinationParam(addParam)
+const statChange = ({ addParam, baseAndCommonStats = 'areCommon'}) => {
+  paramArr.value = combinationParam(addParam, baseAndCommonStats)
 }
 const changeRase = ({ raseModel, addParam }) => {
   const raseParams = basickParams.value.find(r => r.rase === raseModel);
