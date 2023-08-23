@@ -4,14 +4,14 @@ import AppHeader from './components/AppHeader.vue';
 import AppManeken from './components/AppManeken.vue'
 import AppManekenRezult from './components/AppManekenRezult.vue'
 import { baseDummyParams, basickParamsRase, baseParam } from './initialization/baseParams'
-
+import ManeckenModal from './components/use/ManeckenModal.vue';
 
 
 const dummy = baseDummyParams
 const baseParamArr = ref(baseParam) // базовое значение конкретной расы, и их переменные, стартовое люди
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const paramArr = ref(baseParam) // передаю в таблицу итоговый суммарный результат
-
+const isOpen = ref(false)
 
         // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
 const paramsPlus = ref([
@@ -23,7 +23,6 @@ const paramsPlus = ref([
             {key: 'wisdom_bonus', count: 0 },
             {key: 'constitution_bonus', count: 0 },
   ])
-
 
 function combinationParam(addParam, baseAndCommonStats) {
   return baseParamArr.value.map(baseItem => {
@@ -77,16 +76,22 @@ const changeRase = ({ raseModel, addParam }) => {
   }
 }
 
+const modalOpen = () => {
+  isOpen.value = true
+}
 // eslint-disable-next-line no-unused-vars
 const components = {
-  AppHeader
+  AppHeader,
+  ManeckenModal,
+  AppManekenRezult,
+  AppManeken
 }
 </script>
 <template>
   <div class="room-container">
     <div class="wrapper">
       <div class="conteiner">
-
+        <ManeckenModal v-if="isOpen"/>
         <AppHeader />
         
         <main class="main-wrapper">
@@ -96,6 +101,7 @@ const components = {
           :paramArr="paramArr"
           @statChange="statChange"
           @changeRase="changeRase"
+          @modalOpen="modalOpen"
           />
           <AppManekenRezult 
           v-if="paramArr" 

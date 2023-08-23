@@ -35,3 +35,7 @@
 Added display of classes and subclasses
 The database table is filled according to classes and subclasses
 Added display of stats from subclass
+Создание и запуск модального окна на основе materialize css
+Создание и запуск в модальном окне Collapsible
+Открытие/закрытие по событию.
+Рефакторинг на универсальный компонент добавления картинок вещей в манекене.

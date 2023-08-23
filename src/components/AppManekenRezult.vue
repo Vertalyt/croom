@@ -81,7 +81,7 @@
 <script setup>
 import { computed } from 'vue'
 import ManekenStatParams from './ManekenStatParams.vue'
-import ManekenRezultSlot from './use/ManekenRezultSlot.vue'
+import ManekenRezultSlot from './use/slots/ManekenRezultSlot.vue'
 import ParamItemsManeken from './use/ParamItemsManeken.vue'
 
 

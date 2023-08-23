@@ -1,26 +1,12 @@
 <template>
   <div class="dummy" v-if="dummy">
     <div class="dummy__part">
-      <div
-        v-for="(d, idx) in dummyPartLeft"
-        class="parameter__mat__img"
-        :key="`${d.location}_${d.name}${idx}`"
-        :id="`${d.location}_${d.name}${idx}`"
-      >
-        <img :src="d.link" :alt="d.name" />
-      </div>
+      <DummyPartSlot :dummyItems="dummyPartLeft" @choiceClothes="choiceClothes"/>
     </div>
 
     <div class="dummy__center">
       <div class="dummy__center__top">
-        <div
-          v-for="(d, idx) in dummyPartCenterTop"
-          class="parameter__mat__img parameter__mat__small"
-          :key="`${d.location}_${d.name}${idx}`"
-          :id="`${d.location}_${d.name}${idx}`"
-        >
-          <img :src="d.link" :alt="d.name" />
-        </div>
+        <DummyPartSlot :dummyItems="dummyPartCenterTop" @choiceClothes="choiceClothes" :sizeClass="'small'"/>
       </div>
 
       <div class="dummy__center__center">
@@ -76,6 +62,8 @@
                 :lvlSelect="Number(lvlSelect)"
                 @update:modelValue="changeClassSelect"
               />
+
+              
               <ManeckenSelectItems
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
@@ -112,26 +100,13 @@
         </div>
       </div>
       <div class="dummy__center__buttom">
-        <div
-          v-for="(d, idx) in dummyPartCenterBottom"
-          class="parameter__mat__img parameter__mat__Armor__img"
-          :key="`${d.location}_${d.name}${idx}`"
-          :id="`${d.location}_${d.name}${idx}`"
-        >
-          <img :src="d.link" :alt="d.name" />
-        </div>
+        <DummyPartSlot :dummyItems="dummyPartCenterBottom" @choiceClothes="choiceClothes" :sizeClass="'big'"/>
+
       </div>
     </div>
 
     <div class="dummy__part">
-      <div
-        v-for="(d, idx) in dummyPartRight"
-        class="parameter__mat__img"
-        :key="`${d.location}_${d.name}`"
-        :id="`${d.location}_${d.name}${idx}`"
-      >
-        <img :src="d.link" :alt="d.name" />
-      </div>
+      <DummyPartSlot :dummyItems="dummyPartRight" @choiceClothes="choiceClothes"/>
     </div>
   </div>
 </template>
@@ -140,11 +115,13 @@
 import { ref, computed, onMounted } from 'vue'
 import { baseStatFromLvl } from '../initialization/baseStatFromLvl'
 import { modifyStat } from '../utils/modifyStat'
-import ManekenStatParams from './ManekenStatParams.vue'
-import ManekenSlot from './use/ManekenSlot.vue'
+import ManekenStatParams from './Manekenstatparams.vue'
+import ManekenSlot from './use/slots/ManekenSlot.vue'
 import { fetchAPIData } from '../api/fetchApi'
 import ManeckenSelectItems from './use/ManeckenSelectItems.vue'
 import { baseStatClasses } from '../initialization/baseParams'
+import DummyPartSlot from './use/slots/DummyPartSlot.vue'
+
 
 const props = defineProps({
   dummy: {
@@ -158,7 +135,8 @@ const props = defineProps({
 })
 const emits = defineEmits({
   statChange: Array,
-  changeRase: String
+  changeRase: String,
+  modalOpen: null
 })
 
 const raseModel = ref('human')
@@ -192,14 +170,13 @@ const dummyPartCenterTop = props.dummy.filter((d) => d.location === 'dummyPartCe
 const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPartCenterBottom')
 //
 
-// const filtersClasses = {
-//   // Ваши фильтры, например:
-//   category: 'classes'
-//   // parent: 8
-// }
+const filtersClasses = ref({
+  category: 'classes',
+  parent: 8
+})
 
 onMounted(async () => {
-  // OllParamClass.value = await fetchAPIData(filtersClasses)
+  // OllParamClass.value = await fetchAPIData(filtersClasses.value)
   OllParamClass.value = baseStatClasses
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
 })
@@ -252,6 +229,8 @@ const parentClassSelect = (parent) => {
     }
   }
   emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'oll' })
+
+  addClassParam.map((p) => (p.count = 0))
 }
 
 const modifyStatAndEmit = (statKey, increment) => {
@@ -295,11 +274,25 @@ const rezetManecken = () => {
   classModel.value = 'none'
 }
 
+const choiceClothes = async (name) => {
+
+//   filtersClasses.value = ref({
+//   category: 'items',
+//   typeid : 1,
+//   minlevel : "0-10",
+// })
+// const request = await fetchAPIData(filtersClasses.value)
+//   console.log(request);
+emits('modalOpen')
+}
+
+
 // eslint-disable-next-line no-unused-vars
 const components = {
   ManekenStatParams,
   ManekenSlot,
-  ManeckenSelectItems
+  ManeckenSelectItems,
+  DummyPartSlot
 }
 </script>
 
