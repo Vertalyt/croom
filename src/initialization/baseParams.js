@@ -1,25 +1,26 @@
 
 export const baseDummyParams = [
-    { location: 'dummyPartLeft', name: 'helmet', link: 'src/assets/img/helmet.png' },
-    { location: 'dummyPartLeft', name: 'armor', link: 'src/assets/img/armor.png' },
-    { location: 'dummyPartLeft', name: 'belt', link: 'src/assets/img/belt.png' },
-    { location: 'dummyPartLeft', name: 'boots', link: 'src/assets/img/boots.png' },
-    { location: 'dummyPartLeft', name: 'earring', link: 'src/assets/img/earring.png' },
-    { location: 'dummyPartLeft', name: 'ring1', link: 'src/assets/img/ring.png' },
-    { location: 'dummyPartLeft', name: 'ring2', link: 'src/assets/img/ring.png' },
-    { location: 'dummyPartRight', name: 'necklace', link: 'src/assets/img/necklace.png' },
-    { location: 'dummyPartRight', name: 'bracers', link: 'src/assets/img/bracers.png' },
-    { location: 'dummyPartRight', name: 'gloves', link: 'src/assets/img/gloves.png' },
-    { location: 'dummyPartRight', name: 'leggings', link: 'src/assets/img/leggings.png' },
-    { location: 'dummyPartRight', name: 'earring', link: 'src/assets/img/earring.png' },
-    { location: 'dummyPartRight', name: 'ring3', link: 'src/assets/img/ring.png' },
-    { location: 'dummyPartRight', name: 'ring4', link: 'src/assets/img/ring.png' },
-    { location: 'dummyPartCenterTop', name: 'relic1', link: 'src/assets/img/relic.png' },
-    { location: 'dummyPartCenterTop', name: 'relic2', link: 'src/assets/img/relic.png' },
-    { location: 'dummyPartCenterTop', name: 'relic3', link: 'src/assets/img/relic.png' },
-    { location: 'dummyPartCenterTop', name: 'relic4', link: 'src/assets/img/relic.png' },
-    { location: 'dummyPartCenterBottom', name: 'weapons1', link: 'src/assets/img/weapons.png' },
-    { location: 'dummyPartCenterBottom', name: 'weapons2', link: 'src/assets/img/weapons.png' },
+    { location: 'dummyPartLeft', name: 'helmet', link: 'src/assets/img/helmet.png', typeid: [1] },
+    { location: 'dummyPartLeft', name: 'armor', link: 'src/assets/img/armor.png', typeid: [3] },
+    { location: 'dummyPartLeft', name: 'belt', link: 'src/assets/img/belt.png', typeid: [6] }, //поЯс
+    { location: 'dummyPartLeft', name: 'boots', link: 'src/assets/img/boots.png', typeid: [11]  },
+    { location: 'dummyPartLeft', name: 'earring1', link: 'src/assets/img/earring.png', typeid: [55]  },
+    { location: 'dummyPartLeft', name: 'ring1', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'dummyPartLeft', name: 'ring2', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'dummyPartRight', name: 'necklace', link: 'src/assets/img/necklace.png', typeid: [2] },
+    { location: 'dummyPartRight', name: 'bracers', link: 'src/assets/img/bracers.png', typeid: [5] }, //наручи
+    { location: 'dummyPartRight', name: 'gloves', link: 'src/assets/img/gloves.png', typeid: [4] }, //перчатки
+    { location: 'dummyPartRight', name: 'leggings', link: 'src/assets/img/leggings.png', typeid: [10] }, // поножи
+    { location: 'dummyPartRight', name: 'earring2', link: 'src/assets/img/earring.png', typeid: [55] }, //серьга
+    { location: 'dummyPartRight', name: 'ring3', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'dummyPartRight', name: 'ring4', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'dummyPartCenterTop', name: 'relic1', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'dummyPartCenterTop', name: 'relic2', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'dummyPartCenterTop', name: 'relic3', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'dummyPartCenterTop', name: 'relic4', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'dummyPartCenterBottom', name: 'weapons1', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'dummyPartCenterBottom', name: 'weapons2', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    // typeid: 8-пика, 9-топор, 12 меч, 15щит,30 посох, 31 молот,32 молот,33 топор, 35 клеймор, 37 жезл, 38 кастет, 39 кинжал,
   ]
 
 
@@ -1434,3 +1435,21 @@ export const baseStatClasses = [
       "legsArmor_bonus": "13"
   }
 ]
+
+
+export const fortressParam = [
+{ name: 'Новичок', id: 'newbie'},
+{ name: 'Продвинутий', id: 'promotions'},
+{ name: 'Експерт', id: 'expert'},
+{ name: 'Мастер', id: 'master'},
+{ name: 'Грандмастер', id: 'grandmaster'},
+]
+
+export const raseParams = [
+    { name: 'Человек', id: 'human'},
+    { name: 'Гном', id: 'gnom'},
+    { name: 'Эльф', id: 'elf'},
+    { name: 'Вампир', id: 'vampire'},
+    { name: 'Орк', id: 'ork'},
+    { name: 'Троль', id: 'trol'},
+    ]

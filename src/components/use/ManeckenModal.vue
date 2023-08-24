@@ -1,65 +1,143 @@
-
 <template>
   <div>
-    <div class="modal" @click.stop ="isClose">    </div>
-      <div class="modal-content">
-        <span @click="isClose" class="close">&times;</span>
-        <ul class="collapsible" ref="collapsible">
-    <li>
-      <div class="collapsible-header"><span class="material-symbols-outlined">filter_drama</span>First</div>
-      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-    </li>
-    <li>
-      <div class="collapsible-header"><span class="material-symbols-outlined">place</span>Second</div>
-      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-    </li>
-    <li>
-      <div class="collapsible-header"><span class="material-symbols-outlined">whatshot</span>Third</div>
-      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-    </li>
-  </ul>
+    <div class="modal" @click.stop="isClose"></div>
+    <div class="modal-content">
+      <span @click="isClose" class="close">&times;</span>
+
+      <div class="form__items">
+      <select v-model="lvlSelect" @change="lvlSelectChange" class="form__input select-css">
+                <option value="change" disabled selected>Виберіть рівень</option>
+                <option>0</option>
+                <option v-for="l in optionLvl" :key="l">{{ l }}</option>
+      </select>
+    </div>
+      <button
+      key="1"
+      @click="accordionOpen(1)"
+      class="accordion"
+      >Section 1</button>
+      <div 
+      class="panel"
+      :class="{'open': openPanel === 1}"
+      >
+        <p>Lorem ipsum...</p>
       </div>
+
+      <button 
+      key="2"
+      @click="accordionOpen(2)"
+      class="accordion">Section 2</button>
+      <div class="panel"
+      :class="{'open': openPanel === 2}"
+      >
+        <p>Lorem ipsum...</p>
+      </div>
+
+      <button 
+      key="3"
+      @click="accordionOpen(3)"
+      class="accordion">Section 3</button>
+      <div class="panel"
+      :class="{'open': openPanel === 3}"
+      >
+        <p>Lorem ipsum...</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import M from "materialize-css/dist/js/materialize.min.js";
+import { ref } from 'vue'
+import { fetchAPIData } from '../../api/fetchApi'
 
-const emits = defineEmits({
-  isClose: null
+const props = defineProps({
+  cellOptions: {
+    type: Object,
+    required: true,
+  }
 })
 
-const collapsible = ref()
-const modalInstances = ref()
-const collapsibleInstances = ref()
+const emits = defineEmits({
+  isClose: null,
+})
 
-onMounted( ()=> {
-  // M.updateTextFields();
-  collapsibleInstances.value = M.Collapsible.init(collapsible.value);
-} )
+const openPanel  = ref(null) 
+const lvlSelect = ref('change')
+const optionLvl = 24
 
 const isClose = () => {
   emits('isClose')
 }
 
+const accordionOpen = (panelId) => {
+  openPanel.value = openPanel.value === panelId ? null : panelId // Переключение состояния
+}
 
-onBeforeUnmount(() => {
-  if(modalInstances.value && modalInstances.value.destroy) {
-    modalInstances.value.destroy()
-  }
-  if(collapsibleInstances.value && collapsibleInstances.value.destroy) {
-    collapsibleInstances.value.destroy()
-  }
-})
+
+
+const lvlSelectChange = async () => {
+  const sanitizedTypeids = props.cellOptions.typeid.map(item => {
+    if (typeof item === 'string' && !isNaN(item)) {
+        return parseInt(item);
+    }
+    return item;
+});
+
+  const filtersClasses = {
+  category: 'items',
+  typeid : sanitizedTypeids,
+  minlevel : parseInt(lvlSelect.value),
+  // rarity: 1
+}
+
+const request = await fetchAPIData(filtersClasses)
+console.log(request);
+}
+
+
 </script>
 
 <script>
 export default {
-  name: 'ManeckenModal',
+  name: 'ManeckenModal'
 }
 </script>
 
 <style scoped>
-@import 'materialize-css/dist/css/materialize.min.css';
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 5.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+  opacity: 0; /* Начальная непрозрачность */
+  transform: translateY(-10px); /* Начальное смещение */
+}
+
+.open {
+  max-height: 100px; /* Максимальная высота для открытой панели */
+  opacity: 1; /* Полная непрозрачность */
+  transform: translateY(0); /* Смещение отсутствует */
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
 </style>

@@ -12,6 +12,7 @@ const baseParamArr = ref(baseParam) // базовое значение конк�
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const paramArr = ref(baseParam) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
+const cellOptions = ref()
 
         // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
 const paramsPlus = ref([
@@ -76,13 +77,16 @@ const changeRase = ({ raseModel, addParam }) => {
   }
 }
 
-const modalOpen = () => {
+const modalOpen = (param) => {
+  cellOptions.value = param
   isOpen.value = true
 }
 
 const isClose = () => {
   isOpen.value = false
 }
+
+
 // eslint-disable-next-line no-unused-vars
 const components = {
   AppHeader,
@@ -95,7 +99,7 @@ const components = {
   <div class="room-container">
     <div class="wrapper">
       <div class="conteiner">
-        <ManeckenModal v-if="isOpen" @isClose="isClose"/>
+        <ManeckenModal v-if="isOpen" :cellOptions="cellOptions"  @isClose="isClose" />
         <AppHeader />
         
         <main class="main-wrapper">

@@ -3,7 +3,6 @@
     <div class="dummy__part">
       <DummyPartSlot :dummyItems="dummyPartLeft" @choiceClothes="choiceClothes"/>
     </div>
-
     <div class="dummy__center">
       <div class="dummy__center__top">
         <DummyPartSlot :dummyItems="dummyPartCenterTop" @choiceClothes="choiceClothes" :sizeClass="'small'"/>
@@ -32,22 +31,21 @@
 
           <div class="options__itemBlock">
             <div class="form__items">
-              <select
-                class="form__input_left select-css"
-                v-model="raseModel"
-                @change="changeRaseSelect"
+              <ManeckenSelectItems
+              v-if="rase"
+              itemsName="Виберіть расу"
+              v-model="raseModel"
+              @update:modelValue="changeRaseSelect"
+              :left="true"
               >
-                <option value="change" disabled selected>Выбери расу</option>
-                <option value="human">Человек</option>
-                <option value="gnom">Гном</option>
-                <option value="elf">Эльф</option>
-                <option value="vampire">Вампир</option>
-                <option value="ork">Орк</option>
-                <option value="trol">Троль</option>
-              </select>
+              <template  #optionSelect >
+                <BasicSlotOpteons :items="rase"/>
+                </template>
+              </ManeckenSelectItems>
+
 
               <select v-model="lvlSelect" @change="lvlSelectChange" class="form__input select-css">
-                <option value="change" disabled selected>Выберіть рівень</option>
+                <option value="change" disabled selected>Виберіть рівень</option>
                 <option v-for="l in optionLvl" :key="l">{{ l }}</option>
               </select>
             </div>
@@ -56,34 +54,37 @@
               <ManeckenSelectItems
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
-                :items="parentClasses"
-                :itemsName="'Выбери класс'"
+                itemsName="Виберіть класс"
                 :left="true"
-                :lvlSelect="Number(lvlSelect)"
-                @update:modelValue="changeClassSelect"
-              />
+                @update:modelValue="changeClassSelect">
+                <template  #optionSelect >
+                <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)"/>
+                </template>
+              </ManeckenSelectItems>
 
               
               <ManeckenSelectItems
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
-                :items="parentClassItems"
-                :itemsName="'Выбери подкласс'"
-                :lvlSelect="Number(lvlSelect)"
-                @update:modelValue="parentClassSelect"
-              />
+                itemsName="Вибери підкласс"
+                @update:modelValue="parentClassSelect">
+                <template  #optionSelect >
+                <ManeckenOptionSelect :items="parentClassItems" :lvlSelect="Number(lvlSelect)"/>
+                </template>
+              </ManeckenSelectItems>
             </div>
 
             <div class="form__items">
-              <select class="form__input select-css">
-                <option disabled selected>Крепость</option>
-                <option>Нема</option>
-                <option>Новичок</option>
-                <option>Продвинутий</option>
-                <option>Експерт</option>
-                <option>Мастер</option>
-                <option>Грандмастер</option>
-              </select>
+              <ManeckenSelectItems
+              v-if="fortnesParam"
+              itemsName="Крепость"
+              v-model="fortress"
+              @update:modelValue="updateFortress">
+              >
+              <template  #optionSelect >
+                <BasicSlotOpteons :items="fortnesParam"/>
+                </template>
+              </ManeckenSelectItems>
             </div>
 
             <div class="form__items">
@@ -119,9 +120,10 @@ import ManekenStatParams from './Manekenstatparams.vue'
 import ManekenSlot from './use/slots/ManekenSlot.vue'
 import { fetchAPIData } from '../api/fetchApi'
 import ManeckenSelectItems from './use/ManeckenSelectItems.vue'
-import { baseStatClasses } from '../initialization/baseParams'
+import { baseStatClasses, fortressParam, raseParams } from '../initialization/baseParams'
 import DummyPartSlot from './use/slots/DummyPartSlot.vue'
-
+import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
+import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 
 const props = defineProps({
   dummy: {
@@ -131,12 +133,12 @@ const props = defineProps({
   paramArr: {
     type: Array,
     required: true
-  }
+  },
 })
 const emits = defineEmits({
   statChange: Array,
   changeRase: String,
-  modalOpen: null
+  modalOpen: Array,
 })
 
 const raseModel = ref('human')
@@ -163,6 +165,9 @@ const addParam = ref([
   { key: 'astral_bonus', count: 0 }
 ])
 
+const fortress = ref('none')
+const fortnesParam = fortressParam
+const rase = raseParams
 //props
 const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
 const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
@@ -192,9 +197,9 @@ const lvlSelectChange = () => {
   emits('statChange', { addParam: addParam.value })
 }
 
-const changeRaseSelect = () => {
+const changeRaseSelect = (rase) => {
   emits('changeRase', {
-    raseModel: raseModel.value,
+    raseModel: rase,
     addParam: addParam.value
   })
 }
@@ -274,16 +279,15 @@ const rezetManecken = () => {
   classModel.value = 'none'
 }
 
-const choiceClothes = async (name) => {
-//   filtersClasses.value = ref({
-//   category: 'items',
-//   typeid : 1,
-//   minlevel : "0-10",
-// })
-// const request = await fetchAPIData(filtersClasses.value)
-//   console.log(request);
-emits('modalOpen')
+const choiceClothes = async (param) => {
+emits('modalOpen', param)
 }
+
+const updateFortress = (fortress) => {
+  console.log(fortress);
+}
+
+
 
 
 // eslint-disable-next-line no-unused-vars
@@ -291,7 +295,9 @@ const components = {
   ManekenStatParams,
   ManekenSlot,
   ManeckenSelectItems,
-  DummyPartSlot
+  DummyPartSlot,
+  ManeckenOptionSelect,
+  BasicSlotOpteons
 }
 </script>
 

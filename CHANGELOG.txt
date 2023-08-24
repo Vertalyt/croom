@@ -35,7 +35,17 @@
 Added display of classes and subclasses
 The database table is filled according to classes and subclasses
 Added display of stats from subclass
-Создание и запуск модального окна на основе materialize css
-Создание и запуск в модальном окне Collapsible
-Открытие/закрытие по событию.
-Рефакторинг на универсальный компонент добавления картинок вещей в манекене.
+Creating and launching a modal window based on materialize css
+Create and launch in a Collapsible modal window
+Opening/closing by event.
+Refactoring to a universal component for adding pictures of things in a mannequin.
+
+
+## [1.0.32] - 2024-08-23
+### Changed
+Rewritten modal window and accordion
+Added universal select components
+Editing the server request file
+
+### Added 
+loading from the database by level and type of item

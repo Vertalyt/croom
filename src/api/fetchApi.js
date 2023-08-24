@@ -1,7 +1,7 @@
 import axios from 'axios'
 
   export async function fetchAPIData(params) {
-    const url = 'https://sabzero.biz/api/public/fetch-data.php';
+    const url = import.meta.env.VITE_URL_BD;
     try {
         const response = await axios.get(url, { params });
         return response.data;

@@ -15,6 +15,7 @@ coverage
 *.local
 Манекен
 db_config.php
+.env
 
 /cypress/videos/
 /cypress/screenshots/
