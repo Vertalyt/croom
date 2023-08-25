@@ -16,7 +16,7 @@
                     <img :src="p.link" :alt="p.name" />
                     {{ p.name }}
                   </td>
-                  <td>{{ p.summStatBaseOll }}</td>
+                  <td>{{ p.summStatOll }}</td>
                   <slot name="statManeken" :summBase="p" />
                 </tr>
                 <slot />

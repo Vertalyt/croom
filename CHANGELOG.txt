@@ -41,7 +41,7 @@ Opening/closing by event.
 Refactoring to a universal component for adding pictures of things in a mannequin.
 
 
-## [1.0.32] - 2024-08-23
+## [1.0.32] - 2024-08-24
 ### Changed
 Rewritten modal window and accordion
 Added universal select components
@@ -49,3 +49,13 @@ Editing the server request file
 
 ### Added 
 loading from the database by level and type of item
+
+
+## [1.0.32] - 2024-08-25
+### Added 
+Added loader
+Added filtering of the request array with a change in template arrays, for convenient display in the accordion
+
+
+### Changed
+Optimized stat variables

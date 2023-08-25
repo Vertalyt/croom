@@ -16,13 +16,13 @@ const cellOptions = ref()
 
         // переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
 const paramsPlus = ref([
-            {key: 'strength_bonus', count: 0 },
-            {key: 'dexterity_bonus', count: 0 },
-            {key: 'intelligence_bonus', count: 0 },
-            {key: 'luck_bonus', count: 0 },
-            {key: 'reaction_bonus', count: 0 },
-            {key: 'wisdom_bonus', count: 0 },
-            {key: 'constitution_bonus', count: 0 },
+            {key: 'dstrength', count: 0 },
+            {key: 'ddexterity', count: 0 },
+            {key: 'dintel', count: 0 },
+            {key: 'dluck', count: 0 },
+            {key: 'dreaction', count: 0 },
+            {key: 'dwisdom', count: 0 },
+            {key: 'dconst', count: 0 },
   ])
 
 function combinationParam(addParam, baseAndCommonStats) {
@@ -35,11 +35,11 @@ function combinationParam(addParam, baseAndCommonStats) {
       if(baseAndCommonStats === 'areCommon') {
         return {  ...baseItem,
       summStatBase: baseItem.summStatBase + matchingAddParam.count,
-      summStatBaseOll: baseItem.summStatBaseOll + matchingAddParam.count,
+      summStatOll: baseItem.summStatOll + matchingAddParam.count,
         }
       } else {
         return {  ...baseItem,
-      summStatBaseOll: baseItem.summStatBaseOll + matchingAddParam.count,
+      summStatOll: baseItem.summStatOll + matchingAddParam.count,
         }
       }
   }
@@ -58,18 +58,18 @@ const changeRase = ({ raseModel, addParam }) => {
       const matchingParam = raseParams.date.find(rp => rp.key === p.key);
       const matchingPlusParam = paramsPlus.value.find(pp => pp.key === p.key);
 
-      let { summStatBase, summStatBaseOll } = p;
+      let { summStatBase, summStatOll } = p;
 
       if (matchingParam) {
         summStatBase = matchingParam.count;
-        summStatBaseOll = matchingParam.count;
+        summStatOll = matchingParam.count;
       }
 
       if (matchingPlusParam) {
-        summStatBaseOll += matchingPlusParam.count;
+        summStatOll += matchingPlusParam.count;
       }
 
-      return { ...p, summStatBase, summStatBaseOll };
+      return { ...p, summStatBase, summStatOll };
     });
 
     baseParamArr.value = updatedParamArr;

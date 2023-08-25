@@ -153,16 +153,16 @@ const parentClassModel = ref('none')
 const parentClasses = ref([])
 // массив с изменениями параметров
 const addParam = ref([
-  { key: 'strength_bonus', count: 0 },
-  { key: 'dexterity_bonus', count: 0 },
-  { key: 'intelligence_bonus', count: 0 },
-  { key: 'luck_bonus', count: 0 },
-  { key: 'reaction_bonus', count: 0 },
-  { key: 'wisdom_bonus', count: 0 },
-  { key: 'constitution_bonus', count: 0 },
-  { key: 'dawn_bonus', count: 0 },
-  { key: 'fullMoon_bonus', count: 0 },
-  { key: 'astral_bonus', count: 0 }
+  { key: 'dstrength', count: 0 },
+  { key: 'ddexterity', count: 0 },
+  { key: 'dintel', count: 0 },
+  { key: 'dluck', count: 0 },
+  { key: 'dreaction', count: 0 },
+  { key: 'dwisdom', count: 0 },
+  { key: 'dconst', count: 0 },
+  { key: 'whitemagicprotection', count: 0 },
+  { key: 'blackmagicprotection', count: 0 },
+  { key: 'astralmagicprotection', count: 0 }
 ])
 
 const fortress = ref('none')
@@ -181,8 +181,8 @@ const filtersClasses = ref({
 })
 
 onMounted(async () => {
-  // OllParamClass.value = await fetchAPIData(filtersClasses.value)
-  OllParamClass.value = baseStatClasses
+  OllParamClass.value = await fetchAPIData(filtersClasses.value)
+  // OllParamClass.value = baseStatClasses
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
 })
 
@@ -211,16 +211,16 @@ const changeClassSelect = (className) => {
 const parentClassSelect = (parent) => {
   // массив с бонусами от класа
   const addClassParam = [
-    { key: 'strength_bonus', count: 0 },
-    { key: 'dexterity_bonus', count: 0 },
-    { key: 'intelligence_bonus', count: 0 },
-    { key: 'luck_bonus', count: 0 },
-    { key: 'reaction_bonus', count: 0 },
-    { key: 'wisdom_bonus', count: 0 },
-    { key: 'constitution_bonus', count: 0 },
-    { key: 'dawn_bonus', count: 0 },
-    { key: 'fullMoon_bonus', count: 0 },
-    { key: 'astral_bonus', count: 0 }
+    { key: 'dstrength', count: 0 },
+    { key: 'ddexterity', count: 0 },
+    { key: 'dintel', count: 0 },
+    { key: 'dluck', count: 0 },
+    { key: 'dreaction', count: 0 },
+    { key: 'dwisdom', count: 0 },
+    { key: 'dconst', count: 0 },
+    { key: 'whitemagicprotection', count: 0 },
+    { key: 'blackmagicprotection', count: 0 },
+    { key: 'astralmagicprotection', count: 0 }
   ]
   const parentClassItem = OllParamClass.value.filter((p) => p.name_en === parent)
   // Перебираем элементы parentClassItem массива
@@ -259,7 +259,7 @@ const statMinus = (statKey) => {
 
 const statInputShange = (stat) => {
   // изменение стат через инпут
-  const oldBaseStat = paramStatArr.value.find((s) => s.key === stat.key).summStatBaseOll // ищу предыдущие значение стата
+  const oldBaseStat = paramStatArr.value.find((s) => s.key === stat.key).summStatOll // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
   if (accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице

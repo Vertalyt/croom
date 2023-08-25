@@ -9,7 +9,7 @@
             <img :src="p.link" :alt="p.name" />
             {{ p.name }}
           </div>
-          <div class="armor__result">{{ p.summStatBaseOll }}</div>
+          <div class="armor__result">{{ p.summStatOll }}</div>
         </div>
       </div>
 </template>
