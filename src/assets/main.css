@@ -15,6 +15,8 @@ h3 {
   font-size: 1.3rem;
   line-height: 1.4rem;
 }
+
+
 .armor_Item:nth-child(1),
 .armor_Item:nth-child(2),
 .armor_Item:nth-child(5),
@@ -194,12 +196,46 @@ select {
 option:disabled {
   background: #ccc;
 }
+.button {
+  border: none;
+  color: white;
+  padding: 4px 18px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10x;
+  background-color: #e7e7e7; color: black;
+  border-radius: 12px;
+  border: 1px solid #55555587;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #555555;
+  color: white;
+}
+.button .disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkboxWrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+
 
 .select-css {
   display: block;
+  margin: 0;
+  padding: 2px 30px 2px 5px;
+  margin: 0 5px;
   font-weight: 700;
   box-sizing: border-box;
-  margin: 0;
   border: 1px solid #aaa;
   box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
   border-radius: 0.5em;
@@ -260,10 +296,6 @@ option:disabled {
 }
 .form__input_left {
   width: 130px;
-}
-
-.form__input {
-  width: 150px;
 }
 
 .option {

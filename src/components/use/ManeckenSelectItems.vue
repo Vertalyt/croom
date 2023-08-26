@@ -1,6 +1,5 @@
 <template>
   <select class="select-css"
-  :class="left ? 'form__input_left' : 'form__input'"
   v-model="itemsvalue">
     <option value="none" disabled selected>{{ itemsName }}</option>
     <slot name="optionSelect"/>
@@ -23,10 +22,6 @@ defineProps({
   itemsName: {
     type: String,
     required: true
-  },
-  left: {
-    type: Boolean,
-    required: false
   },
 
 })

@@ -16,6 +16,7 @@ $category = $_GET['category'];
 $parent = isset($_GET['parent']) ? $_GET['parent'] : null;
 $typeid = isset($_GET['typeid']) ? $_GET['typeid'] : null;
 $minlevel = isset($_GET['minlevel']) ? $_GET['minlevel'] : null;
+$rarity = isset($_GET['rarity']) ? $_GET['rarity'] : null;
 
 $conditions = array();
 $bindTypes = "";
@@ -27,21 +28,30 @@ if ($parent !== null) {
     $bindValues[] = $parent;
 }
 
-if ($typeid !== null && is_array($typeid)) {
-    $inPlaceholders = implode(', ', array_fill(0, count($typeid), '?'));
-    $conditions[] = "typeid IN ($inPlaceholders)";
-    $bindTypes .= str_repeat("i", count($typeid));
-    $bindValues = array_merge($bindValues, $typeid);
-} elseif ($typeid !== null) {
-    $conditions[] = "typeid = ?";
-    $bindTypes .= "i"; // i - целое число
-    $bindValues[] = $typeid;
+if ($typeid !== null) {
+    if (is_array($typeid)) {
+        $inPlaceholders = implode(', ', array_fill(0, count($typeid), '?'));
+        $conditions[] = "typeid IN ($inPlaceholders)";
+        $bindTypes .= str_repeat("i", count($typeid));
+        $bindValues = array_merge($bindValues, $typeid);
+    } else {
+        $conditions[] = "typeid = ?";
+        $bindTypes .= "i"; // i - целое число
+        $bindValues[] = $typeid;
+    }
 }
 
 if ($minlevel !== null) {
     $conditions[] = "minlevel = ?";
     $bindTypes .= "i"; // i - целое число
     $bindValues[] = $minlevel;
+}
+
+if ($rarity !== null && is_array($rarity) && count($rarity) > 0) {
+    $inPlaceholders = implode(', ', array_fill(0, count($rarity), '?'));
+    $conditions[] = "rarity IN ($inPlaceholders)";
+    $bindTypes .= str_repeat("s", count($rarity)); // s - строка
+    $bindValues = array_merge($bindValues, $rarity);
 }
 
 $conditionsString = implode(' AND ', $conditions);

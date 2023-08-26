@@ -36,7 +36,6 @@
               itemsName="Виберіть расу"
               v-model="raseModel"
               @update:modelValue="changeRaseSelect"
-              :left="true"
               >
               <template  #optionSelect >
                 <BasicSlotOpteons :items="rase"/>
@@ -44,7 +43,7 @@
               </ManeckenSelectItems>
 
 
-              <select v-model="lvlSelect" @change="lvlSelectChange" class="form__input select-css">
+              <select v-model="lvlSelect" @change="lvlSelectChange" class="select-css">
                 <option value="change" disabled selected>Виберіть рівень</option>
                 <option v-for="l in optionLvl" :key="l">{{ l }}</option>
               </select>
@@ -55,7 +54,6 @@
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
                 itemsName="Виберіть класс"
-                :left="true"
                 @update:modelValue="changeClassSelect">
                 <template  #optionSelect >
                 <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)"/>
@@ -181,8 +179,8 @@ const filtersClasses = ref({
 })
 
 onMounted(async () => {
-  OllParamClass.value = await fetchAPIData(filtersClasses.value)
-  // OllParamClass.value = baseStatClasses
+  // OllParamClass.value = await fetchAPIData(filtersClasses.value)
+  OllParamClass.value = baseStatClasses
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
 })
 
