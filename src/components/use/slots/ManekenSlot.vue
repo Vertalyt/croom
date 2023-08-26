@@ -2,19 +2,19 @@
                   <td><input
                     :disabled="accessibleStats === null"
                     :value="statParam.summStatBase"
-                    @change="statInputShange(statParam)"
+                    @change="handleStatInputChange(statParam)"
                     class="options__input" />
                   </td>
                   <td>
                     <button 
-                    @click="$emit('statPlus', statParam.key)" 
+                    @click="$emit('handleStatIncrease', statParam.key)" 
                     class="button__reset">
                       <span class="material-symbols-outlined">stat_2</span>
                     </button>
                   </td>
                   <td>
                     <button 
-                    @click="$emit('statMinus', statParam.key)" 
+                    @click="$emit('handleStatDecrease', statParam.key)" 
                     class="button__reset">
                       <span class="material-symbols-outlined">stat_minus_2</span>
                     </button>
@@ -33,9 +33,9 @@ defineProps({
   }
 })
 defineEmits({
-  statInputShange: (statParam) => ({ statParam }),
-  statMinus: (key) => ({ key }),
-  statPlus: (key) => ({ key }),
+  handleStatInputChange: (statParam) => ({ statParam }),
+  handleStatDecrease: (key) => ({ key }),
+  handleStatIncrease: (key) => ({ key }),
 })
 </script>
 

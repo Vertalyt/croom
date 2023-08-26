@@ -11,7 +11,7 @@
                     <td>Базові</td>
                   </tr>
 
-                  <tr v-for="p in paramStatArr" :key="p.name">
+                  <tr v-for="p in statParams" :key="p.name">
                   <td>
                     <img :src="p.link" :alt="p.name" />
                     {{ p.name }}
@@ -28,7 +28,7 @@
 <script setup>
 
 defineProps({
-  paramStatArr: {
+  statParams: {
     type: Array,
     requared: true
   },

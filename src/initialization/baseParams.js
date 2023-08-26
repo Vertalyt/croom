@@ -1,30 +1,30 @@
 
-export const baseDummyParams = [
-    { location: 'dummyPartLeft', name: 'helmet', link: 'src/assets/img/helmet.png', typeid: [1] },
-    { location: 'dummyPartLeft', name: 'armor', link: 'src/assets/img/armor.png', typeid: [3] },
-    { location: 'dummyPartLeft', name: 'belt', link: 'src/assets/img/belt.png', typeid: [6] }, //поЯс
-    { location: 'dummyPartLeft', name: 'boots', link: 'src/assets/img/boots.png', typeid: [11]  },
-    { location: 'dummyPartLeft', name: 'earring1', link: 'src/assets/img/earring.png', typeid: [55]  },
-    { location: 'dummyPartLeft', name: 'ring1', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'dummyPartLeft', name: 'ring2', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'dummyPartRight', name: 'necklace', link: 'src/assets/img/necklace.png', typeid: [2] },
-    { location: 'dummyPartRight', name: 'bracers', link: 'src/assets/img/bracers.png', typeid: [5] }, //наручи
-    { location: 'dummyPartRight', name: 'gloves', link: 'src/assets/img/gloves.png', typeid: [4] }, //перчатки
-    { location: 'dummyPartRight', name: 'leggings', link: 'src/assets/img/leggings.png', typeid: [10] }, // поножи
-    { location: 'dummyPartRight', name: 'earring2', link: 'src/assets/img/earring.png', typeid: [55] }, //серьга
-    { location: 'dummyPartRight', name: 'ring3', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'dummyPartRight', name: 'ring4', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'dummyPartCenterTop', name: 'relic1', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'dummyPartCenterTop', name: 'relic2', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'dummyPartCenterTop', name: 'relic3', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'dummyPartCenterTop', name: 'relic4', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'dummyPartCenterBottom', name: 'weapons1', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
-    { location: 'dummyPartCenterBottom', name: 'weapons2', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+export const initialSetupEntries = [
+    { location: 'leftDummyPart', name: 'helmet', link: 'src/assets/img/helmet.png', typeid: [1] },
+    { location: 'leftDummyPart', name: 'armor', link: 'src/assets/img/armor.png', typeid: [3] },
+    { location: 'leftDummyPart', name: 'belt', link: 'src/assets/img/belt.png', typeid: [6] }, //поЯс
+    { location: 'leftDummyPart', name: 'boots', link: 'src/assets/img/boots.png', typeid: [11]  },
+    { location: 'leftDummyPart', name: 'earring1', link: 'src/assets/img/earring.png', typeid: [55]  },
+    { location: 'leftDummyPart', name: 'ring1', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'leftDummyPart', name: 'ring2', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'necklace', link: 'src/assets/img/necklace.png', typeid: [2] },
+    { location: 'rightDummyPart', name: 'bracers', link: 'src/assets/img/bracers.png', typeid: [5] }, //наручи
+    { location: 'rightDummyPart', name: 'gloves', link: 'src/assets/img/gloves.png', typeid: [4] }, //перчатки
+    { location: 'rightDummyPart', name: 'leggings', link: 'src/assets/img/leggings.png', typeid: [10] }, // поножи
+    { location: 'rightDummyPart', name: 'earring2', link: 'src/assets/img/earring.png', typeid: [55] }, //серьга
+    { location: 'rightDummyPart', name: 'ring3', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'ring4', link: 'src/assets/img/ring.png', typeid: [7]  },
+    { location: 'centerTopDummyPart', name: 'relic1', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic2', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic3', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic4', link: 'src/assets/img/relic.png', typeid: [40] },
+    { location: 'centerBottomDummyPart', name: 'weapons1', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'centerBottomDummyPart', name: 'weapons2', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
     // typeid: 8-пика, 9-топор, 12 меч, 15щит,30 посох, 31 молот,32 молот,33 топор, 35 клеймор, 37 жезл, 38 кастет, 39 кинжал,
   ]
 
 // стартовый набор стат для первичного заполнения таблиц. Соотвествует расе человек. 
-export const baseParam = [
+export const baseStatModule = [
   { type: 'stat', key: 'dstrength', name: 'Сила', summStatBase: 3, summStatOll: 3, link: 'src/assets/img/icon/svg/strength.svg' },
   { type: 'stat', key: 'ddexterity', name: 'Ловкість', summStatBase: 3, summStatOll: 3, link: 'src/assets/img/icon/svg/dexterity.svg' },
   { type: 'stat', key: 'dintel', name: 'Інтелект', summStatBase: 3, summStatOll: 3, link: 'src/assets/img/icon/svg/intelligence.svg' },
@@ -44,7 +44,7 @@ export const baseParam = [
 
 export const basickParamsRase = [
   {
-    rase: 'human', date: [
+    availableRaces: 'human', date: [
       {key: 'dstrength', count: 3 },
       {key: 'ddexterity', count: 3 },
       {key: 'dintel', count: 3 },
@@ -58,7 +58,7 @@ export const basickParamsRase = [
     ]
   },
   {
-    rase: 'gnom', date: [
+    availableRaces: 'gnom', date: [
       {key: 'dstrength', count: 4 },
       {key: 'ddexterity', count: 2 },
       {key: 'dintel', count: 2 },
@@ -72,7 +72,7 @@ export const basickParamsRase = [
     ]
   },
   {
-    rase: 'elf', date: [
+    availableRaces: 'elf', date: [
       {key: 'dstrength', count: 3 },
       {key: 'ddexterity', count: 5 },
       {key: 'dintel', count: 3 },
@@ -86,7 +86,7 @@ export const basickParamsRase = [
     ]
   },
   {
-    rase: 'vampire', date: [
+    availableRaces: 'vampire', date: [
       {key: 'dstrength', count: 3 },
       {key: 'ddexterity', count: 3 },
       {key: 'dintel', count: 3 },
@@ -100,7 +100,7 @@ export const basickParamsRase = [
     ]
   },
   {
-    rase: 'ork', date: [
+    availableRaces: 'ork', date: [
       {key: 'dstrength', count: 4 },
       {key: 'ddexterity', count: 3 },
       {key: 'dintel', count: 2 },
@@ -114,7 +114,7 @@ export const basickParamsRase = [
     ]
   },
   {
-    rase: 'trol', date: [
+    availableRaces: 'trol', date: [
       {key: 'dstrength', count: 5 },
       {key: 'ddexterity', count: 2 },
       {key: 'dintel', count: 1 },

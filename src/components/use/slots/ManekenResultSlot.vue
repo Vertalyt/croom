@@ -15,7 +15,7 @@ defineProps({
 
 <script>
 export default {
-  name: 'ManekenRezultSlot',
+  name: 'ManekenResultSlot',
 }
 </script>
 

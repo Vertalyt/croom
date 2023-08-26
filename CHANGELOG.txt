@@ -23,7 +23,7 @@
 ## [1.0.31] - 2023-08-20
 ### Added 
 - Divided the mannequin into a separate table component. Implemented data loading by slots.
-- Animated, component of the results of the dummy.
+- Animated, component of the results of the isDummyLoaded.
 
 ### Changed
 - Changed the display of the armor table to div in the resulting component

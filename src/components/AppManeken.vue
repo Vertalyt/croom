@@ -1,24 +1,24 @@
 <template>
-  <div class="dummy" v-if="dummy">
+  <div class="isDummyLoaded" v-if="isDummyLoaded">
     <div class="dummy__part">
-      <DummyPartSlot :dummyItems="dummyPartLeft" @choiceClothes="choiceClothes"/>
+      <DummyPartSlot :dummyItems="leftDummyPart" @handleClothesChoice="handleClothesChoice"/>
     </div>
     <div class="dummy__center">
       <div class="dummy__center__top">
-        <DummyPartSlot :dummyItems="dummyPartCenterTop" @choiceClothes="choiceClothes" :sizeClass="'small'"/>
+        <DummyPartSlot :dummyItems="centerTopDummyPart" @handleClothesChoice="handleClothesChoice" :sizeClass="'small'"/>
       </div>
 
       <div class="dummy__center__center">
         <div class="options">
           <div class="options__itemBlock">
-            <ManekenStatParams :paramStatArr="paramStatArr" :accessibleStats="accessibleStats">
+            <ManekenStatParams :statParams="statParams" :accessibleStats="accessibleStats">
               <template #statManeken="{ summBase }">
                 <ManekenSlot
                   :statParam="summBase"
                   :accessibleStats="accessibleStats"
-                  @statMinus="statMinus"
-                  @statPlus="statPlus"
-                  @statInputShange="statInputShange"
+                  @handleStatDecrease="handleStatDecrease"
+                  @handleStatIncrease="handleStatIncrease"
+                  @handleStatInputChange="handleStatInputChange"
                 />
               </template>
               <tr v-if="accessibleStats !== null">
@@ -32,13 +32,13 @@
           <div class="options__itemBlock">
             <div class="form__items">
               <ManeckenSelectItems
-              v-if="rase"
+              v-if="availableRaces"
               itemsName="Виберіть расу"
               v-model="raseModel"
-              @update:modelValue="changeRaseSelect"
+              @update:modelValue="handleRaseSelectChange"
               >
               <template  #optionSelect >
-                <BasicSlotOpteons :items="rase"/>
+                <BasicSlotOpteons :items="availableRaces"/>
                 </template>
               </ManeckenSelectItems>
 
@@ -54,7 +54,7 @@
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
                 itemsName="Виберіть класс"
-                @update:modelValue="changeClassSelect">
+                @update:modelValue="handleClassSelectChange">
                 <template  #optionSelect >
                 <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)"/>
                 </template>
@@ -65,7 +65,7 @@
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
                 itemsName="Вибери підкласс"
-                @update:modelValue="parentClassSelect">
+                @update:modelValue="handleParentClassSelectChange">
                 <template  #optionSelect >
                 <ManeckenOptionSelect :items="parentClassItems" :lvlSelect="Number(lvlSelect)"/>
                 </template>
@@ -74,13 +74,13 @@
 
             <div class="form__items">
               <ManeckenSelectItems
-              v-if="fortnesParam"
+              v-if="availableFortressOptions"
               itemsName="Крепость"
               v-model="fortress"
-              @update:modelValue="updateFortress">
+              @update:modelValue="handleFortressUpdate">
               >
               <template  #optionSelect >
-                <BasicSlotOpteons :items="fortnesParam"/>
+                <BasicSlotOpteons :items="availableFortressOptions"/>
                 </template>
               </ManeckenSelectItems>
             </div>
@@ -93,19 +93,19 @@
             <div class="form__items">
               <input id="html" type="checkbox" />
               <label for="html">Те, що можна одягнути</label>
-              <a @click="rezetManecken" href="#" class="form__link">Скинути все</a>
+              <a @click="handleResetManecken" href="#" class="form__link">Скинути все</a>
             </div>
           </div>
         </div>
       </div>
       <div class="dummy__center__buttom">
-        <DummyPartSlot :dummyItems="dummyPartCenterBottom" @choiceClothes="choiceClothes" :sizeClass="'big'"/>
+        <DummyPartSlot :dummyItems="centerBottomDummyPart" @handleClothesChoice="handleClothesChoice" :sizeClass="'big'"/>
 
       </div>
     </div>
 
     <div class="dummy__part">
-      <DummyPartSlot :dummyItems="dummyPartRight" @choiceClothes="choiceClothes"/>
+      <DummyPartSlot :dummyItems="rightDummyPart" @handleClothesChoice="handleClothesChoice"/>
     </div>
   </div>
 </template>
@@ -124,11 +124,11 @@ import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 
 const props = defineProps({
-  dummy: {
+  isDummyLoaded: {
     type: Array,
     required: true
   },
-  paramArr: {
+  updatedStatConfigurations: {
     type: Array,
     required: true
   },
@@ -164,13 +164,13 @@ const addParam = ref([
 ])
 
 const fortress = ref('none')
-const fortnesParam = fortressParam
-const rase = raseParams
+const availableFortressOptions = fortressParam
+const availableRaces = raseParams
 //props
-const dummyPartLeft = props.dummy.filter((d) => d.location === 'dummyPartLeft')
-const dummyPartRight = props.dummy.filter((d) => d.location === 'dummyPartRight')
-const dummyPartCenterTop = props.dummy.filter((d) => d.location === 'dummyPartCenterTop')
-const dummyPartCenterBottom = props.dummy.filter((d) => d.location === 'dummyPartCenterBottom')
+const leftDummyPart = props.isDummyLoaded.filter((d) => d.location === 'leftDummyPart')
+const rightDummyPart = props.isDummyLoaded.filter((d) => d.location === 'rightDummyPart')
+const centerTopDummyPart = props.isDummyLoaded.filter((d) => d.location === 'centerTopDummyPart')
+const centerBottomDummyPart = props.isDummyLoaded.filter((d) => d.location === 'centerBottomDummyPart')
 //
 
 const filtersClasses = ref({
@@ -184,8 +184,8 @@ onMounted(async () => {
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
 })
 
-// слежение за изменением суммарного массива paramArr
-const paramStatArr = computed(() => props.paramArr.filter((d) => d.type === 'stat'))
+// слежение за изменением суммарного массива updatedStatConfigurations
+const statParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'stat'))
 
 // emits
 // сброс массива addParam изменения стат при смене уровня
@@ -195,18 +195,18 @@ const lvlSelectChange = () => {
   emits('statChange', { addParam: addParam.value })
 }
 
-const changeRaseSelect = (rase) => {
+const handleRaseSelectChange = (availableRaces) => {
   emits('changeRase', {
-    raseModel: rase,
+    raseModel: availableRaces,
     addParam: addParam.value
   })
 }
 
-const changeClassSelect = (className) => {
+const handleClassSelectChange = (className) => {
   parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
 }
 
-const parentClassSelect = (parent) => {
+const handleParentClassSelectChange = (parent) => {
   // массив с бонусами от класа
   const addClassParam = [
     { key: 'dstrength', count: 0 },
@@ -248,16 +248,16 @@ const modifyStatAndEmit = (statKey, increment) => {
   emits('statChange', { addParam: addParam.value })
 }
 
-const statPlus = (statKey) => {
+const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
 }
-const statMinus = (statKey) => {
+const handleStatDecrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(-1))
 }
 
-const statInputShange = (stat) => {
+const handleStatInputChange = (stat) => {
   // изменение стат через инпут
-  const oldBaseStat = paramStatArr.value.find((s) => s.key === stat.key).summStatOll // ищу предыдущие значение стата
+  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatOll // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
   if (accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице
@@ -265,7 +265,7 @@ const statInputShange = (stat) => {
   modifyStatAndEmit(stat.key, statChange)
 }
 
-const rezetManecken = () => {
+const handleResetManecken = () => {
   addParam.value.map((p) => (p.count = 0))
   emits('changeRase', {
     raseModel: 'human',
@@ -277,16 +277,13 @@ const rezetManecken = () => {
   classModel.value = 'none'
 }
 
-const choiceClothes = async (param) => {
+const handleClothesChoice = async (param) => {
 emits('modalOpen', param)
 }
 
-const updateFortress = (fortress) => {
+const handleFortressUpdate = (fortress) => {
   console.log(fortress);
 }
-
-
-
 
 // eslint-disable-next-line no-unused-vars
 const components = {

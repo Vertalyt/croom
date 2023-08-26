@@ -1,9 +1,9 @@
 <template>
   <div class="dummy__rezult">
     <div class="options__itemBlock options__itemBlock_button">
-      <ManekenStatParams :paramStatArr="paramStatArr">
+      <ManekenStatParams :statParams="statParams">
         <template #statManeken="{ summBase }">
-          <ManekenRezultSlot :statParam="summBase" />
+          <ManekenResultSlot :statParam="summBase" />
         </template>
       </ManekenStatParams>
     </div>
@@ -11,9 +11,9 @@
     <div class="options__itemBlock options__itemBlock_button">
       <div class="armor__title"><h3>Броня</h3></div>
 
-      <ParamItemsManeken :paramItems="paramArmorArr" :withItemsManecken="true"/>
+      <ParamItemsManeken :paramItems="armorParams" :withItemsManecken="true" />
 
-      <ParamItemsManeken :paramItems="paramMagicArr" :withItemsManecken="false"/>
+      <ParamItemsManeken :paramItems="magicParams" :withItemsManecken="false" />
 
     </div>
 
@@ -23,7 +23,7 @@
           <tr>
             <td>
               <img src="../assets/img/icon/svg/health.svg" alt="health" />
-              Житя
+              Життя
             </td>
             <td>0</td>
           </tr>
@@ -55,15 +55,15 @@
     <div class="options__itemBlock options__itemBlock_button">
       <table class="table">
         <thead>
-          <td class="options__table__title" colspan="5"><h3>Стоимость</h3></td>
+          <td class="options__table__title" colspan="5"><h3>Стоимість</h3></td>
         </thead>
         <tbody>
           <tr>
-            <td>Тали</td>
-            <td>Золоті тали</td>
+            <td>Талисмани</td>
+            <td>Золоті талисмани</td>
             <td>Ратник</td>
-            <td>Обміни</td>
-            <td>Реликти</td>
+            <td>Обмінні</td>
+            <td>Реліквії</td>
           </tr>
           <tr>
             <td>1000000</td>
@@ -81,33 +81,31 @@
 <script setup>
 import { computed } from 'vue'
 import ManekenStatParams from './ManekenStatParams.vue'
-import ManekenRezultSlot from './use/slots/ManekenRezultSlot.vue'
+import ManekenResultSlot from './use/slots/ManekenResultSlot.vue'
 import ParamItemsManeken from './use/ParamItemsManeken.vue'
 
-
 const props = defineProps({
-  paramArr: {
+  updatedStatConfigurations: {
     type: Array,
-    requared: true
+    required: true
   }
 })
 
+// Computed properties для улучшенной читаемости
+const statParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'stat'))
+const armorParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'armor'))
+const magicParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'protectionMagick'))
 
-// слежение за изменением суммарного массива paramArr
-const paramStatArr = computed(() => props.paramArr.filter((d) => d.type === 'stat'))
-const paramArmorArr = computed(() => props.paramArr.filter((d) => d.type === 'armor'))
-const paramMagicArr = computed(() => props.paramArr.filter((d) => d.type === 'protectionMagick'))
-
-// eslint-disable-next-line no-unused-vars
+// Имена компонентов
 const components = {
   ManekenStatParams,
-  ManekenRezultSlot,
+  ManekenResultSlot,
   ParamItemsManeken
 }
 </script>
 
 <script>
 export default {
-  name: 'AppManekenRezult'
+  name: 'AppManekenResult'
 }
 </script>

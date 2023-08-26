@@ -16,6 +16,9 @@ h3 {
   line-height: 1.4rem;
 }
 
+p {
+  margin: 5px;
+}
 
 .armor_Item:nth-child(1),
 .armor_Item:nth-child(2),
@@ -163,7 +166,7 @@ small {
   font-family: cursive;
 }
 
-.dummy {
+.isDummyLoaded {
   display: flex;
   min-height: 700px;
   align-content: flex-start;
@@ -560,7 +563,7 @@ body.modal-open {
     margin: 5px 15px 10px 10px;
   }
 
-  .dummy {
+  .isDummyLoaded {
     padding: 0;
   }
 

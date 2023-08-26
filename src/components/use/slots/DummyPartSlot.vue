@@ -7,7 +7,7 @@
 
           :key="d.name"
           :id="`${d.name}_${idx}`"
-          @click="choiceClothes(d)"
+          @click="handleClothesChoice(d)"
         >
           <img :src="d.link" :alt="d.name" />
         </div>
@@ -16,7 +16,7 @@
 
 <script setup>
 const emits = defineEmits({
-  choiceClothes: () => Array
+  handleClothesChoice: () => Array
 })
 const props = defineProps({
   dummyItems: {
@@ -36,8 +36,8 @@ const classParametr = {
 
 const addClass = classParametr[props.sizeClass] || ''
 
-const choiceClothes = (d) => {
-  emits('choiceClothes', d)
+const handleClothesChoice = (d) => {
+  emits('handleClothesChoice', d)
 }
 </script>
 
