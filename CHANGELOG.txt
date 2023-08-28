@@ -59,3 +59,13 @@ Added filtering of the request array with a change in template arrays, for conve
 
 ### Changed
 Optimized stat variables
+
+
+## [1.0.33] - 2024-08-28
+
+### Added
+Added item list display
+
+### Changed
+fixed a number of errors related to rewriting stat.
+Changed the storage system for added bonuses from various types of changes

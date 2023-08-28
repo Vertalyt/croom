@@ -30,7 +30,7 @@
 
     <AppLoader v-if="isloading" />
 
-    <ListCloth v-if="newResult" :newResult="newResult" :openAccordion="openAccordion"/>
+    <ListCloth v-if="newResult" :newResult="newResult" :openAccordion="openAccordion" />
 
     <span v-if="spanErrorText" class="spanError"> {{ spanErrorText }} </span>
   </div>
@@ -43,9 +43,12 @@ import { helm_10Lvl } from '../../initialization/Helm0_10'
 import AppLoader from '../AppLoader.vue'
 import ListCloth from './ListCloth.vue'
 
-
 const props = defineProps({
   cellOptions: {
+    type: Object,
+    required: true
+  },
+  minStats: {
     type: Object,
     required: true
   }
@@ -78,7 +81,12 @@ const addParam = [
   { dconst: 0 },
   { whitemagicprotection: 0 },
   { blackmagicprotection: 0 },
-  { astralmagicprotection: 0 }
+  { astralmagicprotection: 0 },
+  { headarmor: 0 },
+  { bodyarmor: 0 },
+  { righthandarmor: 0 },
+  { lefthandarmor: 0 },
+  { lagsarmor: 0 },
 ]
 
 // массив для отображение требуемых стат
@@ -93,14 +101,20 @@ const minParam = [
 ]
 
 // массив для отображение разной информации по вещи
-const otherInfo = [{ minlevel: 0 }, { name: 0 }, { rarity: 0 }, { id: 0 }, { image: '' }]
+const otherInfo = [
+  { minlevel: 0 },
+  { name: 0 },
+  { rarity: 0 },
+  { id: 0 },
+  { image: '' },
+  { class: '' }
+]
 
 const dataSets = [
   { key: 'addParam', array: addParam },
   { key: 'minParam', array: minParam },
   { key: 'otherInfo', array: otherInfo }
 ]
-
 
 const rarity = ref([
   { key: 'goss', id: '1', name: 'Звичайна річ', checked: true },
@@ -146,6 +160,18 @@ function filterArr(rezultArr, request, compareWithZero = true) {
   })
 }
 
+
+
+function suitableThings() {
+    return newResult.value.filter(item => {
+        const minParamValues = Object.values(item.minParam);
+        const hasError = minParamValues.some(param => param.class === 'error');
+        return !hasError;
+    });
+}
+
+
+
 const loadingByFilters = async () => {
   isloading.value = true
   openAccordion.value = false
@@ -178,12 +204,13 @@ const loadingByFilters = async () => {
   }
 
   // const request = await fetchAPIData(filtersClasses)
-  const request = helm_10Lvl
+  let request = helm_10Lvl
   if (request.length === 0) {
     spanErrorText.value = 'Нема результатів по фільтру'
   }
 
   if (request.length !== 0) {
+
     newResult.value = request.map((requestItem) => {
       const filteredData = {}
       dataSets.forEach((dataSet) => {
@@ -192,6 +219,37 @@ const loadingByFilters = async () => {
       })
       return filteredData
     })
+
+
+    newResult.value.forEach(p => {
+    Object.keys(p.minParam).forEach(key => {
+        const statInfo = props.minStats.find(stat => stat.minKey === key);
+        if (statInfo) {
+          //требуемые статы одежды
+            const minParamValue = parseInt(p.minParam[key]);
+            
+            //базовые статы персонажа, проверка при одевании
+            const minStatValue = parseInt(statInfo.summStatBase);
+
+            if (minStatValue < minParamValue) {
+                p.minParam[key] = {
+                    value: p.minParam[key],
+                    class: 'error'
+                };
+            } else {
+                p.minParam[key] = {
+                    value: p.minParam[key],
+                    class: 'norm'
+                };
+            }
+        }
+    });
+});
+console.log( newResult.value);
+
+const rezult = suitableThings()
+console.log(rezult);
+
     spanErrorText.value = null
   }
   setTimeout(() => {
@@ -199,6 +257,9 @@ const loadingByFilters = async () => {
     openAccordion.value = true
   }, 500)
 }
+
+
+
 
 // eslint-disable-next-line no-unused-vars
 const components = {

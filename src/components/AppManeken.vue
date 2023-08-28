@@ -141,7 +141,7 @@ const emits = defineEmits({
 
 const raseModel = ref('human')
 const lvlSelect = ref('change')
-const accessibleStats = ref(null)
+const accessibleStats = ref(null) //количество стат для распределения
 const optionLvl = 30
 const baseStat = baseStatFromLvl()
 const classModel = ref('none')
@@ -188,12 +188,7 @@ onMounted(async () => {
 const statParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'stat'))
 
 // emits
-// сброс массива addParam изменения стат при смене уровня
-const lvlSelectChange = () => {
-  accessibleStats.value = baseStat.find((l) => l.lvl === Number(lvlSelect.value)).stat
-  addParam.value.map((p) => (p.count = 0))
-  emits('statChange', { addParam: addParam.value })
-}
+
 
 const handleRaseSelectChange = (availableRaces) => {
   emits('changeRase', {
@@ -206,34 +201,93 @@ const handleClassSelectChange = (className) => {
   parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
 }
 
-const handleParentClassSelectChange = (parent) => {
+
   // массив с бонусами от класа
-  const addClassParam = [
-    { key: 'dstrength', count: 0 },
-    { key: 'ddexterity', count: 0 },
-    { key: 'dintel', count: 0 },
-    { key: 'dluck', count: 0 },
-    { key: 'dreaction', count: 0 },
-    { key: 'dwisdom', count: 0 },
-    { key: 'dconst', count: 0 },
-    { key: 'whitemagicprotection', count: 0 },
-    { key: 'blackmagicprotection', count: 0 },
-    { key: 'astralmagicprotection', count: 0 }
+  const addClassParam = addParam.value.map(item => ({ ...item, count: 0 }));
+
+  // массив с требониями класа, что нужно автоматически распределить
+  const addClassMinParam = [
+    { key: 'minstrength', count: 0 },
+    { key: 'mindexterity', count: 0 },
+    { key: 'minreaction', count: 0 },
+    { key: 'minconst', count: 0 },
+    { key: 'minintel', count: 0 },
+    { key: 'minwisdom', count: 0 },
+    { key: 'minluck', count: 0 },
   ]
+
+  function recalculationValues(parent, items) {
   const parentClassItem = OllParamClass.value.filter((p) => p.name_en === parent)
-  // Перебираем элементы parentClassItem массива
   for (const item of parentClassItem) {
-    // Перебираем элементы addClassParam массива
-    for (const param of addClassParam) {
+    // Перебираем элементы массива
+    for (const param of items) {
+
       // Если значения ключей совпадают и значение не равно null
       if (item[param.key] !== null) {
         param.count = parseInt(item[param.key]) // Преобразуем значение в число и записываем в count
       }
     }
   }
-  emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'oll' })
+}
 
-  addClassParam.map((p) => (p.count = 0))
+
+const handleParentClassSelectChange = (parent) => {
+
+  recalculationValues(parent, addClassParam)
+  recalculationValues(parent, addClassMinParam)
+
+  const updateMinParam = addClassMinParam.map(item => {
+    switch (item.key) {
+        case "minstrength":
+            return { key: "dstrength", count: item.count };
+        case "mindexterity":
+            return { key: "ddexterity", count: item.count };
+        case "minreaction":
+            return { key: "dreaction", count: item.count };
+        case "minconst":
+            return { key: "dconst", count: item.count };
+        case "minintel":
+            return { key: "dintel", count: item.count };
+        case "minwisdom":
+            return { key: "dwisdom", count: item.count };
+        case "minluck":
+            return { key: "dluck", count: item.count };
+        default:
+            return item;
+    }
+});
+// Проходим по каждой строке в updatedStatConfigurations
+const updatedStats = updateMinParam.map(item => {
+    const matchingConfig = props.updatedStatConfigurations.find(statConfig => statConfig.key === item.key);
+
+    if (matchingConfig) {
+        const diff = matchingConfig.summStatBase < item.count ? item.count - matchingConfig.summStatBase : 0;
+        return {
+            key: item.key,
+            count: diff
+        };
+    }
+    return item;
+});
+const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0);
+
+  if(accessibleStats.value > totalSum) {
+    accessibleStats.value -= totalSum
+    emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'bonusAndBase', type: 'ollAddclasses' })
+    emits('statChange', { addParam: updatedStats, baseAndCommonStats: 'oll', type: 'minClasses'  })
+  } else {
+    console.log('Не достаточно очков');
+  }
+
+}
+
+// сброс массива addParam изменения стат при смене уровня
+const lvlSelectChange = () => {
+  accessibleStats.value = baseStat.find((l) => l.lvl === Number(lvlSelect.value)).stat
+  const addClassParam = addParam.value.map(item => ({ ...item, count: 0 }));
+  emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'oll', type: 'changeLvl' })
+
+  classModel.value = 'none'
 }
 
 const modifyStatAndEmit = (statKey, increment) => {
@@ -245,7 +299,7 @@ const modifyStatAndEmit = (statKey, increment) => {
   })
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
-  emits('statChange', { addParam: addParam.value })
+  emits('statChange', { addParam: addParam.value, type: 'freeStats', baseAndCommonStats: "oll" })
 }
 
 const handleStatIncrease = (statKey) => {
@@ -257,7 +311,7 @@ const handleStatDecrease = (statKey) => {
 
 const handleStatInputChange = (stat) => {
   // изменение стат через инпут
-  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatOll // ищу предыдущие значение стата
+  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatBonusAndBase // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
   if (accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице

@@ -7,7 +7,7 @@
                   </td>
                   <td>
                     <button 
-                    @click="$emit('handleStatIncrease', statParam.key)" 
+                    @click ="$emit('handleStatIncrease', statParam.key)" 
                     class="button__reset">
                       <span class="material-symbols-outlined">stat_2</span>
                     </button>

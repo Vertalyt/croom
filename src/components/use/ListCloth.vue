@@ -3,20 +3,25 @@
 
     <template v-for="(c, idx) in newResult" :key="c.otherInfo.id">
 
-      <div @click="accordionOpen(idx)" class="accordion">
-        <div class="accordionFaceButton">
-          <img
+      <div @click ="accordionOpen(idx)" class="accordion">
+        <div class="accordionFace">
+          
+          <div class="accordionFaceInfo">
+            <img
             :src="`https://files.nura.biz/site/images/things100x100/${c.otherInfo.image}.png`"
             :alt="c.otherInfo.name"
             class="accordionFaceImg"
           />
-          {{ c.otherInfo.name }}
+          <p>{{ c.otherInfo.name }}</p>
+          </div>
+
+          <button class="button" @click.stop ="dress(c)">Вдягти</button>
         </div>
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
-        <ChildAccordeonItem :items="c.minParam" label="Требуемые параметры" typeParam="minParam"/>
-        <ChildAccordeonItem :items="c.addParam" label="Бонусные параметры" typeParam="addParam"/>
+        <ChildAccordeonItem :items="c.minParam"  :openChildPanel="openChildPanel" label="Требуемые параметры" typeParam="minParam"  @changeChildPanel="accordionChildOpen"/>
+        <ChildAccordeonItem :items="c.addParam" :openChildPanel="openChildPanel"  label="Бонусные параметры" typeParam="addParam"  @changeChildPanel="accordionChildOpen"/>
       </div>
     </template>
   </div>
@@ -39,16 +44,20 @@ defineProps({
 })
 
 const openPanel = ref(null)
-const openChildPanel = ref(null)
-
-const accordionOpen = (panelId) => {
-  openPanel.value = openPanel.value === panelId ? null : panelId // Переключение состояния
-}
+const openChildPanel = ref('')
 
 const accordionChildOpen = (panelId) => {
-  openChildPanel.value = openChildPanel.value === panelId ? null : panelId // Переключение состояния
+  openChildPanel.value = openChildPanel.value === panelId ? '' : panelId // Переключение состояния
 }
 
+const accordionOpen = (panelId) => {
+  openPanel.value = openPanel.value === panelId ? '' : panelId // Переключение состояния
+  openChildPanel.value = ''
+}
+
+const dress = (c) => {
+  console.log(c);
+}
 
 const components = {
   ChildAccordeonItem
@@ -83,10 +92,15 @@ export default {
   outline: none;
 }
 
-.accordionFaceButton {
+.accordionFace {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+}
+
+.accordionFaceInfo {
+  display: grid;
+  justify-items: center;
 }
 
 .accordionFaceImg {
@@ -109,7 +123,7 @@ export default {
 
 .open {
   height: fit-content;
-  max-height: 200px; /* Максимальная высота для открытой панели */
+  max-height: 600px; /* Максимальная высота для открытой панели */
   opacity: 1; /* Полная непрозрачность */
   transform: translateY(0); /* Смещение отсутствует */
   transition:

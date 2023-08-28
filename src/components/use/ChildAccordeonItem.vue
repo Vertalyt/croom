@@ -1,20 +1,31 @@
 
 <template>
-        <div @click="accordionChildOpen(typeParam)" class="accordion">
+        <div @click="accordionChildOpen(typeParam)" class="accordion accordionChild">
           <div class="accordionFaceButton">
             <h3>{{ label }}</h3>
           </div>
         </div>
-        <div class="panel" :class="{ open: openChildPanel === typeParam }">
-          <div v-for="(value, key) in items" :key="key">
-            <p>{{ getStatName(key, typeParam) }} {{ value }}</p>
-          </div>
+        <div class="panel statWrapper" :class="{ open: openChildPanel === typeParam }">
+          <template 
+          v-for="(value, key) in items" 
+          :key="key"
+          >
+            <div           
+            class="stat"
+            :class="value.class"
+            >{{ getStatName(key, typeParam) }} {{ getStatCoast(value) }}</div>
+
+
+          </template>
         </div>
 </template>
 
 
 <script setup>
-import { ref } from 'vue'
+
+const emits = defineEmits({
+  changeChildPanel: () => String
+})
 
 const props = defineProps({
   items: {
@@ -29,28 +40,42 @@ const props = defineProps({
     type: String,
     required: true
   },
+  openChildPanel: {
+    type: String,
+    required: false
+  }
 })
 
-const openChildPanel = ref(null)
-
 const accordionChildOpen = (panelId) => {
-  openChildPanel.value = openChildPanel.value === panelId ? null : panelId // Переключение состояния
+  emits('changeChildPanel', panelId)
 }
 
 
 const nameStat = [
   { minParam: 'minstrength', addParam: 'dstrength', name: 'Сила' },
-  { minParam: 'mindexterity', addParam: 'ddexterity', name: 'Ловкость' },
-  { minParam: 'minconst', addParam: 'dconst', name: 'Сложение' },
-  { minParam: 'minintel', addParam: 'dintel', name: 'Интеллект' },
-  { minParam: 'minwisdom', addParam: 'dwisdom', name: 'Мудрость' },
+  { minParam: 'mindexterity', addParam: 'ddexterity', name: 'Ловкість' },
+  { minParam: 'minconst', addParam: 'dconst', name: 'Статура' },
+  { minParam: 'minintel', addParam: 'dintel', name: 'Інтелект' },
+  { minParam: 'minwisdom', addParam: 'dwisdom', name: 'Мудрість' },
   { minParam: 'minluck', addParam: 'dluck', name: 'Удача' },
-  { minParam: 'minreaction', addParam: 'dreaction', name: 'Реакция' }
+  { minParam: 'minreaction', addParam: 'dreaction', name: 'Реакція' },
+  { minParam: 'whitemagicprotection', addParam: 'whitemagicprotection', name: 'Магія Світанка' },
+  { minParam: 'blackmagicprotection', addParam: 'blackmagicprotection', name: 'Манія Повнолуння' },
+  { minParam: 'astralmagicprotection', addParam: 'astralmagicprotection', name: 'Астральна магія' },
+  { minParam: 'headarmor', addParam: 'headarmor', name: 'Броня голови' },
+  { minParam: 'bodyarmor', addParam: 'bodyarmor', name: 'Броня тулоба' },
+  { minParam: 'righthandarmor', addParam: 'righthandarmor', name: 'Броня права рука' },
+  { minParam: 'lefthandarmor', addParam: 'lefthandarmor', name: 'Броня ліва рука' },
+  { minParam: 'lagsarmor', addParam: 'lagsarmor', name: 'Броня ноги' },
 ]
 
 const getStatName = (key, type) => {
   const stat = nameStat.find((i) => i[type] === key)
   return stat ? stat.name : ''
+}
+
+const getStatCoast = (value) => {
+  return props.typeParam === 'minParam' ? value.value : value
 }
 
 </script>
@@ -64,11 +89,30 @@ export default {
 <style scoped>
 /* Style the buttons that are used to open and close the accordion panel */
 
+.error {
+    color: #ff2121;
+    border: 1px solid #ff000038;
+    border-radius: 5px;
+}
+
+.statWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.stat {
+    padding: 1px 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(85, 71, 41, 0.466);
+    margin: 3px;
+}
+
 .accordion {
   background-color: #eee;
   border-radius: 10px;
   border: 1px solid #413e3e2f;
-  margin-bottom: 2px;
+  margin-bottom: 7px;
   color: #444;
   cursor: pointer;
   padding: 10px 18px;
@@ -76,6 +120,12 @@ export default {
   text-align: left;
   outline: none;
 }
+
+.accordionChild {
+    margin: 5px;
+    padding: 0px 10px;
+}
+
 
 /* Style the accordion panel. Note: hidden by default */
 .panel {
