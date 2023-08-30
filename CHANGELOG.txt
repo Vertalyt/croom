@@ -69,3 +69,13 @@ Added item list display
 ### Changed
 fixed a number of errors related to rewriting stat.
 Changed the storage system for added bonuses from various types of changes
+
+
+## [1.0.33] - 2024-08-30
+
+### Added
+Added filter for dressed items
+Added logic for changing the level and calculating the remaining distribution stats
+
+### Changed
+Changed into sub-functions big data loading function

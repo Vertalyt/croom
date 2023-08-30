@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
 import { initialSetupEntries, basickParamsRase, baseStatModule } from './initialization/baseParams'
 import ManeckenModal from './components/use/ManeckenModal.vue'
+import { aggregateStatValues } from './utils/aggregateStatValues'
+
 
 const isDummyLoaded = initialSetupEntries
 const baseStatConfigurations = ref(baseStatModule) // базовое значение конкретной расы, и их переменные, стартовое люди
@@ -13,17 +15,6 @@ const summaryUpdatedStatConfigurations = ref([]) // массив хранит в
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
 const cellOptions = ref()
-
-// переменная для записи всех дополнительных значений, помимо  базовых, от всего шмота например.
-const paramsPlus = ref([
-  { key: 'dstrength', count: 0 },
-  { key: 'ddexterity', count: 0 },
-  { key: 'dintel', count: 0 },
-  { key: 'dluck', count: 0 },
-  { key: 'dreaction', count: 0 },
-  { key: 'dwisdom', count: 0 },
-  { key: 'dconst', count: 0 }
-])
 
 const statChange = ({ addParam, baseAndCommonStats = 'bonusAndBase', type }) => {
   // Создаем новый массив с обновленными данными
@@ -39,107 +30,35 @@ const statChange = ({ addParam, baseAndCommonStats = 'bonusAndBase', type }) => 
   if (!existingTypes.includes(type)) {
     updatedConfigurations.push({ type, param: addParam, baseAndCommonStats })
   }
-
   // Обновляем массив с обновленными данными
   summaryUpdatedStatConfigurations.value = updatedConfigurations
 
-  summ()
+  //суммирус все колонки для итогового результата
+  const { arrUpdate, sumChangeInfo } = aggregateStatValues({ baseUpdateRase : baseStatConfigurations.value, sumChangeInfo: summaryUpdatedStatConfigurations.value })
+  updatedStatConfigurations.value = arrUpdate
+  summaryUpdatedStatConfigurations.value = sumChangeInfo
 }
-
-// берем все записи с массива суммарных записей и приводит в эдинную сумму стат для базовых характеристик и общих.
-function summ() {
-  // Очищаем массивы перед началом работы
-  let commonStats = []
-  let bonusOllStats = []
-
-  updatedStatConfigurations.value = baseStatConfigurations.value
-
-  // Проходимся по каждому элементу исходного массива
-  summaryUpdatedStatConfigurations.value.forEach((item) => {
-    const baseAndCommonStats = item.baseAndCommonStats
-    const params = item.param
-    // commonStats добавлять только в Базовые.
-    // bonusOllStats добавлять и в Бонусы и в Базовые
-    // Выбираем нужный массив в зависимости от значения baseAndCommonStats
-    const resultArray =
-      baseAndCommonStats === 'bonusAndBase'
-        ? commonStats
-        : baseAndCommonStats === 'oll'
-        ? bonusOllStats
-        : null
-
-    if (resultArray) {
-      // Суммируем значения статов для текущего элемента
-      params.forEach((param) => {
-        const key = param.key
-        const count = param.count
-        const existingStat = resultArray.find((stat) => stat.key === key)
-
-        if (existingStat) {
-          existingStat.count += count
-        } else {
-          resultArray.push({ key, count })
-        }
-      })
-    }
-  })
-
-  if (commonStats) {
-    // Выводим результаты
-    const commonStat = updatedStatConfigurations.value.map((item) => {
-      const common = commonStats.find((i) => i.key === item.key)
-      if (common) {
-        return {
-          ...item,
-          summStatBonusAndBase: item.summStatBonusAndBase + common.count
-        }
-      } else {
-        return {
-          ...item
-        }
-      }
-    })
-    updatedStatConfigurations.value = commonStat
-  }
-
-  if (bonusOllStats) {
-    // Выводим результаты
-    const commonStat = updatedStatConfigurations.value.map((item) => {
-      const common = bonusOllStats.find((i) => i.key === item.key)
-      if (common) {
-        return {
-          ...item,
-          summStatBonusAndBase: item.summStatBonusAndBase + common.count,
-          summStatBase: item.summStatBase + common.count
-        }
-      } else {
-        return {
-          ...item
-        }
-      }
-    })
-    updatedStatConfigurations.value = commonStat
-  }
-}
-
 
 const changeRase = ({ raseModel }) => {
+  //получаю все данные по ноой рассе
   const raseParams = basickParams.value.find((r) => r.availableRaces === raseModel)?.date;
-
+    //изменяю зачение базовой расы на обновленную
   baseStatConfigurations.value = baseStatConfigurations.value.map((i) => {
     const updatedStats = raseParams ? {
       summStatBase: raseParams.find(param => param.key === i.key)?.count || i.summStatBase,
       summStatBonusAndBase: raseParams.find(param => param.key === i.key)?.count || i.summStatBonusAndBase
     } : {};
-    
     return {
       ...i,
       ...updatedStats
     };
   });
-  summ()
-}
 
+  //суммирую в итоговый массив 
+  const { arrUpdate, sumChangeInfo } = aggregateStatValues({ baseUpdateRase : baseStatConfigurations.value, sumChangeInfo: summaryUpdatedStatConfigurations.value })
+  updatedStatConfigurations.value = arrUpdate
+  summaryUpdatedStatConfigurations.value = sumChangeInfo
+}
 
 
 const modalOpen = (param) => {
@@ -149,6 +68,18 @@ const modalOpen = (param) => {
 const isClose = () => {
   isOpen.value = false
 }
+
+const minstats = computed(() => {
+  return updatedStatConfigurations.value
+    .filter(stat => typeof stat.summStatBase !== 'undefined' && stat.summStatBase !== 0)
+    .map(stat => {
+      return {
+        minKey: stat.minKey,
+        summStatBase: stat.summStatBase
+      };
+    });
+});
+
 
 // eslint-disable-next-line no-unused-vars
 const components = {
@@ -165,7 +96,7 @@ const components = {
         <ManeckenModal
           v-if="isOpen"
           :cellOptions="cellOptions"
-          :minStats="updatedStatConfigurations"
+          :minStats="minstats"
           @isClose="isClose"
         />
         <AppHeader />

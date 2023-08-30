@@ -32,14 +32,14 @@ export const baseStatModule = [
   { type: 'stat', key: 'dreaction', name: 'Реакція', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
   { type: 'stat', key: 'dwisdom', name: 'Мудрість', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
   { type: 'stat', key: 'dconst', name: 'Статура', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
-  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/dawn.svg'},
-  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
-  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBonusAndBase: 4, link: 'src/assets/img/icon/svg/astral.svg' },
-  { type: 'armor', key: 'headarmor', name: 'Голова', summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },
-  { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor.svg' },
-  { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leftHend.svg' },
-  { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/rightHend.svg' },
-  { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leg-armor.svg' },
+  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/dawn.svg'},
+  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
+  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 4, link: 'src/assets/img/icon/svg/astral.svg' },
+  { type: 'armor', key: 'headarmor', name: 'Голова', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },
+  { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor.svg' },
+  { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leftHend.svg' },
+  { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/rightHend.svg' },
+  { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leg-armor.svg' },
 ]
 
 export const basickParamsRase = [

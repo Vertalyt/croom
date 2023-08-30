@@ -4,6 +4,17 @@
     <span @click="isClose" class="close">&times;</span>
 
     <div class="form__items">
+      <div class="form__items form__items_modal">
+        <input
+          class="custom-checkbox"
+          v-model="reqParameterVal"
+          @click="clothesfilter"
+          id="cloth"
+          type="checkbox"
+        />
+        <label for="cloth">Те, що можна одягнути</label>
+      </div>
+
       <select v-model="lvlSelect" @change="loadingByFilters" class="select-css">
         <option value="change" disabled selected>Рівень</option>
         <option>0</option>
@@ -21,10 +32,9 @@
           :name="t.name"
           :value="t.name"
           v-model="t.checked"
+          @click="toggleCheckbox(t.key)"
         />
-        <label :for="t.name" @click="toggleCheckbox(t.key)" class="labelChexpox">{{
-          t.name
-        }}</label>
+        <label :for="t.key" class="labelChexpox">{{ t.name }}</label>
       </div>
     </div>
 
@@ -65,6 +75,7 @@ const isloading = ref(false)
 const typeRarity = ref('none')
 const spanErrorText = ref('')
 const openAccordion = ref(false)
+const reqParameterVal = ref(false)
 
 const isClose = () => {
   emits('isClose')
@@ -86,7 +97,7 @@ const addParam = [
   { bodyarmor: 0 },
   { righthandarmor: 0 },
   { lefthandarmor: 0 },
-  { lagsarmor: 0 },
+  { lagsarmor: 0 }
 ]
 
 // массив для отображение требуемых стат
@@ -160,23 +171,17 @@ function filterArr(rezultArr, request, compareWithZero = true) {
   })
 }
 
-
-
 function suitableThings() {
-    return newResult.value.filter(item => {
-        const minParamValues = Object.values(item.minParam);
-        const hasError = minParamValues.some(param => param.class === 'error');
-        return !hasError;
-    });
+  return newResult.value.filter((item) => {
+    const minParamValues = Object.values(item.minParam)
+    const hasError = minParamValues.some((param) => param.class === 'error')
+    return !hasError
+  })
 }
 
+const rarityId = []
 
-
-const loadingByFilters = async () => {
-  isloading.value = true
-  openAccordion.value = false
-
-  const rarityId = []
+function rarityFilter() {
   rarity.value.map((item) => {
     if (item.checked === true) {
       rarityId.push(item.id)
@@ -189,66 +194,87 @@ const loadingByFilters = async () => {
     openAccordion.value = true
     return
   }
+}
 
-  const sanitizedTypeids = props.cellOptions.typeid.map((item) => {
+function sanitizedTypeids() {
+  return props.cellOptions.typeid.map((item) => {
     if (typeof item === 'string' && !isNaN(item)) {
       return parseInt(item)
     }
     return item
   })
+}
+
+function filterDataSets(requestItem, dataSets) {
+  const filteredData = {}
+
+  dataSets.forEach((dataSet) => {
+    const filteredArray = filterArr(dataSet.array, [requestItem])
+    filteredData[dataSet.key] = filteredArray[0]
+  })
+
+  return filteredData
+}
+
+function updateMinParamClass(p, key, value, classValue) {
+  if (Object.prototype.hasOwnProperty.call(p.minParam, key)) {
+    p.minParam[key] = {
+      value: value,
+      class: classValue
+    }
+  }
+}
+
+function processMinStats(newResult, minStats) {
+  newResult.value.forEach((p) => {
+    Object.keys(p.minParam).forEach((key) => {
+      const statInfo = minStats.find((stat) => stat.minKey === key)
+      if (statInfo) {
+        const minParamValue = parseInt(p.minParam[key])
+        const minStatValue = parseInt(statInfo.summStatBase)
+
+        if (minStatValue < minParamValue) {
+          updateMinParamClass(p, key, p.minParam[key], 'error')
+        } else {
+          updateMinParamClass(p, key, p.minParam[key], 'norm')
+        }
+      }
+    })
+  })
+}
+
+// загружаем данные с севера
+const loadingByFilters = async () => {
+  isloading.value = true
+  openAccordion.value = false
+  // записываем в массив название выбранных ключей раритетности
+  rarityFilter()
   const filtersClasses = {
     category: 'items',
-    typeid: sanitizedTypeids,
+    typeid: sanitizedTypeids(), // очищаем от пустых строк
     minlevel: parseInt(lvlSelect.value),
     rarity: rarityId
   }
 
-  // const request = await fetchAPIData(filtersClasses)
-  let request = helm_10Lvl
+  const request = await fetchAPIData(filtersClasses)
+  // let request = helm_10Lvl
   if (request.length === 0) {
     spanErrorText.value = 'Нема результатів по фільтру'
   }
 
   if (request.length !== 0) {
-
+    //разбиваю массив на под элементы, согласно dataSets
     newResult.value = request.map((requestItem) => {
-      const filteredData = {}
-      dataSets.forEach((dataSet) => {
-        const filteredArray = filterArr(dataSet.array, [requestItem])
-        filteredData[dataSet.key] = filteredArray[0]
-      })
-      return filteredData
+      return filterDataSets(requestItem, dataSets)
     })
 
+    // добавляю каждой строчке newResult класс
+    processMinStats(newResult, props.minStats)
 
-    newResult.value.forEach(p => {
-    Object.keys(p.minParam).forEach(key => {
-        const statInfo = props.minStats.find(stat => stat.minKey === key);
-        if (statInfo) {
-          //требуемые статы одежды
-            const minParamValue = parseInt(p.minParam[key]);
-            
-            //базовые статы персонажа, проверка при одевании
-            const minStatValue = parseInt(statInfo.summStatBase);
-
-            if (minStatValue < minParamValue) {
-                p.minParam[key] = {
-                    value: p.minParam[key],
-                    class: 'error'
-                };
-            } else {
-                p.minParam[key] = {
-                    value: p.minParam[key],
-                    class: 'norm'
-                };
-            }
-        }
-    });
-});
-console.log( newResult.value);
-
-const rezult = suitableThings()
-console.log(rezult);
+    // если стоит чекбокс, фильтрую массив по статам
+    if (reqParameterVal.value === true) {
+      newResult.value = suitableThings()
+    }
 
     spanErrorText.value = null
   }
@@ -258,8 +284,12 @@ console.log(rezult);
   }, 500)
 }
 
-
-
+const clothesfilter = () => {
+  reqParameterVal.value = !reqParameterVal.value
+  if (newResult.value !== null && lvlSelect.value !== 'change') {
+    loadingByFilters()
+  }
+}
 
 // eslint-disable-next-line no-unused-vars
 const components = {
@@ -276,7 +306,10 @@ export default {
 
 <style scoped>
 /* Style the buttons that are used to open and close the accordion panel */
-
+.form__items_modal {
+  justify-content: flex-start;
+  width: auto;
+}
 .spanError {
   display: block;
   border: 1px solid #ff000042;

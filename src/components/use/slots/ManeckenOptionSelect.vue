@@ -17,7 +17,7 @@ const props = defineProps({
 })
 
 const isDisabled = (item) => {
-  return Number(props.lvlSelect + 1) < Number(item.minlevel)
+  return Number(props.lvlSelect) < Number(item.minlevel)
 }
 
 </script>
