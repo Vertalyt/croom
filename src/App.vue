@@ -1,65 +1,66 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
 import { initialSetupEntries, basickParamsRase, baseStatModule } from './initialization/baseParams'
 import ManeckenModal from './components/use/ManeckenModal.vue'
 import { aggregateStatValues } from './utils/aggregateStatValues'
-
+import { useStore } from 'vuex'
 
 const isDummyLoaded = initialSetupEntries
-const baseStatConfigurations = ref(baseStatModule) // базовое значение конкретной расы, и их переменные, стартовое люди
 const basickParams = ref(basickParamsRase) // поиск значений по расе
-const summaryUpdatedStatConfigurations = ref([]) // массив хранит в каждом обьекте тип бонуса и его характеристики
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
 const cellOptions = ref()
+const store = useStore()
+const raseParams = ref('')
+const baseStatConfigurations = ref()
 
-const statChange = ({ addParam, baseAndCommonStats = 'bonusAndBase', type }) => {
-  // Создаем новый массив с обновленными данными
-  const updatedConfigurations = summaryUpdatedStatConfigurations.value.map((item) => {
-    if (item.type === type) {
-      // Если тип совпадает, возвращаем объект с обновленным параметром
-      return { ...item, param: addParam }
-    }
-    return item // Возвращаем неизмененный элемент
-  })
-  // Проверяем, есть ли тип в массиве, и добавляем новый элемент, если нет
-  const existingTypes = summaryUpdatedStatConfigurations.value.map((item) => item.type)
-  if (!existingTypes.includes(type)) {
-    updatedConfigurations.push({ type, param: addParam, baseAndCommonStats })
-  }
-  // Обновляем массив с обновленными данными
-  summaryUpdatedStatConfigurations.value = updatedConfigurations
 
-  //суммирус все колонки для итогового результата
-  const { arrUpdate, sumChangeInfo } = aggregateStatValues({ baseUpdateRase : baseStatConfigurations.value, sumChangeInfo: summaryUpdatedStatConfigurations.value })
+const listStatChange = computed(() => store.getters['listStatObjects/listStatChange']) // слежу за массивом, который хранит в себе все обьекты изменения стат
+const id = 1; // айди манекена, в будущем буду менять в зависимости от манекена
+
+onMounted(() => {
+  baseStatConfigurations.value = store.getters['listManeken'](id) // базовое значение конкретной расы, и их переменные, стартовое люди
+} )
+
+watch(listStatChange, (_) => {
+    //суммируем все колонки для итогового результата
+    const { arrUpdate, } = aggregateStatValues({
+    baseUpdateRase: baseStatConfigurations.value,
+  }, { deep: true })
   updatedStatConfigurations.value = arrUpdate
-  summaryUpdatedStatConfigurations.value = sumChangeInfo
-}
+  store.commit('updateManekenInfo', { idManeken: id, statModule: arrUpdate })
+})
 
-const changeRase = ({ raseModel }) => {
-  //получаю все данные по ноой рассе
-  const raseParams = basickParams.value.find((r) => r.availableRaces === raseModel)?.date;
-    //изменяю зачение базовой расы на обновленную
-  baseStatConfigurations.value = baseStatConfigurations.value.map((i) => {
-    const updatedStats = raseParams ? {
-      summStatBase: raseParams.find(param => param.key === i.key)?.count || i.summStatBase,
-      summStatBonusAndBase: raseParams.find(param => param.key === i.key)?.count || i.summStatBonusAndBase
-    } : {};
+watch(raseParams, val => {
+  //изменяю зачение базовой расы на обновленную
+  const newBaseConfig = baseStatConfigurations.value.map((i) => {
+    const updatedStats = val
+      ? {
+          summStatBase: val.find((param) => param.key === i.key)?.count || i.summStatBase,
+          summStatBonusAndBase:
+          val.find((param) => param.key === i.key)?.count || i.summStatBonusAndBase
+        }
+      : {}
     return {
       ...i,
       ...updatedStats
-    };
-  });
-
-  //суммирую в итоговый массив 
-  const { arrUpdate, sumChangeInfo } = aggregateStatValues({ baseUpdateRase : baseStatConfigurations.value, sumChangeInfo: summaryUpdatedStatConfigurations.value })
+    }
+  })
+  //суммирую в итоговый массив
+  const { arrUpdate } = aggregateStatValues({
+    baseUpdateRase: newBaseConfig,
+  })
   updatedStatConfigurations.value = arrUpdate
-  summaryUpdatedStatConfigurations.value = sumChangeInfo
-}
+  store.commit('updateManekenInfo', { idManeken: id, statModule: arrUpdate })
+})
 
+const changeRase = ({ raseModel }) => {
+  //получаю все данные по ноой рассе
+  raseParams.value = basickParams.value.find((r) => r.availableRaces === raseModel)?.date
+}
 
 const modalOpen = (param) => {
   cellOptions.value = param
@@ -71,23 +72,15 @@ const isClose = () => {
 
 const minstats = computed(() => {
   return updatedStatConfigurations.value
-    .filter(stat => typeof stat.summStatBase !== 'undefined' && stat.summStatBase !== 0)
-    .map(stat => {
+    .filter((stat) => typeof stat.summStatBase !== 'undefined' && stat.summStatBase !== 0)
+    .map((stat) => {
       return {
         minKey: stat.minKey,
         summStatBase: stat.summStatBase
-      };
-    });
-});
+      }
+    })
+})
 
-
-// eslint-disable-next-line no-unused-vars
-const components = {
-  AppHeader,
-  ManeckenModal,
-  AppManekenResult,
-  AppManeken
-}
 </script>
 <template>
   <div class="room-container">
@@ -106,7 +99,7 @@ const components = {
             v-if="isDummyLoaded"
             :isDummyLoaded="isDummyLoaded"
             :updatedStatConfigurations="updatedStatConfigurations"
-            @statChange="statChange"
+
             @changeRase="changeRase"
             @modalOpen="modalOpen"
           />

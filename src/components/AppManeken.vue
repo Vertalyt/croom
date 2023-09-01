@@ -10,6 +10,8 @@ import { baseStatClasses, fortressParam, raseParams } from '../initialization/ba
 import DummyPartSlot from './use/slots/DummyPartSlot.vue'
 import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
+import { useStore } from 'vuex'
+
 
 const props = defineProps({
   isDummyLoaded: {
@@ -22,7 +24,6 @@ const props = defineProps({
   }
 })
 const emits = defineEmits({
-  statChange: Array,
   changeRase: String,
   modalOpen: Array
 })
@@ -36,6 +37,8 @@ const OllParamClass = ref([])
 const parentClassItems = ref(null)
 const parentClassModel = ref('none')
 const parentClasses = ref([])
+const store = useStore()
+
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -82,7 +85,6 @@ const statParams = computed(() => props.updatedStatConfigurations.filter((d) => 
 const handleRaseSelectChange = (availableRaces) => {
   emits('changeRase', {
     raseModel: availableRaces,
-    addParam: addParam.value
   })
 }
 
@@ -161,12 +163,11 @@ const handleParentClassSelectChange = (parent) => {
 
   if (accessibleStats.value > totalSum) {
     accessibleStats.value -= totalSum
-    emits('statChange', {
-      addParam: addClassParam,
-      baseAndCommonStats: 'bonusAndBase',
-      type: 'ollAddclasses'
-    })
-    emits('statChange', { addParam: updatedStats, baseAndCommonStats: 'oll', type: 'minClasses' })
+ 
+    store.commit('listStatObjects/statChange', { addParam: updatedStats, baseAndCommonStats: 'oll', type: 'minClasses' }  )
+    store.commit('listStatObjects/statChange', { addParam: addClassParam, baseAndCommonStats: 'bonusAndBase', type: 'ollAddclasses' }  )
+  
+
   } else {
     console.log('Не достаточно очков')
   }
@@ -193,8 +194,10 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
   accessibleStats.value = difference;
   oldCountStat = newCountStat;
   const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }));
-  emits('statChange', { addParam: addClassParam, baseAndCommonStats: 'oll', type: 'changeLvl' });
   classModel.value = 'none';
+
+  store.commit('listStatObjects/statChange', { addParam: addClassParam, baseAndCommonStats: 'oll', type: 'changeLvl' } )
+
 };
 
 const modifyStatAndEmit = (statKey, increment) => {
@@ -206,7 +209,7 @@ const modifyStatAndEmit = (statKey, increment) => {
   })
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
-  emits('statChange', { addParam: addParam.value, type: 'freeStats', baseAndCommonStats: 'oll' })
+  store.commit('listStatObjects/statChange', { addParam: addParam.value, type: 'freeStats', baseAndCommonStats: 'oll' } )
 }
 
 watch(accessibleStats, val => {
@@ -238,7 +241,6 @@ const handleResetManecken = () => {
   addParam.value.map((p) => (p.count = 0))
   emits('changeRase', {
     raseModel: 'human',
-    addParam: addParam.value
   })
   raseModel.value = 'human'
   lvlSelect.value = 'change'
@@ -254,15 +256,6 @@ const handleFortressUpdate = (fortress) => {
   console.log(fortress)
 }
 
-// eslint-disable-next-line no-unused-vars
-const components = {
-  ManekenStatParams,
-  ManekenSlot,
-  ManeckenSelectItems,
-  DummyPartSlot,
-  ManeckenOptionSelect,
-  BasicSlotOpteons
-}
 </script>
 
 <script>

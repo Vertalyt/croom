@@ -12,6 +12,6 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    'no-unused-vars': 'error' // Добавляем правило no-unused-vars с уровнем ошибки
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   }
 }

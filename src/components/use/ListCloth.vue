@@ -59,10 +59,6 @@ const dress = (c) => {
   console.log(c);
 }
 
-const components = {
-  ChildAccordeonItem
-}
-
 </script>
 
 <script>

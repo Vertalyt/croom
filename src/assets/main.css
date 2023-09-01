@@ -74,7 +74,7 @@ small {
   width: 100vw;
   display: flex;
   justify-content: center;
-  background-image: url(/src/assets/img/AL.png);
+  background-image: url(https://sabzero.biz/croomTemplate/assets/img/AL.png);
   background-size: cover;
 }
 
@@ -133,7 +133,7 @@ small {
   width: 19px;
   height: 20px;
   background: transparent;
-  background-image: url(/src/assets/img/delete.png);
+  background-image: url(https://sabzero.biz/croomTemplate/assets/img/delete.png);
   background-size: cover;
   border: none;
   cursor: pointer;
@@ -562,7 +562,7 @@ body.modal-open {
 
 @media screen and (max-width: 600px) {
   .wrapper {
-    background-image: url(/src/assets/img/AL_mobail.png);
+    background-image: url(https://sabzero.biz/croomTemplate/assets/img/AL_mobail.png);
     background-size: contain;
   }
 

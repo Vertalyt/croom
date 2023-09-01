@@ -291,11 +291,6 @@ const clothesfilter = () => {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-const components = {
-  AppLoader,
-  ListCloth
-}
 </script>
 
 <script>

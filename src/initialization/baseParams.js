@@ -1,45 +1,45 @@
 
 export const initialSetupEntries = [
-    { location: 'leftDummyPart', name: 'helmet', link: 'src/assets/img/helmet.png', typeid: [1] },
-    { location: 'leftDummyPart', name: 'armor', link: 'src/assets/img/armor.png', typeid: [3] },
-    { location: 'leftDummyPart', name: 'belt', link: 'src/assets/img/belt.png', typeid: [6] }, //поЯс
-    { location: 'leftDummyPart', name: 'boots', link: 'src/assets/img/boots.png', typeid: [11]  },
-    { location: 'leftDummyPart', name: 'earring1', link: 'src/assets/img/earring.png', typeid: [55]  },
-    { location: 'leftDummyPart', name: 'ring1', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'leftDummyPart', name: 'ring2', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'rightDummyPart', name: 'necklace', link: 'src/assets/img/necklace.png', typeid: [2] },
-    { location: 'rightDummyPart', name: 'bracers', link: 'src/assets/img/bracers.png', typeid: [5] }, //наручи
-    { location: 'rightDummyPart', name: 'gloves', link: 'src/assets/img/gloves.png', typeid: [4] }, //перчатки
-    { location: 'rightDummyPart', name: 'leggings', link: 'src/assets/img/leggings.png', typeid: [10] }, // поножи
-    { location: 'rightDummyPart', name: 'earring2', link: 'src/assets/img/earring.png', typeid: [55] }, //серьга
-    { location: 'rightDummyPart', name: 'ring3', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'rightDummyPart', name: 'ring4', link: 'src/assets/img/ring.png', typeid: [7]  },
-    { location: 'centerTopDummyPart', name: 'relic1', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic2', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic3', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic4', link: 'src/assets/img/relic.png', typeid: [40] },
-    { location: 'centerBottomDummyPart', name: 'weapons1', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
-    { location: 'centerBottomDummyPart', name: 'weapons2', link: 'src/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'leftDummyPart', name: 'helmet', link: 'https://sabzero.biz/croomTemplate/assets/img/helmet.png', typeid: [1] },
+    { location: 'leftDummyPart', name: 'armor', link: 'https://sabzero.biz/croomTemplate/assets/img/armor.png', typeid: [3] },
+    { location: 'leftDummyPart', name: 'belt', link: 'https://sabzero.biz/croomTemplate/assets/img/belt.png', typeid: [6] }, //поЯс
+    { location: 'leftDummyPart', name: 'boots', link: 'https://sabzero.biz/croomTemplate/assets/img/boots.png', typeid: [11]  },
+    { location: 'leftDummyPart', name: 'earring1', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.png', typeid: [55]  },
+    { location: 'leftDummyPart', name: 'ring1', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
+    { location: 'leftDummyPart', name: 'ring2', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'necklace', link: 'https://sabzero.biz/croomTemplate/assets/img/necklace.png', typeid: [2] },
+    { location: 'rightDummyPart', name: 'bracers', link: 'https://sabzero.biz/croomTemplate/assets/img/bracers.png', typeid: [5] }, //наручи
+    { location: 'rightDummyPart', name: 'gloves', link: 'https://sabzero.biz/croomTemplate/assets/img/gloves.png', typeid: [4] }, //перчатки
+    { location: 'rightDummyPart', name: 'leggings', link: 'https://sabzero.biz/croomTemplate/assets/img/leggings.png', typeid: [10] }, // поножи
+    { location: 'rightDummyPart', name: 'earring2', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.png', typeid: [55] }, //серьга
+    { location: 'rightDummyPart', name: 'ring3', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'ring4', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
+    { location: 'centerTopDummyPart', name: 'relic1', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic2', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic3', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic4', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
+    { location: 'centerBottomDummyPart', name: 'weapons1', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'centerBottomDummyPart', name: 'weapons2', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
     // typeid: 8-пика, 9-топор, 12 меч, 15щит,30 посох, 31 молот,32 молот,33 топор, 35 клеймор, 37 жезл, 38 кастет, 39 кинжал,
   ]
 
 // стартовый набор стат для первичного заполнения таблиц. Соотвествует расе человек. 
 export const baseStatModule = [
-  { type: 'stat', key: 'dstrength', name: 'Сила', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/strength.svg', minKey: 'minstrength' },
-  { type: 'stat', key: 'ddexterity', name: 'Ловкість', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/dexterity.svg', minKey: 'mindexterity'  },
-  { type: 'stat', key: 'dintel', name: 'Інтелект', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/intelligence.svg', minKey: 'minintel'  },
-  { type: 'stat', key: 'dluck', name: 'Удача', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/luck.svg', minKey: 'minluck'  },
-  { type: 'stat', key: 'dreaction', name: 'Реакція', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
-  { type: 'stat', key: 'dwisdom', name: 'Мудрість', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
-  { type: 'stat', key: 'dconst', name: 'Статура', summStatBase: 3, summStatBonusAndBase: 3, link: 'src/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
-  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/dawn.svg'},
-  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 6, link: 'src/assets/img/icon/svg/full-Moon.svg' },
-  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 4, link: 'src/assets/img/icon/svg/astral.svg' },
-  { type: 'armor', key: 'headarmor', name: 'Голова', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor_head.svg' },
-  { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/armor.svg' },
-  { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leftHend.svg' },
-  { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/rightHend.svg' },
-  { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBase: 0, summStatBonusAndBase: 0, link: 'src/assets/img/icon/svg/leg-armor.svg' },
+  { type: 'stat', key: 'dstrength', name: 'Сила', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/strength.svg', minKey: 'minstrength' },
+  { type: 'stat', key: 'ddexterity', name: 'Ловкість', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dexterity.svg', minKey: 'mindexterity'  },
+  { type: 'stat', key: 'dintel', name: 'Інтелект', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/intelligence.svg', minKey: 'minintel'  },
+  { type: 'stat', key: 'dluck', name: 'Удача', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/luck.svg', minKey: 'minluck'  },
+  { type: 'stat', key: 'dreaction', name: 'Реакція', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
+  { type: 'stat', key: 'dwisdom', name: 'Мудрість', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
+  { type: 'stat', key: 'dconst', name: 'Статура', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
+  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 6, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dawn.svg'},
+  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 6, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/full-Moon.svg' },
+  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 4, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/astral.svg' },
+  { type: 'armor', key: 'headarmor', name: 'Голова', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor_head.svg' },
+  { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor.svg' },
+  { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leftHend.svg' },
+  { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rightHend.svg' },
+  { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leg-armor.svg' },
 ]
 
 export const basickParamsRase = [

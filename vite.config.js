@@ -4,14 +4,13 @@ import vue from '@vitejs/plugin-vue';
 export default ({ command }) => {
   const isProduction = command === 'build';
 
-  const base = isProduction ? './croomTemplate/' : '/';
+  const base = isProduction ? './croomTemplate/' : './';
 
   return defineConfig({
-    base,
     plugins: [vue()],
     resolve: {
       alias: {
-        '@': new URL('./src', import.meta.url).pathname
+        '@': new URL('./src/', import.meta.url).pathname
       }
     },
     build: {

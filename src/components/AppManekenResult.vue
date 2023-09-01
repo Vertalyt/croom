@@ -96,12 +96,7 @@ const statParams = computed(() => props.updatedStatConfigurations.filter((d) => 
 const armorParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'armor'))
 const magicParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'protectionMagick'))
 
-// Имена компонентов
-const components = {
-  ManekenStatParams,
-  ManekenResultSlot,
-  ParamItemsManeken
-}
+
 </script>
 
 <script>

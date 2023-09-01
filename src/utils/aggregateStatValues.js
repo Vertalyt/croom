@@ -1,3 +1,6 @@
+import store from '../store'
+
+
 function updateStats(sourceStatsArray, arrUpdate, includeSummStatBase) {
     return arrUpdate.map((item) => {
       const common = sourceStatsArray.find((i) => i.key === item.key);
@@ -19,18 +22,15 @@ function updateStats(sourceStatsArray, arrUpdate, includeSummStatBase) {
       }
     });
   }
-  
-  
 
-
-
-
-export function aggregateStatValues({baseUpdateRase, sumChangeInfo  }) {
+export function aggregateStatValues({baseUpdateRase }) {
     // Очищаем массивы перед началом работы
     let commonStats = []
     let bonusOllStats = []
     let arrUpdate = baseUpdateRase
   
+  const sumChangeInfo = store.getters['listStatObjects/listStatChange']
+
     // Проходимся по каждому элементу исходного массива
     sumChangeInfo.forEach((item) => {
       const baseAndCommonStats = item.baseAndCommonStats
@@ -71,6 +71,6 @@ export function aggregateStatValues({baseUpdateRase, sumChangeInfo  }) {
     arrUpdate = updateStats(bonusOllStats, arrUpdate, true);
     }
 
-    return { arrUpdate, sumChangeInfo }
+    return { arrUpdate }
   }
   
