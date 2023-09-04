@@ -21,11 +21,16 @@ const props = defineProps({
   updatedStatConfigurations: {
     type: Array,
     required: true
+  },
+  idMannequin: {
+    type: Number,
+    required: true
   }
 })
 const emits = defineEmits({
   changeRase: String,
-  modalOpen: Array
+  modalOpen: Array,
+  updateLvl: Number,
 })
 
 const raseModel = ref('human')
@@ -164,10 +169,7 @@ const handleParentClassSelectChange = (parent) => {
   if (accessibleStats.value > totalSum) {
     accessibleStats.value -= totalSum
  
-    store.commit('listStatObjects/statChange', { addParam: updatedStats, baseAndCommonStats: 'oll', type: 'minClasses' }  )
-    store.commit('listStatObjects/statChange', { addParam: addClassParam, baseAndCommonStats: 'bonusAndBase', type: 'ollAddclasses' }  )
-  
-
+    store.commit('listStatObjects/statChange', { addParam: [{'oll': updatedStats},{'bonusAndBase': addClassParam }], type: 'addShoes', idMannequin: props.idMannequin }  )
   } else {
     console.log('Не достаточно очков')
   }
@@ -185,6 +187,7 @@ const lvlSelectChange = () => {
 
   if (lvlStatDifference > 0 || different.value > -1) {
     updateStatsAndEmitEvent(different.value, newCountStat);
+    emits('updateLvl', Number(lvlSelect.value))
   } else {
     console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`);
   }
@@ -196,7 +199,9 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
   const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }));
   classModel.value = 'none';
 
-  store.commit('listStatObjects/statChange', { addParam: addClassParam, baseAndCommonStats: 'oll', type: 'changeLvl' } )
+  store.commit('listStatObjects/statChange', { addParam: [{'oll': addClassParam}], type: 'changeLvl', idMannequin: props.idMannequin }  )
+
+
 
 };
 
@@ -209,7 +214,10 @@ const modifyStatAndEmit = (statKey, increment) => {
   })
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
-  store.commit('listStatObjects/statChange', { addParam: addParam.value, type: 'freeStats', baseAndCommonStats: 'oll' } )
+
+  store.commit('listStatObjects/statChange', { addParam: [{'oll': addParam.value}], type: 'freeStats', idMannequin: props.idMannequin }  )
+
+  
 }
 
 watch(accessibleStats, val => {

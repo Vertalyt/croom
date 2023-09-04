@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { fetchAPIData } from '../../api/fetchApi'
 import { helm_10Lvl } from '../../initialization/Helm0_10'
 import AppLoader from '../AppLoader.vue'
@@ -61,7 +61,11 @@ const props = defineProps({
   minStats: {
     type: Object,
     required: true
-  }
+  },
+  lvlPerson:{
+    type: Number,
+    required: true
+  },
 })
 
 const emits = defineEmits({
@@ -69,13 +73,15 @@ const emits = defineEmits({
 })
 
 const lvlSelect = ref('change')
-const optionLvl = 24
+const BASE_LVL_PERSON = 24
+const optionLvl = ref(BASE_LVL_PERSON)
 const newResult = ref(null)
 const isloading = ref(false)
 const typeRarity = ref('none')
 const spanErrorText = ref('')
 const openAccordion = ref(false)
 const reqParameterVal = ref(false)
+
 
 const isClose = () => {
   emits('isClose')
@@ -286,6 +292,8 @@ const loadingByFilters = async () => {
 
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
+  reqParameterVal.value ? optionLvl.value = props.lvlPerson : optionLvl.value = BASE_LVL_PERSON
+  
   if (newResult.value !== null && lvlSelect.value !== 'change') {
     loadingByFilters()
   }

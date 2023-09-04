@@ -74,7 +74,7 @@ small {
   width: 100vw;
   display: flex;
   justify-content: center;
-  background-image: url(https://sabzero.biz/croomTemplate/assets/img/AL.png);
+  background-image: url('./src/assets/img/AL.png');
   background-size: cover;
 }
 

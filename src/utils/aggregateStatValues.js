@@ -23,54 +23,59 @@ function updateStats(sourceStatsArray, arrUpdate, includeSummStatBase) {
     });
   }
 
-export function aggregateStatValues({baseUpdateRase }) {
-    // Очищаем массивы перед началом работы
-    let commonStats = []
-    let bonusOllStats = []
-    let arrUpdate = baseUpdateRase
-  
-  const sumChangeInfo = store.getters['listStatObjects/listStatChange']
+export function aggregateStatValues({ baseUpdate, idMannequin }) {
+  // Очищаем массивы перед началом работы
+  let commonStats = [];
+  let bonusOllStats = [];
+  let arrUpdate = baseUpdate;
 
-    // Проходимся по каждому элементу исходного массива
-    sumChangeInfo.forEach((item) => {
-      const baseAndCommonStats = item.baseAndCommonStats
-      const params = item.param
-      // commonStats добавлять только в Базовые.
-      // bonusOllStats добавлять и в Бонусы и в Базовые
-      // Выбираем нужный массив в зависимости от значения baseAndCommonStats
-      const resultArray =
-        baseAndCommonStats === 'bonusAndBase'
-          ? commonStats
-          : baseAndCommonStats === 'oll'
-          ? bonusOllStats
-          : null
-  
-      if (resultArray) {
-        // Суммируем значения статов для текущего элемента
-        params.forEach((param) => {
-          const key = param.key
-          const count = param.count
-          const existingStat = resultArray.find((stat) => stat.key === key)
-  
+  const sumChangeInfo = store.getters['listStatObjects/listStat'](idMannequin);
+console.log(sumChangeInfo);
+  // Проходимся по каждому элементу исходного массива
+  sumChangeInfo.forEach((item) => {
+    const params = item.param;
+
+    params.forEach((paramObj) => {
+      // Проверяем, есть ли в объекте 'oll' и обрабатываем его
+      if (paramObj['oll']) {
+        paramObj['oll'].forEach((param) => {
+          const key = param.key;
+          const count = param.count;
+          const existingStat = bonusOllStats.find((stat) => stat.key === key);
+
           if (existingStat) {
-            existingStat.count += count
+            existingStat.count += count;
           } else {
-            resultArray.push({ key, count })
+            bonusOllStats.push({ key, count });
           }
-        })
+        });
       }
-    })
-  
-    if (commonStats) {
-    //     // Суммируем значения статов для текущего элемента
-    arrUpdate = updateStats(commonStats, arrUpdate, false);
-    }
-  
-    if (bonusOllStats) {
-    //   // Выводим результаты
-    arrUpdate = updateStats(bonusOllStats, arrUpdate, true);
-    }
 
-    return { arrUpdate }
+      // Проверяем, есть ли в объекте 'bonusAndBase' и обрабатываем его
+      if (paramObj['bonusAndBase']) {
+        paramObj['bonusAndBase'].forEach((param) => {
+          const key = param.key;
+          const count = param.count;
+          const existingStat = commonStats.find((stat) => stat.key === key);
+
+          if (existingStat) {
+            existingStat.count += count;
+          } else {
+            commonStats.push({ key, count });
+          }
+        });
+      }
+    });
+  });
+
+  // Обновляем статы, если соответствующие массивы не пусты
+  if (commonStats.length > 0) {
+    arrUpdate = updateStats(commonStats, arrUpdate, false);
   }
-  
+
+  if (bonusOllStats.length > 0) {
+    arrUpdate = updateStats(bonusOllStats, arrUpdate, true);
+  }
+
+  return { arrUpdate };
+}

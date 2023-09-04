@@ -16,23 +16,32 @@ const cellOptions = ref()
 const store = useStore()
 const raseParams = ref('')
 const baseStatConfigurations = ref()
+const baseManekenConfig = ref()
+const lvlPerson = ref(0)
 
+const idMannequin = 1; // айди манекена, в будущем буду менять в зависимости от манекена
+const listStat = computed(() => store.getters['listStatObjects/listStat'](idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 
-const listStatChange = computed(() => store.getters['listStatObjects/listStatChange']) // слежу за массивом, который хранит в себе все обьекты изменения стат
-const id = 1; // айди манекена, в будущем буду менять в зависимости от манекена
 
 onMounted(() => {
-  baseStatConfigurations.value = store.getters['listManeken'](id) // базовое значение конкретной расы, и их переменные, стартовое люди
+  baseManekenConfig.value = store.getters['listManeken'](idMannequin);// базовое значение конкретной расы, и их переменные, стартовое люди
+  baseStatConfigurations.value = baseManekenConfig.value.map(item => item.statModule).flat()
 } )
 
-watch(listStatChange, (_) => {
+const updateLvl = (lvl) => {
+  lvlPerson.value = lvl
+}
+
+watch(listStat, (_) => {
     //суммируем все колонки для итогового результата
-    const { arrUpdate, } = aggregateStatValues({
-    baseUpdateRase: baseStatConfigurations.value,
+    const { arrUpdate } = aggregateStatValues({
+      baseUpdate: baseStatConfigurations.value,
+      idMannequin: idMannequin
   }, { deep: true })
   updatedStatConfigurations.value = arrUpdate
-  store.commit('updateManekenInfo', { idManeken: id, statModule: arrUpdate })
-})
+
+  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl: lvlPerson.value})
+}, {deep: true})
 
 watch(raseParams, val => {
   //изменяю зачение базовой расы на обновленную
@@ -51,10 +60,11 @@ watch(raseParams, val => {
   })
   //суммирую в итоговый массив
   const { arrUpdate } = aggregateStatValues({
-    baseUpdateRase: newBaseConfig,
+    baseUpdate: newBaseConfig,
+    idMannequin: idMannequin
   })
   updatedStatConfigurations.value = arrUpdate
-  store.commit('updateManekenInfo', { idManeken: id, statModule: arrUpdate })
+  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl: lvlPerson.value })
 })
 
 const changeRase = ({ raseModel }) => {
@@ -90,6 +100,7 @@ const minstats = computed(() => {
           v-if="isOpen"
           :cellOptions="cellOptions"
           :minStats="minstats"
+          :lvlPerson='lvlPerson'
           @isClose="isClose"
         />
         <AppHeader />
@@ -99,9 +110,12 @@ const minstats = computed(() => {
             v-if="isDummyLoaded"
             :isDummyLoaded="isDummyLoaded"
             :updatedStatConfigurations="updatedStatConfigurations"
+            :idMannequin="idMannequin"
 
             @changeRase="changeRase"
             @modalOpen="modalOpen"
+            @updateLvl="updateLvl"
+
           />
           <AppManekenResult
             v-if="updatedStatConfigurations"

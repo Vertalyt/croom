@@ -7,16 +7,15 @@ export default createStore({
   state() {
     return {
       listManeken: [
-        { idManeken: 1, statModule: baseStatModule},
+        { idMannequin: 1, statModule: baseStatModule, lvl: 0},
       ]
     }
   },
   getters: {
     listManeken: (state) => (id) => {
-      const filteredItems = state.listManeken.filter(item => {
-        return item.idManeken === id;
+      return state.listManeken.filter(item => {
+        return item.idMannequin === id;
       });
-      return filteredItems.map(item => item.statModule).flat();
     }
   },  
   mutations: {
@@ -35,15 +34,16 @@ export default createStore({
         }
       })
     },
-    addManekenInfo(state, { idManeken, statModule }) {
-      state.listManeken.push({ idManeken, statModule })
+    addManekenInfo(state, { idMannequin, statModule }) {
+      state.listManeken.push({ idMannequin, statModule })
     },
-    updateManekenInfo(state, { idManeken, statModule }) {
+    updateManekenInfo(state, { idMannequin, statModule, lvl }) {
       state.listManeken = state.listManeken.map((c) => {
-        if (c.idManeken === idManeken) {
+        if (c.idMannequin === idMannequin) {
           return {
             ...c,
-            statModule
+            statModule,
+            lvl
           }
         }
         return c
@@ -51,14 +51,14 @@ export default createStore({
     }
   },
   actions: {
-    addManekenInfo({ commit }, { idManeken, statModule }) {
-      commit('addManekenInfo', { idManeken, statModule })
+    addManekenInfo({ commit }, { idMannequin, statModule }) {
+      commit('addManekenInfo', { idMannequin, statModule })
     },
-    updateManekenInfo({ commit }, { idManeken, statModule }) {
-      commit('updateManekenInfo', { idManeken, statModule })
+    updateManekenInfo({ commit }, update) {
+      commit('updateManekenInfo', update)
     },
-    setlistManecken({ commit }, { idManeken, raseModel }) {
-      commit('updateManekenInfo', { idManeken, raseModel })
+    setlistManecken({ commit }, { idMannequin, raseModel }) {
+      commit('updateManekenInfo', { idMannequin, raseModel })
     }
   },
   modules: {
