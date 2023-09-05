@@ -3,12 +3,11 @@ import { ref, computed, watch, onMounted } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
-import { initialSetupEntries, basickParamsRase, baseStatModule } from './initialization/baseParams'
+import { basickParamsRase, baseStatModule } from './initialization/baseParams'
 import ManeckenModal from './components/use/ManeckenModal.vue'
 import { aggregateStatValues } from './utils/aggregateStatValues'
 import { useStore } from 'vuex'
 
-const isDummyLoaded = initialSetupEntries
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
@@ -20,7 +19,7 @@ const baseManekenConfig = ref()
 const lvlPerson = ref(0)
 
 const idMannequin = 1; // айди манекена, в будущем буду менять в зависимости от манекена
-const listStat = computed(() => store.getters['listStatObjects/listStat'](idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
+const listStat = computed(() => store.getters['statChange/listStat'](idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 
 
 onMounted(() => {
@@ -101,17 +100,15 @@ const minstats = computed(() => {
           :cellOptions="cellOptions"
           :minStats="minstats"
           :lvlPerson='lvlPerson'
+          :idMannequin="idMannequin"
           @isClose="isClose"
         />
         <AppHeader />
 
         <main class="main-wrapper">
           <AppManeken
-            v-if="isDummyLoaded"
-            :isDummyLoaded="isDummyLoaded"
             :updatedStatConfigurations="updatedStatConfigurations"
             :idMannequin="idMannequin"
-
             @changeRase="changeRase"
             @modalOpen="modalOpen"
             @updateLvl="updateLvl"

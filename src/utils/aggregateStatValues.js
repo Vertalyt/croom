@@ -29,16 +29,15 @@ export function aggregateStatValues({ baseUpdate, idMannequin }) {
   let bonusOllStats = [];
   let arrUpdate = baseUpdate;
 
-  const sumChangeInfo = store.getters['listStatObjects/listStat'](idMannequin);
-console.log(sumChangeInfo);
+  const sumChangeInfo = store.getters['statChange/listStat'](idMannequin);
   // Проходимся по каждому элементу исходного массива
   sumChangeInfo.forEach((item) => {
     const params = item.param;
 
     params.forEach((paramObj) => {
-      // Проверяем, есть ли в объекте 'oll' и обрабатываем его
-      if (paramObj['oll']) {
-        paramObj['oll'].forEach((param) => {
+      // Проверяем, есть ли в объекте 'base' и обрабатываем его
+      if (paramObj['base']) {
+        paramObj['base'].forEach((param) => {
           const key = param.key;
           const count = param.count;
           const existingStat = bonusOllStats.find((stat) => stat.key === key);
@@ -53,6 +52,8 @@ console.log(sumChangeInfo);
 
       // Проверяем, есть ли в объекте 'bonusAndBase' и обрабатываем его
       if (paramObj['bonusAndBase']) {
+
+
         paramObj['bonusAndBase'].forEach((param) => {
           const key = param.key;
           const count = param.count;

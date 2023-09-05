@@ -37,8 +37,8 @@ export default {
     },
   },
   actions: {
-    statChange({ commit }, { addParam, baseAndCommonStats, type, idMannequin }) {
-      commit('statChange', { addParam, baseAndCommonStats, type, idMannequin })
+    statChange({ commit }, { addParam, type, idMannequin }) {
+      commit('statChange', { addParam, type, idMannequin })
     },
   }
 }

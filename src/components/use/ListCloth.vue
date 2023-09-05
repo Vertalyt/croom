@@ -1,27 +1,36 @@
 <template>
   <div class="accordionWrap" :class="{ active: openAccordion }">
-
     <template v-for="(c, idx) in newResult" :key="c.otherInfo.id">
-
-      <div @click ="accordionOpen(idx)" class="accordion">
+      <div @click="accordionOpen(idx)" class="accordion">
         <div class="accordionFace">
-          
           <div class="accordionFaceInfo">
             <img
-            :src="`https://files.nura.biz/site/images/things100x100/${c.otherInfo.image}.png`"
-            :alt="c.otherInfo.name"
-            class="accordionFaceImg"
-          />
-          <p>{{ c.otherInfo.name }}</p>
+              :src="`https://files.nura.biz/site/images/things100x100/${c.otherInfo.image}.png`"
+              :alt="c.otherInfo.name"
+              class="accordionFaceImg"
+            />
+            <p>{{ c.otherInfo.name }}</p>
           </div>
 
-          <button class="button" @click.stop ="dress(c)">Вдягти</button>
+          <button class="button" @click.stop="dress(c)">Вдягти</button>
         </div>
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
-        <ChildAccordeonItem :items="c.minParam"  :openChildPanel="openChildPanel" label="Требуемые параметры" typeParam="minParam"  @changeChildPanel="accordionChildOpen"/>
-        <ChildAccordeonItem :items="c.addParam" :openChildPanel="openChildPanel"  label="Бонусные параметры" typeParam="addParam"  @changeChildPanel="accordionChildOpen"/>
+        <ChildAccordeonItem
+          :items="c.minParam"
+          :openChildPanel="openChildPanel"
+          label="Требуемые параметры"
+          typeParam="minParam"
+          @changeChildPanel="accordionChildOpen"
+        />
+        <ChildAccordeonItem
+          :items="c.addParam"
+          :openChildPanel="openChildPanel"
+          label="Бонусные параметры"
+          typeParam="addParam"
+          @changeChildPanel="accordionChildOpen"
+        />
       </div>
     </template>
   </div>
@@ -30,9 +39,9 @@
 <script setup>
 import { ref } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
+import { useStore } from 'vuex'
 
-
-defineProps({
+const props = defineProps({
   newResult: {
     type: Array,
     required: true
@@ -40,11 +49,19 @@ defineProps({
   openAccordion: {
     type: Boolean,
     required: true
+  },
+  idMannequin: {
+    type: Number,
+    required: true
   }
 })
 
+const emits = defineEmits({
+  modalClose: null
+})
 const openPanel = ref(null)
 const openChildPanel = ref('')
+const store = useStore()
 
 const accordionChildOpen = (panelId) => {
   openChildPanel.value = openChildPanel.value === panelId ? '' : panelId // Переключение состояния
@@ -55,10 +72,38 @@ const accordionOpen = (panelId) => {
   openChildPanel.value = ''
 }
 
-const dress = (c) => {
-  console.log(c);
-}
 
+const dress = (item) => {
+  // Проверка наличия ключей с "class": "error" в minParam
+  const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
+
+ // Если есть ключи с "class": "error", выведите сообщение и завершите проверку
+  if (errorKeys.length > 0) {
+    console.log('Ваши параметры ниже минимальных')
+    return
+  } 
+    const addParam = item.addParam
+
+    // Преобразовываем данные
+    const convertedData = []
+    for (const key in addParam) {
+      if (Object.hasOwnProperty.call(addParam, key)) {
+        convertedData.push({
+          key: key,
+          count: parseInt(addParam[key])
+        })
+      }
+    }
+
+    store.dispatch('dummy/changeDummyEl', {
+      idMannequin: props.idMannequin,
+      addParam: [{ "bonusAndBase": convertedData }],
+      typeid: item.otherInfo.typeid,
+      imgLink: item.otherInfo.image
+    })
+    emits('modalClose')
+
+}
 </script>
 
 <script>

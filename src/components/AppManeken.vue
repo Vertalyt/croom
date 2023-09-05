@@ -12,12 +12,7 @@ import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 import { useStore } from 'vuex'
 
-
 const props = defineProps({
-  isDummyLoaded: {
-    type: Array,
-    required: true
-  },
   updatedStatConfigurations: {
     type: Array,
     required: true
@@ -30,7 +25,7 @@ const props = defineProps({
 const emits = defineEmits({
   changeRase: String,
   modalOpen: Array,
-  updateLvl: Number,
+  updateLvl: Number
 })
 
 const raseModel = ref('human')
@@ -43,7 +38,6 @@ const parentClassItems = ref(null)
 const parentClassModel = ref('none')
 const parentClasses = ref([])
 const store = useStore()
-
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -62,19 +56,18 @@ const addParam = ref([
 const fortress = ref('none')
 const availableFortressOptions = fortressParam
 const availableRaces = raseParams
-//props
-const leftDummyPart = props.isDummyLoaded.filter((d) => d.location === 'leftDummyPart')
-const rightDummyPart = props.isDummyLoaded.filter((d) => d.location === 'rightDummyPart')
-const centerTopDummyPart = props.isDummyLoaded.filter((d) => d.location === 'centerTopDummyPart')
-const centerBottomDummyPart = props.isDummyLoaded.filter(
-  (d) => d.location === 'centerBottomDummyPart'
-)
-//
 
 const filtersClasses = ref({
   category: 'classes'
   // parent: 8
 })
+
+const isDummyLoaded = computed(() => store.getters['dummy/listsDummy'](props.idMannequin))
+const leftDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'leftDummyPart'))
+const rightDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'rightDummyPart'))
+const centerTopDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'centerTopDummyPart'))
+const centerBottomDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'centerBottomDummyPart'))
+
 
 onMounted(async () => {
   // OllParamClass.value = await fetchAPIData(filtersClasses.value)
@@ -89,7 +82,7 @@ const statParams = computed(() => props.updatedStatConfigurations.filter((d) => 
 
 const handleRaseSelectChange = (availableRaces) => {
   emits('changeRase', {
-    raseModel: availableRaces,
+    raseModel: availableRaces
   })
 }
 
@@ -168,8 +161,12 @@ const handleParentClassSelectChange = (parent) => {
 
   if (accessibleStats.value > totalSum) {
     accessibleStats.value -= totalSum
- 
-    store.commit('listStatObjects/statChange', { addParam: [{'oll': updatedStats},{'bonusAndBase': addClassParam }], type: 'addShoes', idMannequin: props.idMannequin }  )
+
+    store.commit('statChange/statChange', {
+      addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
+      type: 'addShoes',
+      idMannequin: props.idMannequin
+    })
   } else {
     console.log('Не достаточно очков')
   }
@@ -186,24 +183,24 @@ const lvlSelectChange = () => {
   different.value = lvlStatDifference + oldAccessibleStats
 
   if (lvlStatDifference > 0 || different.value > -1) {
-    updateStatsAndEmitEvent(different.value, newCountStat);
+    updateStatsAndEmitEvent(different.value, newCountStat)
     emits('updateLvl', Number(lvlSelect.value))
   } else {
-    console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`);
+    console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`)
   }
 }
 
 const updateStatsAndEmitEvent = (difference, newCountStat) => {
-  accessibleStats.value = difference;
-  oldCountStat = newCountStat;
-  const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }));
-  classModel.value = 'none';
-
-  store.commit('listStatObjects/statChange', { addParam: [{'oll': addClassParam}], type: 'changeLvl', idMannequin: props.idMannequin }  )
-
-
-
-};
+  accessibleStats.value = difference
+  oldCountStat = newCountStat
+  const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }))
+  classModel.value = 'none'
+  store.commit('statChange/statChange', {
+    addParam: [{ base: addClassParam }],
+    type: 'changeLvl',
+    idMannequin: props.idMannequin
+  })
+}
 
 const modifyStatAndEmit = (statKey, increment) => {
   const { addParam: updatedAddParam, accessibleStats: updatedAccessibleStats } = modifyStat({
@@ -214,19 +211,19 @@ const modifyStatAndEmit = (statKey, increment) => {
   })
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
-
-  store.commit('listStatObjects/statChange', { addParam: [{'oll': addParam.value}], type: 'freeStats', idMannequin: props.idMannequin }  )
-
-  
+  store.commit('statChange/statChange', {
+    addParam: [{ base: addParam.value }],
+    type: 'freeStats',
+    idMannequin: props.idMannequin
+  })
 }
 
-watch(accessibleStats, val => {
-  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat;
-  baseStat.value.forEach(item => {
-    item.disabled = item.stat < (Number(newCountStat) - Number(val));
-  });
-});
-
+watch(accessibleStats, (val) => {
+  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat
+  baseStat.value.forEach((item) => {
+    item.disabled = item.stat < Number(newCountStat) - Number(val)
+  })
+})
 
 const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
@@ -248,7 +245,7 @@ const handleStatInputChange = (stat) => {
 const handleResetManecken = () => {
   addParam.value.map((p) => (p.count = 0))
   emits('changeRase', {
-    raseModel: 'human',
+    raseModel: 'human'
   })
   raseModel.value = 'human'
   lvlSelect.value = 'change'
@@ -263,7 +260,6 @@ const handleClothesChoice = async (param) => {
 const handleFortressUpdate = (fortress) => {
   console.log(fortress)
 }
-
 </script>
 
 <script>
@@ -322,7 +318,9 @@ export default {
 
               <select v-model="lvlSelect" @change="lvlSelectChange" class="select-css">
                 <option value="change" disabled selected>Виберіть рівень</option>
-                <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">{{ l.lvl }}</option>
+                <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
+                  {{ l.lvl }}
+                </option>
               </select>
             </div>
 

@@ -9,7 +9,7 @@
           :id="`${d.name}_${idx}`"
           @click="handleClothesChoice(d)"
         >
-          <img :src="d.link" :alt="d.name" />
+          <img class="mat_img" :src="d.link" :alt="d.name" />
         </div>
 </template>
 

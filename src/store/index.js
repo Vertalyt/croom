@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
-import listStatObjects from './modules/statChange.module'
+import statChange from './modules/statChange.module'
+import dummy from './modules/dummy.module'
+
 import { baseStatModule } from '../initialization/baseParams'
 
 
@@ -62,6 +64,7 @@ export default createStore({
     }
   },
   modules: {
-    listStatObjects,
+    statChange,
+    dummy
 }
 })

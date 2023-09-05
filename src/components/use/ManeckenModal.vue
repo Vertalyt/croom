@@ -40,14 +40,14 @@
 
     <AppLoader v-if="isloading" />
 
-    <ListCloth v-if="newResult" :newResult="newResult" :openAccordion="openAccordion" />
+    <ListCloth v-if="newResult" :newResult="newResult" :openAccordion="openAccordion" :idMannequin="idMannequin" @modalClose="isClose"/>
 
     <span v-if="spanErrorText" class="spanError"> {{ spanErrorText }} </span>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { fetchAPIData } from '../../api/fetchApi'
 import { helm_10Lvl } from '../../initialization/Helm0_10'
 import AppLoader from '../AppLoader.vue'
@@ -66,6 +66,10 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  idMannequin:{
+    type: Number,
+    required: true
+  },
 })
 
 const emits = defineEmits({
@@ -80,7 +84,7 @@ const isloading = ref(false)
 const typeRarity = ref('none')
 const spanErrorText = ref('')
 const openAccordion = ref(false)
-const reqParameterVal = ref(false)
+const reqParameterVal = ref(true)
 
 
 const isClose = () => {
@@ -124,7 +128,8 @@ const otherInfo = [
   { rarity: 0 },
   { id: 0 },
   { image: '' },
-  { class: '' }
+  { class: '' },
+  { typeid: '' },
 ]
 
 const dataSets = [
@@ -141,7 +146,7 @@ const rarity = ref([
   { key: 'epic', id: '6', name: 'Епична річ', checked: true },
   { key: 'ratnic', id: '7', name: 'Річ ратника', checked: true },
   { key: 'mythical', id: '8', name: 'Міфічна річ', checked: true },
-  { key: 'unique', id: '9', name: 'Уникальна річ', checked: true }
+  { key: 'unique', id: '9', name: 'Уникальна річ', checked: false }
 ])
 
 //меняем в массиве rarity состояние включенности в чекбоксе

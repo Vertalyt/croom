@@ -332,6 +332,9 @@ option:disabled {
 }
 
 .parameter__mat__img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-blend-mode: multiply;
   background-image: url('./img/parameter_mat.png');
   background-size: cover;
@@ -348,6 +351,11 @@ option:disabled {
 .parameter__mat__small {
   width: 65px;
   height: 65px;
+}
+
+.mat_img {
+  width: 90%;
+  height: auto;
 }
 
 .dummy__center {
