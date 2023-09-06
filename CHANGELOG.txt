@@ -90,3 +90,10 @@ Added filtering of the maximum level of clothing by the filter that I can wear
 ### Changed
 Changed the array of added required base and general stats when calling statChange to a more universal one.
 Changed storage in the data store to data for each meken
+
+
+
+## [1.0.35] - 2024-0*-06
+
+### Added
+Added ability to change subclass

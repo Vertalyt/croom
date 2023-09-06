@@ -24,7 +24,7 @@ const listStat = computed(() => store.getters['statChange/listStat'](idMannequin
 
 onMounted(() => {
   baseManekenConfig.value = store.getters['listManeken'](idMannequin);// базовое значение конкретной расы, и их переменные, стартовое люди
-  baseStatConfigurations.value = baseManekenConfig.value.map(item => item.statModule).flat()
+  baseStatConfigurations.value = baseManekenConfig.value.statModule
 } )
 
 const updateLvl = (lvl) => {

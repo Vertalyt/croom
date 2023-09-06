@@ -63,11 +63,24 @@ const filtersClasses = ref({
 })
 
 const isDummyLoaded = computed(() => store.getters['dummy/listsDummy'](props.idMannequin))
-const leftDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'leftDummyPart'))
-const rightDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'rightDummyPart'))
-const centerTopDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'centerTopDummyPart'))
-const centerBottomDummyPart = computed(() => isDummyLoaded.value.filter((d) => d.location === 'centerBottomDummyPart'))
+const leftDummyPart = computed(() =>
+  isDummyLoaded.value.filter((d) => d.location === 'leftDummyPart')
+)
+const rightDummyPart = computed(() =>
+  isDummyLoaded.value.filter((d) => d.location === 'rightDummyPart')
+)
+const centerTopDummyPart = computed(() =>
+  isDummyLoaded.value.filter((d) => d.location === 'centerTopDummyPart')
+)
+const centerBottomDummyPart = computed(() =>
+  isDummyLoaded.value.filter((d) => d.location === 'centerBottomDummyPart')
+)
 
+// слежу за изменением базовых стат
+const baseStatManeken = computed(() => store.getters['listManekenBase'](props.idMannequin))
+// слежу за изменением минимальных стат
+const minParamCloth = computed(() => store.getters['statChange/minParamCloth'](props.idMannequin))
+const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 
 onMounted(async () => {
   // OllParamClass.value = await fetchAPIData(filtersClasses.value)
@@ -105,7 +118,10 @@ const addClassMinParam = [
 ]
 
 function recalculationValues(parent, items) {
+  //нахожу какая конкретно расса, для расчета сколько нужно потратить и распределить стат для
+  // выполнения минимальных требований подкласса
   const parentClassItem = OllParamClass.value.filter((p) => p.name_en === parent)
+
   for (const item of parentClassItem) {
     // Перебираем элементы массива
     for (const param of items) {
@@ -117,7 +133,30 @@ function recalculationValues(parent, items) {
   }
 }
 
-const handleParentClassSelectChange = (parent) => {
+async function changingSubclassParameters() {
+  const subclass = listStat.value.find((item) => item.type === 'subclass')
+  if (subclass && subclass.param) {
+    // Найдем объект с ключом "base" в массиве "param"
+    const baseObject = subclass.param.find((obj) => obj.base)
+    if (baseObject) {
+      // Получим массив значений из объекта "base"
+      const baseValues = baseObject.base.map((item) => item.count)
+      // Вычислим сумму значений
+      const sum = baseValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+      accessibleStats.value += sum
+    } else {
+      console.log('Объект с ключом "base" не найден в массиве "param"')
+    }
+    store.commit('statChange/listDelChange', {
+      idMannequin: props.idMannequin,
+      type: 'subclass'
+    })
+  }
+}
+
+const handleParentClassSelectChange = async (parent) => {
+  await changingSubclassParameters()
+
   recalculationValues(parent, addClassParam)
   recalculationValues(parent, addClassMinParam)
 
@@ -141,12 +180,12 @@ const handleParentClassSelectChange = (parent) => {
         return item
     }
   })
-  // Проходим по каждой строке в updatedStatConfigurations
+
+  // Проходим по каждой строке в updatedStatConfigurations преобразовывая данные
   const updatedStats = updateMinParam.map((item) => {
     const matchingConfig = props.updatedStatConfigurations.find(
       (statConfig) => statConfig.key === item.key
     )
-
     if (matchingConfig) {
       const diff =
         matchingConfig.summStatBase < item.count ? item.count - matchingConfig.summStatBase : 0
@@ -158,13 +197,13 @@ const handleParentClassSelectChange = (parent) => {
     return item
   })
   const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
-
+  // считаю можно ли сменить уровень ниже, в зависимости от количества оставшихся очков распределения, что бы
+  //выполнить минимальную проверку требований подкласса
   if (accessibleStats.value > totalSum) {
     accessibleStats.value -= totalSum
-
     store.commit('statChange/statChange', {
       addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
-      type: 'addShoes',
+      type: 'subclass',
       idMannequin: props.idMannequin
     })
   } else {

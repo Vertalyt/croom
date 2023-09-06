@@ -15,10 +15,24 @@ export default createStore({
   },
   getters: {
     listManeken: (state) => (id) => {
-      return state.listManeken.filter(item => {
+      return state.listManeken.find(item => {
         return item.idMannequin === id;
       });
+    },
+    listManekenBase: (state) => (id) => {
+      const mannequin = state.listManeken.find(item => item.idMannequin === id);
+      if (mannequin) {
+        return mannequin.statModule.map(item => {
+          return {
+            key: item.key,
+            summStatBase: item.summStatBase
+          }
+        })
+      } else {
+        return null;
+      }
     }
+    
   },  
   mutations: {
     setlistManecken(state, raseParams) {

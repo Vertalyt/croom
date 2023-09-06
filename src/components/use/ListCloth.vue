@@ -72,37 +72,49 @@ const accordionOpen = (panelId) => {
   openChildPanel.value = ''
 }
 
+function parameterConversion(params, convertedData) {
+  for (const key in params) {
+    if (Object.hasOwnProperty.call(params, key)) {
+      convertedData.push({
+        key: key,
+        count: parseInt(params[key])
+      })
+    }
+  }
+}
 
 const dress = (item) => {
   // Проверка наличия ключей с "class": "error" в minParam
   const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
 
- // Если есть ключи с "class": "error", выведите сообщение и завершите проверку
+  // Если есть ключи с "class": "error", выведите сообщение и завершите проверку
   if (errorKeys.length > 0) {
     console.log('Ваши параметры ниже минимальных')
     return
-  } 
-    const addParam = item.addParam
+  }
+  const addParam = item.addParam
+  const minBaseParam = item.minParam
 
-    // Преобразовываем данные
-    const convertedData = []
-    for (const key in addParam) {
-      if (Object.hasOwnProperty.call(addParam, key)) {
-        convertedData.push({
-          key: key,
-          count: parseInt(addParam[key])
-        })
-      }
+  // Преобразовываем данные
+  const convertedAdd = []
+
+  // Преобразование минимальных требований
+  const convertedMin = Object.keys(minBaseParam).map((key) => {
+    return {
+      key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
+      count: parseInt(minBaseParam[key].value, 10)
     }
+  })
 
-    store.dispatch('dummy/changeDummyEl', {
-      idMannequin: props.idMannequin,
-      addParam: [{ "bonusAndBase": convertedData }],
-      typeid: item.otherInfo.typeid,
-      imgLink: item.otherInfo.image
-    })
-    emits('modalClose')
+  parameterConversion(addParam, convertedAdd)
 
+  store.dispatch('dummy/changeDummyEl', {
+    idMannequin: props.idMannequin,
+    addParam: [{ base: convertedMin }, { bonusAndBase: convertedAdd }],
+    typeid: item.otherInfo.typeid,
+    imgLink: item.otherInfo.image
+  })
+  emits('modalClose')
 }
 </script>
 
