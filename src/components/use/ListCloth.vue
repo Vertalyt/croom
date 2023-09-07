@@ -41,6 +41,8 @@ import { ref } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
 import { useStore } from 'vuex'
 
+
+
 const props = defineProps({
   newResult: {
     type: Array,
@@ -84,6 +86,8 @@ function parameterConversion(params, convertedData) {
 }
 
 const dress = (item) => {
+//добавляет вещи по typeid. Проблема что одевает сразу все вещи. Нужно добавлять с тор и фильтровать по name
+
   // Проверка наличия ключей с "class": "error" в minParam
   const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
 
@@ -99,7 +103,7 @@ const dress = (item) => {
   const convertedAdd = []
 
   // Преобразование минимальных требований
-  const convertedMin = Object.keys(minBaseParam).map((key) => {
+  Object.keys(minBaseParam).map((key) => {
     return {
       key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
       count: parseInt(minBaseParam[key].value, 10)
@@ -110,7 +114,7 @@ const dress = (item) => {
 
   store.dispatch('dummy/changeDummyEl', {
     idMannequin: props.idMannequin,
-    addParam: [{ base: convertedMin }, { bonusAndBase: convertedAdd }],
+    addParam: [{ bonusAndBase: convertedAdd }],
     typeid: item.otherInfo.typeid,
     imgLink: item.otherInfo.image
   })

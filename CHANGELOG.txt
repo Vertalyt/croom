@@ -97,3 +97,10 @@ Changed storage in the data store to data for each meken
 
 ### Added
 Added ability to change subclass
+
+
+## [1.0.35] - 2024-0*-07
+
+### Changed
+Fixed a bug with incorrect recalculation of the number of distribution points when changing a subclass
+Fixed stat drop via input/arrows when automatically distributed from a subclass

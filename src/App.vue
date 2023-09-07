@@ -69,6 +69,7 @@ watch(raseParams, val => {
 const changeRase = ({ raseModel }) => {
   //получаю все данные по ноой рассе
   raseParams.value = basickParams.value.find((r) => r.availableRaces === raseModel)?.date
+  store.commit('updateManekenInfo', { raseParams, idMannequin })
 }
 
 const modalOpen = (param) => {

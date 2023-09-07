@@ -11,6 +11,8 @@ import DummyPartSlot from './use/slots/DummyPartSlot.vue'
 import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 import { useStore } from 'vuex'
+import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
+
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -106,33 +108,6 @@ const handleClassSelectChange = (className) => {
 // массив с бонусами от класа
 const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }))
 
-// массив с требониями класа, что нужно автоматически распределить
-const addClassMinParam = [
-  { key: 'minstrength', count: 0 },
-  { key: 'mindexterity', count: 0 },
-  { key: 'minreaction', count: 0 },
-  { key: 'minconst', count: 0 },
-  { key: 'minintel', count: 0 },
-  { key: 'minwisdom', count: 0 },
-  { key: 'minluck', count: 0 }
-]
-
-function recalculationValues(parent, items) {
-  //нахожу какая конкретно расса, для расчета сколько нужно потратить и распределить стат для
-  // выполнения минимальных требований подкласса
-  const parentClassItem = OllParamClass.value.filter((p) => p.name_en === parent)
-
-  for (const item of parentClassItem) {
-    // Перебираем элементы массива
-    for (const param of items) {
-      // Если значения ключей совпадают и значение не равно null
-      if (item[param.key] !== null) {
-        param.count = parseInt(item[param.key]) // Преобразуем значение в число и записываем в count
-      }
-    }
-  }
-}
-
 async function changingSubclassParameters() {
   const subclass = listStat.value.find((item) => item.type === 'subclass')
   if (subclass && subclass.param) {
@@ -143,6 +118,7 @@ async function changingSubclassParameters() {
       const baseValues = baseObject.base.map((item) => item.count)
       // Вычислим сумму значений
       const sum = baseValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+
       accessibleStats.value += sum
     } else {
       console.log('Объект с ключом "base" не найден в массиве "param"')
@@ -155,10 +131,23 @@ async function changingSubclassParameters() {
 }
 
 const handleParentClassSelectChange = async (parent) => {
-  await changingSubclassParameters()
 
-  recalculationValues(parent, addClassParam)
-  recalculationValues(parent, addClassMinParam)
+// массив с требониями класа, что нужно автоматически распределить
+const addClassMinParam = [
+  { key: 'minstrength', count: 0 },
+  { key: 'mindexterity', count: 0 },
+  { key: 'minreaction', count: 0 },
+  { key: 'minconst', count: 0 },
+  { key: 'minintel', count: 0 },
+  { key: 'minwisdom', count: 0 },
+  { key: 'minluck', count: 0 }
+]
+
+
+  await changingSubclassParameters()
+  recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassParam })
+  recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassMinParam })
+
 
   const updateMinParam = addClassMinParam.map((item) => {
     switch (item.key) {
@@ -180,22 +169,8 @@ const handleParentClassSelectChange = async (parent) => {
         return item
     }
   })
-
   // Проходим по каждой строке в updatedStatConfigurations преобразовывая данные
-  const updatedStats = updateMinParam.map((item) => {
-    const matchingConfig = props.updatedStatConfigurations.find(
-      (statConfig) => statConfig.key === item.key
-    )
-    if (matchingConfig) {
-      const diff =
-        matchingConfig.summStatBase < item.count ? item.count - matchingConfig.summStatBase : 0
-      return {
-        key: item.key,
-        count: diff
-      }
-    }
-    return item
-  })
+  const updatedStats = updatedBaseStats({ arrMinParam: updateMinParam, ollStats: props.updatedStatConfigurations})
   const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
   // считаю можно ли сменить уровень ниже, в зависимости от количества оставшихся очков распределения, что бы
   //выполнить минимальную проверку требований подкласса
@@ -241,12 +216,15 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
   })
 }
 
+
+
 const modifyStatAndEmit = (statKey, increment) => {
   const { addParam: updatedAddParam, accessibleStats: updatedAccessibleStats } = modifyStat({
     accessibleStats: accessibleStats.value,
     addParam: addParam.value,
     statKey,
-    increment
+    increment,
+    id:props.idMannequin
   })
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats

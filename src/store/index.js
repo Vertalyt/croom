@@ -2,14 +2,14 @@ import { createStore } from 'vuex'
 import statChange from './modules/statChange.module'
 import dummy from './modules/dummy.module'
 
-import { baseStatModule } from '../initialization/baseParams'
-
+import { baseStatModule, basickParamsRase } from '../initialization/baseParams'
+const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
 
 export default createStore({
   state() {
     return {
       listManeken: [
-        { idMannequin: 1, statModule: baseStatModule, lvl: 0},
+        { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: raseParams},
       ]
     }
   },
@@ -35,36 +35,20 @@ export default createStore({
     
   },  
   mutations: {
-    setlistManecken(state, raseParams) {
-      state.listManeken =  state.listManeken.map((i) => {
-        const updatedStats = raseParams
-          ? {
-              summStatBase: raseParams.find((param) => param.key === i.key)?.count || i.summStatBase,
-              summStatBonusAndBase:
-                raseParams.find((param) => param.key === i.key)?.count || i.summStatBonusAndBase
-            }
-          : {}
-        return {
-          ...i,
-          ...updatedStats
-        }
-      })
-    },
     addManekenInfo(state, { idMannequin, statModule }) {
       state.listManeken.push({ idMannequin, statModule })
     },
-    updateManekenInfo(state, { idMannequin, statModule, lvl }) {
+    updateManekenInfo(state, update) {
       state.listManeken = state.listManeken.map((c) => {
-        if (c.idMannequin === idMannequin) {
+        if (c.idMannequin === update.idMannequin) {
           return {
             ...c,
-            statModule,
-            lvl
+            ...update
           }
         }
         return c
       })
-    }
+    },
   },
   actions: {
     addManekenInfo({ commit }, { idMannequin, statModule }) {
@@ -73,9 +57,6 @@ export default createStore({
     updateManekenInfo({ commit }, update) {
       commit('updateManekenInfo', update)
     },
-    setlistManecken({ commit }, { idMannequin, raseModel }) {
-      commit('updateManekenInfo', { idMannequin, raseModel })
-    }
   },
   modules: {
     statChange,

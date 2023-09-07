@@ -14,6 +14,11 @@ export default {
     listsDummy: (state) => (id) => {
       const foundItem = state.listsDummy.find(item => item.idMannequin === id);
       return foundItem ? foundItem.isDummy : [];
+    },
+    clothName(state) {
+      return state.listsDummy[0].isDummy.map(item => {
+        return item.name
+      })
     }
 
   },
