@@ -1,82 +1,101 @@
 import store from '../store'
 
-
 function updateStats(sourceStatsArray, arrUpdate, includeSummStatBase) {
-    return arrUpdate.map((item) => {
-      const common = sourceStatsArray.find((i) => i.key === item.key);
-      if (common) {
-        const updatedItem = {
-          ...item,
-          summStatBonusAndBase: item.summStatBonusAndBase + common.count
-        };
-        
-        if (includeSummStatBase) {
-          updatedItem.summStatBase = item.summStatBase + common.count;
-        }
-        
-        return updatedItem;
-      } else {
-        return {
-          ...item
-        };
+  return arrUpdate.map((item) => {
+    const common = sourceStatsArray.find((i) => i.key === item.key)
+    if (common) {
+      const updatedItem = {
+        ...item,
+        summStatBonusAndBase: item.summStatBonusAndBase + common.count
       }
-    });
-  }
+
+      if (includeSummStatBase) {
+        updatedItem.summStatBase = item.summStatBase + common.count
+      }
+
+      return updatedItem
+    } else {
+      return {
+        ...item
+      }
+    }
+  })
+}
+
 
 export function aggregateStatValues({ baseUpdate, idMannequin }) {
-  // Очищаем массивы перед началом работы
-  let commonStats = [];
-  let bonusOllStats = [];
-  let arrUpdate = baseUpdate;
+  let commonStats = []
+  let bonusOllStats = []
+  let arrUpdate = baseUpdate
+  const sortedChangesByType = ['freeStats', 'subclass']
 
-  const sumChangeInfo = store.getters['statChange/listStat'](idMannequin);
-  // Проходимся по каждому элементу исходного массива
-  sumChangeInfo.forEach((item) => {
-    const params = item.param;
+  // Получаем данные изменений статистики из хранилища по идентификатору манекена
+  const sumChangeInfo = store.getters['statChange/listStat'](idMannequin)
 
-    params.forEach((paramObj) => {
-      // Проверяем, есть ли в объекте 'base' и обрабатываем его
-      if (paramObj['base']) {
-        paramObj['base'].forEach((param) => {
-          const key = param.key;
-          const count = param.count;
-          const existingStat = bonusOllStats.find((stat) => stat.key === key);
+  // Фильтруем изменения статистики по заданным типам и получаем массив sorted
+  const sorted = sumChangeInfo.filter((item) => {
+    return sortedChangesByType.some((changeType) => item.type.includes(changeType))
+  })
 
-          if (existingStat) {
-            existingStat.count += count;
-          } else {
-            bonusOllStats.push({ key, count });
-          }
-        });
-      }
+  // Обработка 'base' из массива sorted (необходимо для отбраковки базовых стат от вещей)
+  processBase(sorted, bonusOllStats)
 
-      // Проверяем, есть ли в объекте 'bonusAndBase' и обрабатываем его
-      if (paramObj['bonusAndBase']) {
-
-
-        paramObj['bonusAndBase'].forEach((param) => {
-          const key = param.key;
-          const count = param.count;
-          const existingStat = commonStats.find((stat) => stat.key === key);
-
-          if (existingStat) {
-            existingStat.count += count;
-          } else {
-            commonStats.push({ key, count });
-          }
-        });
-      }
-    });
-  });
+  // Обработка 'bonusAndBase' из массива sumChangeInfo
+  processBonusAndBase(sumChangeInfo, commonStats)
 
   // Обновляем статы, если соответствующие массивы не пусты
   if (commonStats.length > 0) {
-    arrUpdate = updateStats(commonStats, arrUpdate, false);
+    arrUpdate = updateStats(commonStats, arrUpdate, false)
   }
 
   if (bonusOllStats.length > 0) {
-    arrUpdate = updateStats(bonusOllStats, arrUpdate, true);
+    arrUpdate = updateStats(bonusOllStats, arrUpdate, true)
   }
 
-  return { arrUpdate };
+  return { arrUpdate }
+}
+
+// Функция для обработки 'base'
+function processBase(sorted, bonusOllStats) {
+  sorted.forEach((item) => {
+    const params = item.param
+
+    params.forEach((paramObj) => {
+      if (paramObj['base']) {
+        paramObj['base'].forEach((param) => {
+          const key = param.key
+          const count = param.count
+          const existingStat = bonusOllStats.find((stat) => stat.key === key)
+
+          if (existingStat) {
+            existingStat.count += count
+          } else {
+            bonusOllStats.push({ key, count })
+          }
+        })
+      }
+    })
+  })
+}
+
+// Функция для обработки 'bonusAndBase'
+function processBonusAndBase(sumChangeInfo, commonStats) {
+  sumChangeInfo.forEach((item) => {
+    const params = item.param
+    params.forEach((paramObj) => {
+      if (paramObj['bonusAndBase']) {
+        paramObj['bonusAndBase'].forEach((param) => {
+          const key = param.key
+          const count = param.count
+          const existingStat = commonStats.find((stat) => stat.key === key)
+
+          if (existingStat) {
+            existingStat.count += count
+          } else {
+            commonStats.push({ key, count })
+          }
+        })
+      }
+    })
+  })
 }

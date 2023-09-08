@@ -1,6 +1,6 @@
 import store from '../store/index'
 
-export function checkingStatAvailability(id) {
+function checkingStatAvailability(id) {
   const minParamRase = store.getters['listManeken'](id)
   const countParam = minParamRase.raseParams
   const statEditParam = minParamRase.statModule
@@ -24,7 +24,10 @@ export function checkingStatAvailability(id) {
   })
 }
 
+// флаг разрешения на понижения стат
+let availabilityFlag = true
 // функция расчета изменения статов.
+
 export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }) => {
   if (accessibleStats === null) {
     console.log(`Выберите уровень персонажа`)
@@ -45,14 +48,17 @@ export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }
     return handleIncrement(addParam, foundParam, accessibleStats, increment)
   } else {
     return handleDecrement(
-      addParam,
-      foundOllParam,
-      foundParam,
-      accessibleStats,
-      minParamCloth,
-      minParamsWithoutRaceBonus,
-      statKey,
-      increment
+{
+  addParam,
+  foundOllParam,
+  foundParam,
+  accessibleStats,
+  minParamCloth,
+  minParamsWithoutRaceBonus,
+  statKey,
+  increment,
+  id
+}
     )
   }
 }
@@ -60,6 +66,7 @@ export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }
 // положительый изменения
 function handleIncrement(addParam, foundParam, accessibleStats, increment) {
   if (accessibleStats > 0) {
+    availabilityFlag = true
     foundParam.count += increment
     accessibleStats -= increment
   } else {
@@ -70,6 +77,7 @@ function handleIncrement(addParam, foundParam, accessibleStats, increment) {
 
 // отрицательные изменения
 function handleDecrement(
+{
   addParam,
   foundOllParam,
   foundParam,
@@ -77,48 +85,86 @@ function handleDecrement(
   minParamCloth,
   minParamsWithoutRaceBonus,
   statKey,
-  increment
+  increment,
+  id
+}
 ) {
 
-  let availabilityFlag = true
 
   if (minParamCloth.length > 0) {
     const minParamSubclass = minParamCloth.find((item) => item.type === 'subclass')?.base
-// тут же делать подобную проверку для вещей
+
     if (minParamSubclass) {
-      availabilityFlag = handleDecrementSubclass(minParamsWithoutRaceBonus, minParamSubclass, statKey)
+      handleDecrementSubclass(
+        minParamsWithoutRaceBonus,
+        minParamSubclass,
+        statKey
+      )
     }
-       
-    
-    if(availabilityFlag) {
-              // смотрю в foundOllParam все распределенные статы,
-              if (foundOllParam.count < 1) {
-                if (foundOllParam.count === 0) {
-                  console.log(`Значение ${foundParam.key} не может быть меньше базового`)
-                }
-              } else {
-                foundParam.count += increment
-                accessibleStats -= increment
-              }
-            }
+
+    // тут же делать подобную проверку для вещей-------
+    checkStatRequirementsForClothing(statKey, id)
+
+    if (availabilityFlag) {
+      // смотрю в foundOllParam все распределенные статы,
+      if (foundOllParam.count < 1) {
+        if (foundOllParam.count === 0) {
+          console.log(`Значение ${foundParam.key} не может быть меньше базового`)
+        }
+      } else {
+        foundParam.count += increment
+        accessibleStats -= increment
+      }
+    }
   }
   return { addParam, accessibleStats }
 }
 
 
 function handleDecrementSubclass(minParamsWithoutRaceBonus, minParamSubclass, statKey) {
-    minParamsWithoutRaceBonus.map((minParamsItem) => {
-      const minParamSubclassItem = minParamSubclass.find((item) => item.key === minParamsItem.key)
-      if (minParamSubclassItem) {
-        // сравниваю требования для подкласса и текущие распределенные базовые статы, если меньше, запрещаю обновление
-        if (minParamsItem.count <= minParamSubclassItem.count) {
-          if (statKey === minParamsItem.key) {
-            console.log(
-              `Нельзя понизить характеристику "${minParamsItem.key}", будет ниже требований подкласса`
-            )
-            return false
-          }
+  minParamsWithoutRaceBonus.find((minParamsItem) => {
+    const minParamSubclassItem = minParamSubclass.find((item) => item.key === minParamsItem.key)
+    if (minParamSubclassItem) {
+      // сравниваю требования для подкласса и текущие распределенные базовые статы, если меньше, запрещаю обновление
+      if (minParamsItem.count <= minParamSubclassItem.count) {
+        if (statKey === minParamsItem.key) { // проверка что передаваемый стат именно тот что жмем
+          console.log(
+            `Нельзя понизить характеристику "${minParamsItem.key}", будет ниже требований подкласса`
+          )
+          availabilityFlag = false
         }
       }
-    })
+    }
+  })
+}
+
+// беру базовые статы персонажа, сравниваю их с требованиями надетой одежды, 
+// и если требования ниже, запрещаю понижать базовые характеристики персонажа
+function checkStatRequirementsForClothing(statKey, id) {
+      // получаю имена вещей
+      const listClothName = store.getters['dummy/clothName']
+      // получаю значения требований вещей по базовым статам
+      const minParamBase = store.getters['statChange/minParamCloth'](id)
+      //получаю сами распредленные базовые статы
+      const baseParamManecken = store.getters['listManekenBase'](id)
+  
+      // oтсортировую требований по базовым статам, оставляя только одежду
+      const sorted = minParamBase.filter((item) => {
+        return listClothName.some((changeType) => item.type.includes(changeType))
+      })
+
+      // проверяю соответствуют ли базовые статы требованиям вещей
+      sorted.forEach(item => {
+        const base = item.base;
+        base.forEach(baseItem => {
+          const matching = baseParamManecken.find(manecken => manecken.key === baseItem.key);
+    
+          if (matching && matching.summStatBase <= baseItem.count) {
+            if (statKey === baseItem.key) {
+              console.log(`Не возможно понизить ${statKey}, требования вещи ${item.type} больше.`);
+              availabilityFlag = false
+            }
+          }
+        });
+      })
 }

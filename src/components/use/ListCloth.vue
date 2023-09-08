@@ -74,15 +74,17 @@ const accordionOpen = (panelId) => {
   openChildPanel.value = ''
 }
 
-function parameterConversion(params, convertedData) {
+function parameterConversion(params) {
+  const convertedData = [];
   for (const key in params) {
     if (Object.hasOwnProperty.call(params, key)) {
       convertedData.push({
         key: key,
         count: parseInt(params[key])
-      })
+      });
     }
   }
+  return convertedData;
 }
 
 const dress = (item) => {
@@ -99,22 +101,22 @@ const dress = (item) => {
   const addParam = item.addParam
   const minBaseParam = item.minParam
 
-  // Преобразовываем данные
-  const convertedAdd = []
 
-  // Преобразование минимальных требований
-  Object.keys(minBaseParam).map((key) => {
-    return {
-      key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
-      count: parseInt(minBaseParam[key].value, 10)
-    }
-  })
+// Создаем новый массив для хранения преобразованных минимальных базовых значений
+const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
+  return {
+    key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
+    count: parseInt(minBaseParam[key].value, 10),
+    class: minBaseParam[key].class
+  };
+});
 
-  parameterConversion(addParam, convertedAdd)
+  // Преобразовываем данные с addParam
+const convertedAdd = parameterConversion(addParam)
 
   store.dispatch('dummy/changeDummyEl', {
     idMannequin: props.idMannequin,
-    addParam: [{ bonusAndBase: convertedAdd }],
+    addParam: [{ base: transformedMinBaseParam, bonusAndBase: convertedAdd }],
     typeid: item.otherInfo.typeid,
     imgLink: item.otherInfo.image
   })

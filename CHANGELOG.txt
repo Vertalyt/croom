@@ -93,14 +93,24 @@ Changed storage in the data store to data for each meken
 
 
 
-## [1.0.35] - 2024-0*-06
+## [1.0.36] - 2024-0*-06
 
 ### Added
 Added ability to change subclass
 
 
-## [1.0.35] - 2024-0*-07
+## [1.0.37] - 2024-0*-07
 
 ### Changed
 Fixed a bug with incorrect recalculation of the number of distribution points when changing a subclass
 Fixed stat drop via input/arrows when automatically distributed from a subclass
+
+## [1.0.38] - 2024-0*-08
+Added:
+Checking when lowering stats for minimum clothing requirements
+
+Changed:
+Things now save basic parameters in the store.
+
+Corrected:
+Prevented stats from being removed after entering a subclass

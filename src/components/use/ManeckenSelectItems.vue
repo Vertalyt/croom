@@ -7,14 +7,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 const itemsvalue = ref('none')
+const oldValueParam = ref()
 
 const emits = defineEmits({
-  'update:modelValue': () => String
+  'update:modelValue': () => String,
+  'oldValueCheck': null,
 })
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: String,
     required: true
@@ -23,11 +25,23 @@ defineProps({
     type: String,
     required: true
   },
+  oldValueCheck: {
+    type: Boolean,
+    required: false
+  }
 
 })
 
+const computedCheckOld = computed( () =>  props.oldValueCheck)
 
-watch(itemsvalue, (val) => {
-  emits('update:modelValue', val)
+watch(computedCheckOld, (val) => {
+  if(val === false) {
+    itemsvalue.value = oldValueParam.value
+  }
+})
+
+watch(itemsvalue, (newValue, oldValue) => {
+  emits('update:modelValue', newValue)
+  oldValueParam.value = oldValue
 })
 </script>

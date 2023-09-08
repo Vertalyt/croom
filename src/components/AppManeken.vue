@@ -12,7 +12,7 @@ import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 import { useStore } from 'vuex'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
-
+import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -40,6 +40,8 @@ const parentClassItems = ref(null)
 const parentClassModel = ref('none')
 const parentClasses = ref([])
 const store = useStore()
+const availabilityClassFlag = ref(true)
+const oldValueSubclass = ref()
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -132,6 +134,9 @@ async function changingSubclassParameters() {
 
 const handleParentClassSelectChange = async (parent) => {
 
+ availabilityClassFlag.value = checkSubclassChangeFeasibilityWithGearRequirements({id:props.idMannequin, ollParamClass: OllParamClass.value, parent })
+if(availabilityClassFlag.value === true) {
+  oldValueSubclass.value = true
 // массив с требониями класа, что нужно автоматически распределить
 const addClassMinParam = [
   { key: 'minstrength', count: 0 },
@@ -142,12 +147,11 @@ const addClassMinParam = [
   { key: 'minwisdom', count: 0 },
   { key: 'minluck', count: 0 }
 ]
-
-
+  // проверяю есть ли уже запись о подклассе, если есть, обнуляю о ней запись и восстанавливаю количество очков
   await changingSubclassParameters()
+
   recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassParam })
   recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassMinParam })
-
 
   const updateMinParam = addClassMinParam.map((item) => {
     switch (item.key) {
@@ -184,6 +188,10 @@ const addClassMinParam = [
   } else {
     console.log('Не достаточно очков')
   }
+} else {
+  oldValueSubclass.value = false
+}
+
 }
 
 let oldAccessibleStats = 0 // остаток не распределенных стат
@@ -207,13 +215,7 @@ const lvlSelectChange = () => {
 const updateStatsAndEmitEvent = (difference, newCountStat) => {
   accessibleStats.value = difference
   oldCountStat = newCountStat
-  const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }))
   classModel.value = 'none'
-  store.commit('statChange/statChange', {
-    addParam: [{ base: addClassParam }],
-    type: 'changeLvl',
-    idMannequin: props.idMannequin
-  })
 }
 
 
@@ -346,10 +348,15 @@ export default {
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
                 itemsName="Виберіть класс"
+                :disabled="!availabilityClassFlag"
+                :availabilityClassFlag="availabilityClassFlag"
                 @update:modelValue="handleClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)" />
+                  <ManeckenOptionSelect 
+                  :items="parentClasses" 
+                  :lvlSelect="Number(lvlSelect)"
+                  />
                 </template>
               </ManeckenSelectItems>
 
@@ -357,10 +364,15 @@ export default {
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
                 itemsName="Вибери підкласс"
+                :disabled="!availabilityClassFlag"
+                :oldValueCheck='oldValueSubclass'
                 @update:modelValue="handleParentClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect :items="parentClassItems" :lvlSelect="Number(lvlSelect)" />
+                  <ManeckenOptionSelect 
+                  :items="parentClassItems" 
+                  :lvlSelect="Number(lvlSelect)" 
+                  />
                 </template>
               </ManeckenSelectItems>
             </div>
