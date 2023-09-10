@@ -67,6 +67,7 @@ const nameStat = [
   { minParam: 'righthandarmor', addParam: 'righthandarmor', name: 'Броня права рука' },
   { minParam: 'lefthandarmor', addParam: 'lefthandarmor', name: 'Броня ліва рука' },
   { minParam: 'lagsarmor', addParam: 'lagsarmor', name: 'Броня ноги' },
+  { addParam: 'dstamina', name: 'Енергія' },
 ]
 
 const getStatName = (key, type) => {

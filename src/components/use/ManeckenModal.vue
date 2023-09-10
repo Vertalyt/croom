@@ -15,10 +15,10 @@
         <label for="cloth">Те, що можна одягнути</label>
       </div>
 
-      <select v-model="lvlSelect" @change="loadingByFilters" class="select-css">
+      <select v-model="lvlSelectModel" @change="loadingByFilters" class="select-css">
         <option value="change" disabled selected>Рівень</option>
         <option>0</option>
-        <option v-for="l in optionLvl" :key="l">{{ l }}</option>
+        <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
       </select>
     </div>
 
@@ -40,16 +40,16 @@
 
     <AppLoader v-if="isloading" />
 
-    <ListCloth v-if="newResult" :newResult="newResult" :openAccordion="openAccordion" :idMannequin="idMannequin" @modalClose="isClose"/>
+    <ListCloth v-if="newResult" :cellOptions="cellOptions" :newResult="newResult" :openAccordion="openAccordion" :idMannequin="idMannequin" @modalClose="isClose"/>
 
     <span v-if="spanErrorText" class="spanError"> {{ spanErrorText }} </span>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { fetchAPIData } from '../../api/fetchApi'
-import { helm_10Lvl } from '../../initialization/Helm0_10'
 import AppLoader from '../AppLoader.vue'
 import ListCloth from './ListCloth.vue'
 
@@ -62,10 +62,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  lvlPerson:{
-    type: Number,
-    required: true
-  },
   idMannequin:{
     type: Number,
     required: true
@@ -76,16 +72,16 @@ const emits = defineEmits({
   isClose: null
 })
 
-const lvlSelect = ref('change')
-const BASE_LVL_PERSON = 24
-const optionLvl = ref(BASE_LVL_PERSON)
+const lvlSelectModel = ref('change')
+
 const newResult = ref(null)
 const isloading = ref(false)
-const typeRarity = ref('none')
 const spanErrorText = ref('')
 const openAccordion = ref(false)
 const reqParameterVal = ref(true)
 
+const store = useStore()
+const lvlPerson = computed( () => store.getters['listManeken'](props.idMannequin).lvl )
 
 const isClose = () => {
   emits('isClose')
@@ -107,7 +103,8 @@ const addParam = [
   { bodyarmor: 0 },
   { righthandarmor: 0 },
   { lefthandarmor: 0 },
-  { lagsarmor: 0 }
+  { lagsarmor: 0 },
+  { dstamina: 0 },
 ]
 
 // массив для отображение требуемых стат
@@ -131,11 +128,21 @@ const otherInfo = [
   { class: '' },
   { typeid: '' },
 ]
+// массив для отображение стоимостецй по вещи по вещи
+const priseInfo = [
+  { price: '' },
+  { goldprice: '' },
+  { obmenprice: '' },
+  { reliktprice: '' },
+  { ratnikprice: '' },
+  { artcrystalsprice: '' },
+]
 
 const dataSets = [
   { key: 'addParam', array: addParam },
   { key: 'minParam', array: minParam },
-  { key: 'otherInfo', array: otherInfo }
+  { key: 'otherInfo', array: otherInfo },
+  { key: 'priseInfo', array: priseInfo }
 ]
 
 const rarity = ref([
@@ -163,7 +170,7 @@ const toggleCheckbox = (key) => {
       }
     }
   })
-  if (!isNaN(lvlSelect.value)) {
+  if (!isNaN(lvlSelectModel.value)) {
     loadingByFilters()
   }
 }
@@ -263,12 +270,11 @@ const loadingByFilters = async () => {
   const filtersClasses = {
     category: 'items',
     typeid: sanitizedTypeids(), // очищаем от пустых строк
-    minlevel: parseInt(lvlSelect.value),
+    minlevel: parseInt(lvlSelectModel.value),
     rarity: rarityId
   }
 
   const request = await fetchAPIData(filtersClasses)
-  // let request = helm_10Lvl
   if (request.length === 0) {
     spanErrorText.value = 'Нема результатів по фільтру'
   }
@@ -297,9 +303,8 @@ const loadingByFilters = async () => {
 
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
-  reqParameterVal.value ? optionLvl.value = props.lvlPerson : optionLvl.value = BASE_LVL_PERSON
   
-  if (newResult.value !== null && lvlSelect.value !== 'change') {
+  if (newResult.value !== null && lvlSelectModel.value !== 'change') {
     loadingByFilters()
   }
 }

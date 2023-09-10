@@ -23,6 +23,9 @@ export const initialSetupEntries = [
     // typeid: 8-пика, 9-топор, 12 меч, 15щит,30 посох, 31 молот,32 молот,33 топор, 35 клеймор, 37 жезл, 38 кастет, 39 кинжал,
   ]
 
+export const listTwoHandedTypes = [8, 9, 14, 30, 32, 35, 36 ]
+
+
 // стартовый набор стат для первичного заполнения таблиц. Соотвествует расе человек. 
 export const baseStatModule = [
   { type: 'stat', key: 'dstrength', name: 'Сила', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/strength.svg', minKey: 'minstrength' },

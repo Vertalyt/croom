@@ -18,6 +18,7 @@
 
       <div class="panel" :class="{ open: openPanel === idx }">
         <ChildAccordeonItem
+          v-if="Object.entries(c.minParam).length > 0"
           :items="c.minParam"
           :openChildPanel="openChildPanel"
           label="Требуемые параметры"
@@ -25,6 +26,7 @@
           @changeChildPanel="accordionChildOpen"
         />
         <ChildAccordeonItem
+        v-if="Object.entries(c.addParam).length > 0"
           :items="c.addParam"
           :openChildPanel="openChildPanel"
           label="Бонусные параметры"
@@ -55,7 +57,11 @@ const props = defineProps({
   idMannequin: {
     type: Number,
     required: true
-  }
+  },
+  cellOptions: {
+    type: Object,
+    required: true
+  },
 })
 
 const emits = defineEmits({
@@ -88,7 +94,6 @@ function parameterConversion(params) {
 }
 
 const dress = (item) => {
-//добавляет вещи по typeid. Проблема что одевает сразу все вещи. Нужно добавлять с тор и фильтровать по name
 
   // Проверка наличия ключей с "class": "error" в minParam
   const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
@@ -100,7 +105,7 @@ const dress = (item) => {
   }
   const addParam = item.addParam
   const minBaseParam = item.minParam
-
+  const priseInfo = item.priseInfo
 
 // Создаем новый массив для хранения преобразованных минимальных базовых значений
 const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
@@ -113,12 +118,15 @@ const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
 
   // Преобразовываем данные с addParam
 const convertedAdd = parameterConversion(addParam)
-
   store.dispatch('dummy/changeDummyEl', {
     idMannequin: props.idMannequin,
-    addParam: [{ base: transformedMinBaseParam, bonusAndBase: convertedAdd }],
+    addParam: [
+      {base: transformedMinBaseParam}, 
+      {bonusAndBase: convertedAdd}, 
+      {priseInfo} ],
     typeid: item.otherInfo.typeid,
-    imgLink: item.otherInfo.image
+    imgLink: item.otherInfo.image,
+    cellName: props.cellOptions.name
   })
   emits('modalClose')
 }

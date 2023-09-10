@@ -65,6 +65,7 @@ export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }
 
 // положительый изменения
 function handleIncrement(addParam, foundParam, accessibleStats, increment) {
+
   if (accessibleStats > 0) {
     availabilityFlag = true
     foundParam.count += increment
@@ -72,6 +73,7 @@ function handleIncrement(addParam, foundParam, accessibleStats, increment) {
   } else {
     console.log(`Не достаточно очков`)
   }
+
   return { addParam, accessibleStats }
 }
 

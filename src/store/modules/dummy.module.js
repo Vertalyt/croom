@@ -1,4 +1,5 @@
-import { initialSetupEntries } from '../../initialization/baseParams'
+import { initialSetupEntries, listTwoHandedTypes } from '../../initialization/baseParams'
+
 
 let isDummy = [...initialSetupEntries]
 export default {
@@ -23,23 +24,34 @@ export default {
 
   },
   mutations: {
-    changeDummyEl(state, { idMannequin, imgLink, typeid }) {
+    changeDummyEl(state, { idMannequin, imgLink, cellName, typeid }) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
         if (foundItem) {
-          foundItem.isDummy.forEach(item => {
-            if (item.typeid.includes(Number(typeid))) {
-              item.link = `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+          
+            if(listTwoHandedTypes.includes(typeid)) {
+              foundItem.isDummy.forEach(item => {
+                if (item.typeid.includes(typeid)) {
+                  item.link = `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+                }
+              });
+            } else {
+              foundItem.isDummy.find(item => {
+                if (item.name === cellName) {
+                  item.link = `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+                }
+              });
             }
-          });
+
         }
       }
   },
   actions: {
-    changeDummyEl( {dispatch, state, commit}, { addParam, typeid, idMannequin, imgLink } ) {
+    changeDummyEl( {dispatch, state, commit}, { addParam, typeid, idMannequin, imgLink, cellName } ) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
-        const dummy = foundItem.isDummy.find(item => item.typeid.includes(Number(typeid)))
 
-        commit('changeDummyEl', { idMannequin, imgLink, typeid }); 
+        const dummy = foundItem.isDummy.find(item => item.name === cellName)
+
+        commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid }); 
         dispatch('statChange/statChange', {
             addParam,
             type: dummy.name,

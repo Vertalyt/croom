@@ -29,6 +29,11 @@ onMounted(() => {
 
 const updateLvl = (lvl) => {
   lvlPerson.value = lvl
+  store.dispatch('updateManekenInfo', {
+    ...baseManekenConfig.value,
+    lvl,
+  })
+
 }
 
 watch(listStat, (_) => {
@@ -100,7 +105,6 @@ const minstats = computed(() => {
           v-if="isOpen"
           :cellOptions="cellOptions"
           :minStats="minstats"
-          :lvlPerson='lvlPerson'
           :idMannequin="idMannequin"
           @isClose="isClose"
         />
@@ -118,6 +122,7 @@ const minstats = computed(() => {
           <AppManekenResult
             v-if="updatedStatConfigurations"
             :updatedStatConfigurations="updatedStatConfigurations"
+            :idMannequin="idMannequin"
           />
         </main>
       </div>

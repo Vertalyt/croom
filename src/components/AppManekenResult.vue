@@ -17,60 +17,19 @@
 
     </div>
 
-    <div class="options__itemBlock options__itemBlock_button">
-      <table class="table">
-        <tbody>
-          <tr>
-            <td>
-              <img src="../assets/img/icon/svg/health.svg" alt="health" />
-              Життя
-            </td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>
-              <img src="../assets/img/icon/svg/mana.svg" alt="mana" />
-              Мана
-            </td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>
-              <img src="../assets/img/icon/svg/power.svg" alt="power" />
-              Енергія
-            </td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>
-              <img src="../assets/img/icon/svg/rating.svg" alt="rating" />
-              Рейтинг
-            </td>
-            <td>0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <TotalValCharacterBlock :idMannequin="idMannequin" />
 
     <div class="options__itemBlock options__itemBlock_button">
       <table class="table">
         <thead>
-          <td class="options__table__title" colspan="5"><h3>Стоимість</h3></td>
+          <td class="options__table__title" colspan="5"><h3>Вартість</h3></td>
         </thead>
         <tbody>
           <tr>
-            <td>Талисмани</td>
-            <td>Золоті талисмани</td>
-            <td>Ратник</td>
-            <td>Обмінні</td>
-            <td>Реліквії</td>
+            <td v-for="n in nameCost" :key="n.name">{{ n.name }}</td>
           </tr>
           <tr>
-            <td>1000000</td>
-            <td>1000</td>
-            <td>300</td>
-            <td>5</td>
-            <td>500</td>
+            <td v-for="n in nameCost" :key="n.key">{{ n.cost }}</td>
           </tr>
         </tbody>
       </table>
@@ -79,22 +38,58 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 import ManekenStatParams from './ManekenStatParams.vue'
 import ManekenResultSlot from './use/slots/ManekenResultSlot.vue'
 import ParamItemsManeken from './use/ParamItemsManeken.vue'
+import TotalValCharacterBlock from './TotalValCharacterBlock.vue'
+
+import { useStore } from 'vuex'
+import { totalCostCloth } from '../utils/totalCostCloth'
 
 const props = defineProps({
   updatedStatConfigurations: {
     type: Array,
     required: true
+  },
+  idMannequin: {
+    type: Number,
+    required: true
   }
 })
+
+const store = useStore()
+
+const nameCost = ref([
+  {key: 'price', name: 'Тали', cost: 0},
+  {key: 'goldprice', name: 'Золоті тали', cost: 0},
+  {key: 'ratnikprice', name: 'Ратник', cost: 0},
+  {key: 'obmenprice', name: 'Обміни', cost: 0},
+  {key: 'reliktprice', name: 'Реліквії', cost: 0},
+])
+
 
 // Computed properties для улучшенной читаемости
 const statParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'stat'))
 const armorParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'armor'))
 const magicParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'protectionMagick'))
+const priseInfo = computed( () => store.getters['statChange/priseInfoCloth'](props.idMannequin))
+
+
+
+const totalPriseInfo = ref([]);
+watch(priseInfo, val => {
+  totalPriseInfo.value = totalCostCloth(val);
+
+  nameCost.value.forEach(item => {
+    const priseFind = totalPriseInfo.value.find(priсe => Object.prototype.hasOwnProperty.call(priсe, item.key));
+    if (priseFind) {
+      item.cost = priseFind[item.key];
+    }
+  });
+});
+
+
 
 
 </script>

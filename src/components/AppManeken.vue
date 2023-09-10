@@ -6,7 +6,7 @@ import ManekenStatParams from './Manekenstatparams.vue'
 import ManekenSlot from './use/slots/ManekenSlot.vue'
 import { fetchAPIData } from '../api/fetchApi'
 import ManeckenSelectItems from './use/ManeckenSelectItems.vue'
-import { baseStatClasses, fortressParam, raseParams } from '../initialization/baseParams'
+import { fortressParam, raseParams } from '../initialization/baseParams'
 import DummyPartSlot from './use/slots/DummyPartSlot.vue'
 import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
@@ -31,7 +31,7 @@ const emits = defineEmits({
 })
 
 const raseModel = ref('human')
-const lvlSelect = ref('change')
+const lvlSelectModel = ref('change')
 const accessibleStats = ref(null) //количество стат для распределения
 const baseStat = ref(baseStatFromLvl())
 const classModel = ref('none')
@@ -80,15 +80,11 @@ const centerBottomDummyPart = computed(() =>
   isDummyLoaded.value.filter((d) => d.location === 'centerBottomDummyPart')
 )
 
-// слежу за изменением базовых стат
-const baseStatManeken = computed(() => store.getters['listManekenBase'](props.idMannequin))
-// слежу за изменением минимальных стат
-const minParamCloth = computed(() => store.getters['statChange/minParamCloth'](props.idMannequin))
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 
 onMounted(async () => {
-  // OllParamClass.value = await fetchAPIData(filtersClasses.value)
-  OllParamClass.value = baseStatClasses
+  OllParamClass.value = await fetchAPIData(filtersClasses.value)
+  // OllParamClass.value = baseStatClasses
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
 })
 
@@ -199,14 +195,14 @@ let oldCountStat = 0 // старое количество стат на уров
 const different = ref(0)
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
-  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
+  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelectModel.value)).stat // получаю стартовое количество стат на уровне
   oldAccessibleStats = accessibleStats.value // остаток не распределенных стат
   const lvlStatDifference = Number(newCountStat) - Number(oldCountStat) // разница стат на уровне
   different.value = lvlStatDifference + oldAccessibleStats
 
   if (lvlStatDifference > 0 || different.value > -1) {
     updateStatsAndEmitEvent(different.value, newCountStat)
-    emits('updateLvl', Number(lvlSelect.value))
+    emits('updateLvl', Number(lvlSelectModel.value))
   } else {
     console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`)
   }
@@ -238,7 +234,7 @@ const modifyStatAndEmit = (statKey, increment) => {
 }
 
 watch(accessibleStats, (val) => {
-  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat
+  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelectModel.value)).stat
   baseStat.value.forEach((item) => {
     item.disabled = item.stat < Number(newCountStat) - Number(val)
   })
@@ -252,8 +248,9 @@ const handleStatDecrease = (statKey) => {
 }
 
 const handleStatInputChange = (stat) => {
+
   // изменение стат через инпут
-  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatBonusAndBase // ищу предыдущие значение стата
+  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatBase // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
   if (accessibleStats.value < statChange) {
     statChange = accessibleStats.value // при избыточной разнице
@@ -267,7 +264,7 @@ const handleResetManecken = () => {
     raseModel: 'human'
   })
   raseModel.value = 'human'
-  lvlSelect.value = 'change'
+  lvlSelectModel.value = 'change'
   accessibleStats.value = null
   classModel.value = 'none'
 }
@@ -335,7 +332,7 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <select v-model="lvlSelect" @change="lvlSelectChange" class="select-css">
+              <select v-model="lvlSelectModel" @change="lvlSelectChange" class="select-css">
                 <option value="change" disabled selected>Виберіть рівень</option>
                 <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
                   {{ l.lvl }}
@@ -345,7 +342,7 @@ export default {
 
             <div class="form__items">
               <ManeckenSelectItems
-                v-if="lvlSelect >= 8"
+                v-if="lvlSelectModel >= 8"
                 v-model="classModel"
                 itemsName="Виберіть класс"
                 :disabled="!availabilityClassFlag"
@@ -355,13 +352,13 @@ export default {
                 <template #optionSelect>
                   <ManeckenOptionSelect 
                   :items="parentClasses" 
-                  :lvlSelect="Number(lvlSelect)"
+                  :lvlSelectModel="Number(lvlSelectModel)"
                   />
                 </template>
               </ManeckenSelectItems>
 
               <ManeckenSelectItems
-                v-if="parentClassItems && lvlSelect >= 8"
+                v-if="parentClassItems && lvlSelectModel >= 8"
                 v-model="parentClassModel"
                 itemsName="Вибери підкласс"
                 :disabled="!availabilityClassFlag"
@@ -371,7 +368,7 @@ export default {
                 <template #optionSelect>
                   <ManeckenOptionSelect 
                   :items="parentClassItems" 
-                  :lvlSelect="Number(lvlSelect)" 
+                  :lvlSelectModel="Number(lvlSelectModel)" 
                   />
                 </template>
               </ManeckenSelectItems>

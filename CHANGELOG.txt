@@ -114,3 +114,13 @@ Things now save basic parameters in the store.
 
 Corrected:
 Prevented stats from being removed after entering a subclass
+
+
+## [1.0.39] - 2024-0*-10
+
+Added
+Displaying the total cost of things, rating, money, life, energy
+
+Corrected
+Displaying a block of required stats when the object is empty
+Error: incorrect parameter for calculating stat differences when adding

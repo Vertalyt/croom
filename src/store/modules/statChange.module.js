@@ -10,6 +10,15 @@ export default {
       const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
       return foundItem ? foundItem.listStat : []
     },
+    priseInfoCloth: (state) => (id) => {
+      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      if (foundItem) {
+        return foundItem.listStat.flatMap(item => {
+          return item.param.filter(characteristics => characteristics.priseInfo)
+        })
+      }
+      return [] // Возвращаем пустой массив, если элемент не найден
+    },    
     minParamCloth: (state) => (id) => {
       // Найдем элемент с соответствующим idMannequin
       const foundItem = state.listMannequins.find((item) => item.idMannequin === id)

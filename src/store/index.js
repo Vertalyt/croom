@@ -25,7 +25,8 @@ export default createStore({
         return mannequin.statModule.map(item => {
           return {
             key: item.key,
-            summStatBase: item.summStatBase
+            summStatBase: item.summStatBase,
+            type: item.type
           }
         })
       } else {
