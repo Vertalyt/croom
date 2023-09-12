@@ -2,13 +2,15 @@
 <template>
               <table class="table">
                 <thead>
-                  <td class="options__table__title" colspan="5"><h3>Манекен 1</h3></td>
                 </thead>
                 <tbody class="options__tbody">
                   <tr>
                     <td>Параметри</td>
                     <td>Сума</td>
                     <td>Базові</td>
+                    <td v-if="additionalCheck">Еліксири</td>
+                    <td v-if="additionalCheck">+</td>
+                    <td v-if="additionalCheck">-</td>
                   </tr>
 
                   <tr v-for="p in statParams" :key="p.name">
@@ -35,6 +37,14 @@ defineProps({
   accessibleStats: {
     type: Number,
     requared: true
+  },
+  additionalCheck: {
+    type: Boolean,
+    requared: false
+  },
+  inputShow: {
+    type: Boolean,
+    requared: false
   }
 })
 

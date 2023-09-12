@@ -10,14 +10,14 @@ const props = defineProps({
   type: Array,
   requared: true
   },
-  lvlSelectModel: {
+  lvlSelect: {
     type: Number,
     required: false
   }
 })
 
 const isDisabled = (item) => {
-  return Number(props.lvlSelectModel) < Number(item.minlevel)
+  return Number(props.lvlSelect) < Number(item.minlevel)
 }
 
 </script>

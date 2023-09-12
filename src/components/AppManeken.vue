@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { baseStatFromLvl } from '../utils/baseStatFromLvl'
-import { modifyStat } from '../utils/modifyStat'
+import { modifyStat, statInputChange } from '../utils/modifyStat'
 import ManekenStatParams from './Manekenstatparams.vue'
 import ManekenSlot from './use/slots/ManekenSlot.vue'
 import { fetchAPIData } from '../api/fetchApi'
@@ -13,6 +13,8 @@ import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 import { useStore } from 'vuex'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
+import AddElixir from './AddElixir.vue'
+
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -31,7 +33,7 @@ const emits = defineEmits({
 })
 
 const raseModel = ref('human')
-const lvlSelectModel = ref('change')
+const lvlSelect = ref('change')
 const accessibleStats = ref(null) //количество стат для распределения
 const baseStat = ref(baseStatFromLvl())
 const classModel = ref('none')
@@ -42,6 +44,7 @@ const parentClasses = ref([])
 const store = useStore()
 const availabilityClassFlag = ref(true)
 const oldValueSubclass = ref()
+const elixFlag = ref(false)
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -195,14 +198,14 @@ let oldCountStat = 0 // старое количество стат на уров
 const different = ref(0)
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
-  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelectModel.value)).stat // получаю стартовое количество стат на уровне
+  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
   oldAccessibleStats = accessibleStats.value // остаток не распределенных стат
   const lvlStatDifference = Number(newCountStat) - Number(oldCountStat) // разница стат на уровне
   different.value = lvlStatDifference + oldAccessibleStats
 
   if (lvlStatDifference > 0 || different.value > -1) {
     updateStatsAndEmitEvent(different.value, newCountStat)
-    emits('updateLvl', Number(lvlSelectModel.value))
+    emits('updateLvl', Number(lvlSelect.value))
   } else {
     console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`)
   }
@@ -234,7 +237,7 @@ const modifyStatAndEmit = (statKey, increment) => {
 }
 
 watch(accessibleStats, (val) => {
-  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelectModel.value)).stat
+  const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat
   baseStat.value.forEach((item) => {
     item.disabled = item.stat < Number(newCountStat) - Number(val)
   })
@@ -248,14 +251,9 @@ const handleStatDecrease = (statKey) => {
 }
 
 const handleStatInputChange = (stat) => {
-
   // изменение стат через инпут
-  const oldBaseStat = statParams.value.find((s) => s.key === stat.key).summStatBase // ищу предыдущие значение стата
-  let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
-  if (accessibleStats.value < statChange) {
-    statChange = accessibleStats.value // при избыточной разнице
-  }
-  modifyStatAndEmit(stat.key, statChange)
+  const { key, statChange } = statInputChange({ stat, statParams: statParams.value, accessibleStats: accessibleStats.value })
+ modifyStatAndEmit(key, statChange)
 }
 
 const handleResetManecken = () => {
@@ -264,13 +262,19 @@ const handleResetManecken = () => {
     raseModel: 'human'
   })
   raseModel.value = 'human'
-  lvlSelectModel.value = 'change'
+  lvlSelect.value = 'change'
   accessibleStats.value = null
   classModel.value = 'none'
 }
 
 const handleClothesChoice = async (param) => {
   emits('modalOpen', param)
+}
+
+
+
+const isCloseElix = () => {
+  elixFlag.value = false
 }
 
 const handleFortressUpdate = (fortress) => {
@@ -332,7 +336,7 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <select v-model="lvlSelectModel" @change="lvlSelectChange" class="select-css">
+              <select v-model="lvlSelect" @change="lvlSelectChange" class="select-css">
                 <option value="change" disabled selected>Виберіть рівень</option>
                 <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
                   {{ l.lvl }}
@@ -342,7 +346,7 @@ export default {
 
             <div class="form__items">
               <ManeckenSelectItems
-                v-if="lvlSelectModel >= 8"
+                v-if="lvlSelect >= 8"
                 v-model="classModel"
                 itemsName="Виберіть класс"
                 :disabled="!availabilityClassFlag"
@@ -352,13 +356,13 @@ export default {
                 <template #optionSelect>
                   <ManeckenOptionSelect 
                   :items="parentClasses" 
-                  :lvlSelectModel="Number(lvlSelectModel)"
+                  :lvlSelect="Number(lvlSelect)"
                   />
                 </template>
               </ManeckenSelectItems>
 
               <ManeckenSelectItems
-                v-if="parentClassItems && lvlSelectModel >= 8"
+                v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
                 itemsName="Вибери підкласс"
                 :disabled="!availabilityClassFlag"
@@ -368,7 +372,7 @@ export default {
                 <template #optionSelect>
                   <ManeckenOptionSelect 
                   :items="parentClassItems" 
-                  :lvlSelectModel="Number(lvlSelectModel)" 
+                  :lvlSelect="Number(lvlSelect)" 
                   />
                 </template>
               </ManeckenSelectItems>
@@ -388,8 +392,14 @@ export default {
               </ManeckenSelectItems>
             </div>
 
+            <AddElixir 
+              v-if="elixFlag"
+              :idMannequin="props.idMannequin"
+              :statParams="statParams"
+              @isCloseElix="isCloseElix"/>
+
             <div class="form__items">
-              <a href="#" class="form__link">Випити еліксир</a>
+              <a href="#" @click="elixFlag = true" class="form__link">Випити еліксир</a>
               <p>Випито: 0</p>
             </div>
 

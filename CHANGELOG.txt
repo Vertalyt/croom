@@ -124,3 +124,15 @@ Displaying the total cost of things, rating, money, life, energy
 Corrected
 Displaying a block of required stats when the object is empty
 Error: incorrect parameter for calculating stat differences when adding
+
+
+## [1.0.40] - 2024-0*-12
+
+On a note:
+const sortedChangesByType = ['freeStats', 'subclass', 'elixStats'] move to global initiators!!!
+
+Elixirs, check for subclass, prohibit demotion if the class does not correspond.
+Consider writing a clean, new component without reusing the elixir component
+
+Added
+Adding elixirs.

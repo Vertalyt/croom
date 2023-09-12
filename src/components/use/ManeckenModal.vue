@@ -15,7 +15,7 @@
         <label for="cloth">Те, що можна одягнути</label>
       </div>
 
-      <select v-model="lvlSelectModel" @change="loadingByFilters" class="select-css">
+      <select v-model="lvlSelect" @change="loadingByFilters" class="select-css">
         <option value="change" disabled selected>Рівень</option>
         <option>0</option>
         <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
@@ -72,7 +72,7 @@ const emits = defineEmits({
   isClose: null
 })
 
-const lvlSelectModel = ref('change')
+const lvlSelect = ref('change')
 
 const newResult = ref(null)
 const isloading = ref(false)
@@ -170,7 +170,7 @@ const toggleCheckbox = (key) => {
       }
     }
   })
-  if (!isNaN(lvlSelectModel.value)) {
+  if (!isNaN(lvlSelect.value)) {
     loadingByFilters()
   }
 }
@@ -270,7 +270,7 @@ const loadingByFilters = async () => {
   const filtersClasses = {
     category: 'items',
     typeid: sanitizedTypeids(), // очищаем от пустых строк
-    minlevel: parseInt(lvlSelectModel.value),
+    minlevel: parseInt(lvlSelect.value),
     rarity: rarityId
   }
 
@@ -304,7 +304,7 @@ const loadingByFilters = async () => {
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
   
-  if (newResult.value !== null && lvlSelectModel.value !== 'change') {
+  if (newResult.value !== null && lvlSelect.value !== 'change') {
     loadingByFilters()
   }
 }

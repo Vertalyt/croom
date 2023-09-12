@@ -27,7 +27,7 @@ export function aggregateStatValues({ baseUpdate, idMannequin }) {
   let commonStats = []
   let bonusOllStats = []
   let arrUpdate = baseUpdate
-  const sortedChangesByType = ['freeStats', 'subclass']
+  const sortedChangesByType = ['freeStats', 'subclass', 'elixStats']
 
   // Получаем данные изменений статистики из хранилища по идентификатору манекена
   const sumChangeInfo = store.getters['statChange/listStat'](idMannequin)

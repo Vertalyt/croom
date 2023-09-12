@@ -170,3 +170,16 @@ function checkStatRequirementsForClothing(statKey, id) {
         });
       })
 }
+
+
+
+export function statInputChange({ stat, statParams, accessibleStats }) {
+
+  // изменение стат через инпут
+  const oldBaseStat = statParams.find((s) => s.key === stat.key).summStatBase // ищу предыдущие значение стата
+  let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
+  if (accessibleStats < statChange) {
+    statChange = accessibleStats // при избыточной разнице
+  }
+  return {key: stat.key , statChange  }
+}

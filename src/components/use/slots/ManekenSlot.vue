@@ -5,9 +5,16 @@
                     @change="updateStatParam"
                     class="options__input" />
                   </td>
+
+
+                  <td
+                  v-if="inputShow">
+                      {{ addElixParam.count }}
+                  </td>
+                
+
                   <td>
                     <button 
-                    
                     @click ="$emit('handleStatIncrease', statParam.key)" 
                     class="button__reset"
                     :class="{ 'noactive' : accessibleStats === null }"
@@ -27,6 +34,9 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
+
 const props = defineProps({
   statParam:{
     type: Object,
@@ -35,7 +45,15 @@ const props = defineProps({
   accessibleStats: {
     type: Number,
     requared: true
-  }
+  },
+  inputShow: {
+    type: Boolean,
+    requared: false
+  },
+  addElix: {
+    type: Object,
+    requared: true
+  },
 })
 const emits = defineEmits({
   handleStatInputChange: (statParam) => ({ statParam }),
@@ -43,13 +61,17 @@ const emits = defineEmits({
   handleStatIncrease: (key) => ({ key }),
 })
 
+
+
+const addElixParam = computed( () => props.addElix.find(item => item.key === props.statParam.key) ) 
+
+
 let updatedStatValue = props.statParam.summStatBase;
 const updateStatParam = (event) => {
   updatedStatValue = parseFloat(event.target.value);
   const updatedStatParam = { ...props.statParam, summStatBase: updatedStatValue };
   emits('handleStatInputChange', updatedStatParam);
 }
-
 
 </script>
 
