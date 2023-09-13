@@ -8,9 +8,9 @@
                     <td>Параметри</td>
                     <td>Сума</td>
                     <td>Базові</td>
-                    <td v-if="additionalCheck">Еліксири</td>
-                    <td v-if="additionalCheck">+</td>
-                    <td v-if="additionalCheck">-</td>
+                    <td v-if="elixCheck">Еліксири</td>
+                    <td v-if="!additionalCheck"><span class="material-symbols-outlined">add</span></td>
+                    <td v-if="!additionalCheck"><span class="material-symbols-outlined">remove</span></td>
                   </tr>
 
                   <tr v-for="p in statParams" :key="p.name">
@@ -45,7 +45,11 @@ defineProps({
   inputShow: {
     type: Boolean,
     requared: false
-  }
+  },
+  elixCheck: {
+    type: Boolean,
+    requared: false
+  },
 })
 
 </script>

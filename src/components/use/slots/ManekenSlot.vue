@@ -8,7 +8,7 @@
 
 
                   <td
-                  v-if="inputShow">
+                  v-if="elixShow">
                       {{ addElixParam.count }}
                   </td>
                 
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 
 
 const props = defineProps({
@@ -46,13 +46,17 @@ const props = defineProps({
     type: Number,
     requared: true
   },
-  inputShow: {
+  elixShow: {
     type: Boolean,
     requared: false
   },
   addElix: {
     type: Object,
     requared: true
+  },
+  classCheck:{
+    type: Boolean,
+    requared: false
   },
 })
 const emits = defineEmits({
@@ -61,15 +65,18 @@ const emits = defineEmits({
   handleStatIncrease: (key) => ({ key }),
 })
 
-
-
+const updatedStatValue = ref(props.statParam.summStatBase)
 const addElixParam = computed( () => props.addElix.find(item => item.key === props.statParam.key) ) 
 
+const subclassFlag = computed(() => props.classCheck ) 
+watch(subclassFlag, val => {
+  if(val === false) {
+    updatedStatValue.value = props.statParam.summStatBase
+  }
+}, { immediate: true })
 
-let updatedStatValue = props.statParam.summStatBase;
 const updateStatParam = (event) => {
-  updatedStatValue = parseFloat(event.target.value);
-  const updatedStatParam = { ...props.statParam, summStatBase: updatedStatValue };
+  const updatedStatParam = { ...props.statParam, summStatBase: parseFloat(event.target.value) };
   emits('handleStatInputChange', updatedStatParam);
 }
 

@@ -45,6 +45,7 @@ const store = useStore()
 const availabilityClassFlag = ref(true)
 const oldValueSubclass = ref()
 const elixFlag = ref(false)
+const classMinParam = ref()
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -152,6 +153,7 @@ const addClassMinParam = [
   recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassParam })
   recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassMinParam })
 
+
   const updateMinParam = addClassMinParam.map((item) => {
     switch (item.key) {
       case 'minstrength':
@@ -172,6 +174,7 @@ const addClassMinParam = [
         return item
     }
   })
+  classMinParam.value = updateMinParam
   // Проходим по каждой строке в updatedStatConfigurations преобразовывая данные
   const updatedStats = updatedBaseStats({ arrMinParam: updateMinParam, ollStats: props.updatedStatConfigurations})
   const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
@@ -396,6 +399,7 @@ export default {
               v-if="elixFlag"
               :idMannequin="props.idMannequin"
               :statParams="statParams"
+              :classMinParam="classMinParam"
               @isCloseElix="isCloseElix"/>
 
             <div class="form__items">

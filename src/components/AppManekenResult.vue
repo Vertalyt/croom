@@ -1,7 +1,7 @@
 <template>
   <div class="dummy__rezult">
     <div class="options__itemBlock options__itemBlock_button">
-      <ManekenStatParams :statParams="statParams">
+      <ManekenStatParams :statParams="statParams" :additionalCheck="true">
         <template #statManeken="{ summBase }">
           <ManekenResultSlot :statParam="summBase" />
         </template>

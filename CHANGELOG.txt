@@ -128,11 +128,14 @@ Error: incorrect parameter for calculating stat differences when adding
 
 ## [1.0.40] - 2024-0*-12
 
-On a note:
-const sortedChangesByType = ['freeStats', 'subclass', 'elixStats'] move to global initiators!!!
-
 Elixirs, check for subclass, prohibit demotion if the class does not correspond.
 Consider writing a clean, new component without reusing the elixir component
 
 Added
 Adding elixirs.
+
+
+
+## [1.0.41] - 2024-0*-12
+
+Added check for subclass requirements when trying to reduce elixirs
