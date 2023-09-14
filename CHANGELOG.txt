@@ -139,3 +139,10 @@ Adding elixirs.
 ## [1.0.41] - 2024-0*-12
 
 Added check for subclass requirements when trying to reduce elixirs
+
+
+## [1.0.42] - 2024-0*-13
+Added "finishing" elixirs and their logic
+
+Corrections have been made to ensure that the minimum characteristics of items and subclasses are correctly maintained when reducing elixirs
+

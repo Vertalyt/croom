@@ -1,6 +1,7 @@
 <template>
                   <td><input
                     :disabled="accessibleStats === null"
+                    type="number"
                     :value="statParam.summStatBase"
                     @change="updateStatParam"
                     class="options__input" />
