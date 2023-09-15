@@ -317,7 +317,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /* Style the buttons that are used to open and close the accordion panel */
 .form__items_modal {
   justify-content: flex-start;

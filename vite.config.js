@@ -1,10 +1,7 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-export default ({ command }) => {
-  const isProduction = command === 'build';
-
-  const base = isProduction ? './croomTemplate/' : './';
+export default () => {
 
   return defineConfig({
     plugins: [vue()],

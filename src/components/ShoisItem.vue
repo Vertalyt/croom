@@ -7,7 +7,6 @@
     </div>
   </div>
   <div class="panel" :class="{ open: isOpen }">
-    <!-- Остальной код для отображения дополнительной информации о шлеме -->
   </div>
 </template>
 

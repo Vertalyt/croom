@@ -1,6 +1,6 @@
 <template>
                   <td><input
-                    :disabled="accessibleStats === null"
+                    :disabled="accessibleStats === null || hasddisabledLastElix"
                     type="number"
                     :value="statParam.summStatBase"
                     @change="updateStatParam"
@@ -15,19 +15,21 @@
                 
 
                   <td>
-                    <button 
+                    <button
+                    :disabled="accessibleStats === 0 || hasddisabledLastElix"
                     @click ="$emit('handleStatIncrease', statParam.key)" 
                     class="button__reset"
-                    :class="{ 'noactive' : accessibleStats === null }"
+                    :class="{ 'noactive' : accessibleStats === null || accessibleStats === 0 || hasddisabledLastElix}"
                     >
                       <span class="material-symbols-outlined">stat_2</span>
                     </button>
                   </td>
                   <td>
                     <button 
+                    :disabled="hasddisabledLastElix"
                     @click="$emit('handleStatDecrease', statParam.key)" 
                     class="button__reset"
-                    :class="{ 'noactive' : accessibleStats === null }"
+                    :class="{ 'noactive' : accessibleStats === null || hasddisabledLastElix}"
                     >
                       <span class="material-symbols-outlined">stat_minus_2</span>
                     </button>
@@ -59,6 +61,10 @@ const props = defineProps({
     type: Boolean,
     requared: false
   },
+  hasddisabledLastElix: {
+    type: Boolean,
+    requared: false
+  }
 })
 const emits = defineEmits({
   handleStatInputChange: (statParam) => ({ statParam }),

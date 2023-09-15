@@ -81,7 +81,7 @@ Added logic for changing the level and calculating the remaining distribution st
 Changed into sub-functions big data loading function
 
 
-## [1.0.35] - 2024-0*-04
+## [1.0.35] - 2023-09-04
 
 ### Added
 Added filtering of the maximum level of clothing by the filter that I can wear
@@ -93,19 +93,19 @@ Changed storage in the data store to data for each meken
 
 
 
-## [1.0.36] - 2024-0*-06
+## [1.0.36] - 2023-09-06
 
 ### Added
 Added ability to change subclass
 
 
-## [1.0.37] - 2024-0*-07
+## [1.0.37] - 2023-09-07
 
 ### Changed
 Fixed a bug with incorrect recalculation of the number of distribution points when changing a subclass
 Fixed stat drop via input/arrows when automatically distributed from a subclass
 
-## [1.0.38] - 2024-0*-08
+## [1.0.38] - 2023-09-08
 Added:
 Checking when lowering stats for minimum clothing requirements
 
@@ -116,7 +116,7 @@ Corrected:
 Prevented stats from being removed after entering a subclass
 
 
-## [1.0.39] - 2024-0*-10
+## [1.0.39] - 2023-09-10
 
 Added
 Displaying the total cost of things, rating, money, life, energy
@@ -126,7 +126,7 @@ Displaying a block of required stats when the object is empty
 Error: incorrect parameter for calculating stat differences when adding
 
 
-## [1.0.40] - 2024-0*-12
+## [1.0.40] - 2023-09-12
 
 Elixirs, check for subclass, prohibit demotion if the class does not correspond.
 Consider writing a clean, new component without reusing the elixir component
@@ -136,13 +136,23 @@ Adding elixirs.
 
 
 
-## [1.0.41] - 2024-0*-12
+## [1.0.41] - 2023-09-12
 
 Added check for subclass requirements when trying to reduce elixirs
 
 
-## [1.0.42] - 2024-0*-13
+## [1.0.42] - 2023-09-13
 Added "finishing" elixirs and their logic
 
 Corrections have been made to ensure that the minimum characteristics of items and subclasses are correctly maintained when reducing elixirs
 
+
+
+
+## [1.0.43] - 2023-09-15
+
+With the Elixir of Sekolah selected, block the downgrade and input buttons if the number of stats is lower than the stat of the elixir
+When a potion is selected, check for the presence of the potion and prohibit lowering below 3
+Reset finishing elixirs
+Reset for potions.
+Numerous changes to the logic of how potions work

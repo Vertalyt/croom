@@ -29,7 +29,7 @@ const props = defineProps({
 const emits = defineEmits({
   changeRase: String,
   modalOpen: Array,
-  updateLvl: Number
+  updateLvl: [Number, null]
 })
 
 const raseModel = ref('human')
@@ -199,14 +199,16 @@ const addClassMinParam = [
 let oldAccessibleStats = 0 // остаток не распределенных стат
 let oldCountStat = 0 // старое количество стат на уровне
 const different = ref(0)
+
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
+
   oldAccessibleStats = accessibleStats.value // остаток не распределенных стат
   const lvlStatDifference = Number(newCountStat) - Number(oldCountStat) // разница стат на уровне
   different.value = lvlStatDifference + oldAccessibleStats
 
-  if (lvlStatDifference > 0 || different.value > -1) {
+  if (lvlStatDifference >= 0 || different.value > -1) {
     updateStatsAndEmitEvent(different.value, newCountStat)
     emits('updateLvl', Number(lvlSelect.value))
   } else {

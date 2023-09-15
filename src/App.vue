@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import AppHeader from './components/AppHeader.vue'
+import AppHeader from '@/components/appHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
 import { basickParamsRase, baseStatModule } from './initialization/baseParams'

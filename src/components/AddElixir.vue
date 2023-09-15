@@ -2,7 +2,7 @@
   <div class="modal" @click.stop="isClose"></div>
   <div class="modal-content">
     <span @click="isClose" class="close">&times;</span>
-    <h3>Доступно: {{ countElix }} | Использовано: {{ lvlPers - countElix }}</h3>
+    <h3>Доступно: {{ countElix }} | Использовано: {{ MAX_ELIX_FOR_LVL - countElix }}</h3>
     <ManekenStatParams
       :statParams="statParams"
       :accessibleStats="countElix"
@@ -11,6 +11,7 @@
     >
       <template #statManeken="{ summBase }">
         <ManekenSlot
+          :hasddisabledLastElix="hasddisabledLastElix"
           :key="idrebut"
           :elixShow="true"
           :classCheck="availabilityFlag"
@@ -24,12 +25,36 @@
       </template>
     </ManekenStatParams>
 
-    <select v-model="lastElix" @change="addLastElix" class="select-css">
-      <option value="change" disabled selected>Випити останнім</option>
-      <option v-for="e in lastElixParam" :key="e.key" :value="e.key">
-        {{ e.name }}
-      </option>
-    </select>
+    <div class="form__items">
+      <select :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css">
+        <option value="change" disabled selected>Випити останнім</option>
+        <option v-for="e in lastElixParam" :key="e.key" :value="e.key">
+          {{ e.name }}
+        </option>
+      </select>
+      <div>
+        <div class="checkbox">
+          <button
+            :disabled="!hasLastElix"
+            @click="resetLostElix"
+            class="tab-button elixBtn"
+            :class="{ 'tab-button-disabled': !hasLastElix }"
+          >
+            <p class="p__tab-button">Обнулення мікстур</p>
+          </button>
+        </div>
+        <div class="checkbox">
+          <button
+            :disabled="MAX_ELIX_FOR_LVL - countElix === 0"
+            @click="resetElix"
+            class="tab-button elixBtn"
+            :class="{ 'tab-button-disabled': MAX_ELIX_FOR_LVL - countElix === 0 }"
+          >
+            <p class="p__tab-button">Скинути еліксири</p>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -87,106 +112,72 @@ const lastElixParam = [
 
 const store = useStore()
 const countElix = ref(0)
-const lvlPers = ref()
+const hasLastElix = ref(false)
+const hasddisabledLastElix = ref(false)
 const lastElix = ref('change')
-
+const COUNT_STAT_MIXTURE = 3
 let availabilityFlag = true
 let avaiStatFlag = true
 
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 const elixStats = computed(() => listStat.value.find((item) => item.type === 'elixStats'))
 const listManeken = computed(() => store.getters['listManeken'](props.idMannequin))
+//получаю сами распредленные базовые статы
+const baseParamManecken = computed(() => store.getters['listManekenBase'](props.idMannequin))
+
+// флаг перерисовки ManekenSlot
 const oldValueInput = ref(true)
+// идентификатор перерисовки ManekenSlot
 const idrebut = ref(1)
+const hascountElix = ref(false)
 
-lvlPers.value = listManeken.value.lvl
-
-// function addCountElix() {
-
-//   if (elixStats.value) {
-//     addParam.value = elixStats.value.param[0].base
-
-//     let totalSum = 0
-
-// const hasLastElix = elixStats.value.param[0].base.some(item => item.type === 'lastElix');
-//  const hasSecolach = elixStats.value.param[0].base.some(item => item.dSecolach === true);
-
-
-//     elixStats.value.param[0].base.forEach((item) => {
-//       if (hasSecolach && item.dSecolach === true) {
-//         totalSum += item.count - 3
-//       }
-//       else {
-//         totalSum += item.count
-//       }
-//     })
-
-//       if(hasSecolach && countElix.value > 0 && lvlPers.value - totalSum <= 21) {
-
-//           countElix.value = 0 
-//           return
-//          else if (hasSecolach){
-//           countElix.value = lvlPers.value - totalSum + 1
-//           return
-//         }
-//       }
-//     // Проверка на наличие "lastElix" и условие для countElix.value
-//     if (hasLastElix) {
-//       if (countElix.value > 0 && lvlPers.value - totalSum <= 3) {
-//         countElix.value = 0
-//         return
-//       } else {
-//         countElix.value = lvlPers.value - totalSum
-//         return
-//       }
-//     }
-//     countElix.value = lvlPers.value - totalSum
-//   } else {
-//     countElix.value = lvlPers.value
-//   }
-// }
-
-
+// возможное количество эликсиров
+const MAX_ELIX_FOR_LVL = ref(listManeken.value.lvl * 3 + 1)
+// функция расчета и перерасчета свободных стат эликсиров
 
 function addCountElix() {
   if (!elixStats.value) {
-    countElix.value = lvlPers.value;
-    return;
+    countElix.value = MAX_ELIX_FOR_LVL.value
+    return
   }
 
   addParam.value = elixStats.value.param[0].base
-  const hasLastElix = elixStats.value.param[0].base.some(item => item.type === 'lastElix');
-  const hasSecolach = elixStats.value.param[0].base.some(item => item.dSecolach === true);
+  hasLastElix.value = elixStats.value.param[0].base.some((item) => item.type === 'lastElix')
+  const hasSecolach = elixStats.value.param[0].base.some((item) => item.dSecolach === true)
 
-  let totalSum = 0;
-
+  let totalSum = 0
   elixStats.value.param[0].base.forEach((item) => {
     if (hasSecolach && item.dSecolach === true) {
-      totalSum += item.count - 3;
+      totalSum += item.count
     } else {
-      totalSum += item.count;
+      totalSum += item.count
     }
-  });
-
-  if (hasSecolach && countElix.value > 0 && lvlPers.value - totalSum <= 21) {
-    countElix.value = 0;
-  } else if (hasLastElix && (countElix.value > 0) && ((lvlPers.value - totalSum) <= 3)) {
-    countElix.value = 0;
+  })
+  if (hasSecolach && totalSum > MAX_ELIX_FOR_LVL.value) {
+    countElix.value = 0
+    hasddisabledLastElix.value = true
+    hascountElix.value = true
+  } else if (hasLastElix.value && totalSum > MAX_ELIX_FOR_LVL.value) {
+    countElix.value = 0
+    hasddisabledLastElix.value = true
+    return
   } else {
-    countElix.value = lvlPers.value - totalSum + (hasSecolach ? 1 : 0);
+    countElix.value = MAX_ELIX_FOR_LVL.value - totalSum
   }
 }
 
-
-
 onMounted(() => {
   addCountElix()
+  if (countElix.value === 0) {
+    hascountElix.value = true
+  }
 })
 
 watch(elixStats, (_) => {
   addCountElix()
 })
 
+// изменяю значение в addParam.value при выпитом или отнятом обычном постоянном эликсире
 const updateParam = (val, operation, count) => {
   return addParam.value.map((item) => {
     if (
@@ -207,10 +198,10 @@ function subclassChecking(stat) {
   let flag = true
   // проверяю на наличие записей о подклассе, для проверки возможности понижения стат
   if (props.classMinParam) {
-    // оставляю только текущий стат
+    // оставляю только текущий стат в минимальных параметрах класса
     const minParamClass = props.classMinParam.find((item) => item.key === stat)
 
-    // фильтрую, оставляю только текущий стат
+    // фильтрую, оставляю только текущий стат в базовых статах манекена
     const statModule = listManeken.value.statModule.find((item) => item.key === stat)
     if (minParamClass.count < statModule.summStatBase) {
       flag = true
@@ -236,39 +227,99 @@ const handleStatChange = (val, operation, count) => {
   addParam.value = changeParam
 }
 
-//получаю сами распредленные базовые статы
-const baseParamManecken = computed(() => store.getters['listManekenBase'](props.idMannequin))
-
 const handleStatDecrease = (val) => {
+  const hasLastElix = addParam.value.find((item) => item.type === 'lastElix' && item.key === val)
+  const hasSecolach = addParam.value.find((item) => item.dSecolach === true && item.key === val)
+  let availabilityElixFlag = true
+
+  if (hasLastElix) {
+    availabilityElixFlag =
+      hasLastElix.count > COUNT_STAT_MIXTURE
+        ? true
+        : (console.log('Оставшиеся очки стата дает эликсир'), false)
+  }
+
+  if (hasSecolach) {
+    availabilityElixFlag = hasSecolach.count > COUNT_STAT_MIXTURE
+  } else if (hasLastElix && hasLastElix.key === val) {
+    availabilityElixFlag = hasLastElix.count > COUNT_STAT_MIXTURE
+  }
+  if (!availabilityElixFlag) console.log('Оставшиеся очки стата дает эликсир')
+
+
+  // проверка на минимальные параметры вещей
   availabilityFlag = checkStatRequirementsForClothing(
     props.idMannequin,
     baseParamManecken.value,
     val
   )
+  // проверка на минимальные параметры подкласса
   avaiStatFlag = subclassChecking(val)
 
-  if (availabilityFlag === true && avaiStatFlag === true) {
+  if (availabilityFlag && avaiStatFlag && availabilityElixFlag) {
     handleStatChange(val, 'decrease', 1)
   }
 }
 
 const handleStatIncrease = (val) => {
-  handleStatChange(val, 'increase', 1)
+  if (countElix.value - 1 >= 0) {
+    handleStatChange(val, 'increase', 1)
+  }
+}
+
+function lastElixStatCoast(statChange, key) {
+  const hasLastElix = addParam.value.find((item) => item.type === 'lastElix' && item.key === key)
+  const hasSecolach = addParam.value.find((item) => item.dSecolach === true && item.key === key)
+
+  if (hasLastElix) {
+    const count = hasLastElix.count - COUNT_STAT_MIXTURE - Math.abs(statChange)
+    if (count <= COUNT_STAT_MIXTURE) {
+      return -(hasLastElix.count - COUNT_STAT_MIXTURE)
+    } else return statChange
+  }
+
+  if (hasSecolach) {
+    const count = hasSecolach.count - COUNT_STAT_MIXTURE - Math.abs(statChange)
+    if (count <= COUNT_STAT_MIXTURE) {
+      return -(hasSecolach.count - COUNT_STAT_MIXTURE)
+    } else return statChange
+  }
+
+  return statChange
+}
+
+function maxiAvailableValueElixirs(statChange, key) {
+  const availabilityQuantity = addParam.value.find((item) => item.key === key).count
+  if (availabilityQuantity < Math.abs(statChange)) {
+    return -availabilityQuantity
+  } else return statChange
 }
 
 const handleStatInputChange = (stat) => {
-  const { key, statChange } = statInputChange({
+  // получаю значениен ключа и фактическую разницу для изменения стата
+  let { key, statChange } = statInputChange({
     stat,
     statParams: props.statParams,
     accessibleStats: countElix.value
   })
 
+  // считаю логику для отрицательных изменений
   if (statChange < 0) {
+    // проверяю на наличие записей о последних эликсирах, считаю необходимсть изменения количества стат
+    statChange = lastElixStatCoast(statChange, key)
+
+    // высчитываю необходимость понижения очков в statChange от количества в availabilityQuantity
+    statChange = maxiAvailableValueElixirs(statChange, key)
     availabilityFlag = subclassChecking(key)
     avaiStatFlag = checkStatRequirementsForClothing(props.idMannequin, baseParamManecken.value, key)
   }
 
-  if (availabilityFlag === true && avaiStatFlag === true) {
+  if (availabilityFlag && avaiStatFlag) {
+    const editCoastElix = countElix.value - statChange
+    if (editCoastElix < 0) {
+      statChange = statChange - editCoastElix
+    }
+
     handleStatChange(key, 'increase', statChange)
     oldValueInput.value = false
   } else {
@@ -277,74 +328,110 @@ const handleStatInputChange = (stat) => {
   }
 }
 
-
 // Функция для уменьшения счетчика "lastElix" и сброса типа
 function decreaseLastElixCount(item) {
   return {
     ...item,
-    count: item.count - 3,
+    count: item.count - COUNT_STAT_MIXTURE,
     type: 'elix'
-  };
+  }
 }
 
 // Функция для увеличения счетчика "dSecolach" и установки флага
 function increaseDsecolachCount(item) {
   return {
     ...item,
-    count: item.count + 3,
+    count: item.count + COUNT_STAT_MIXTURE,
     dSecolach: true
-  };
+  }
 }
 
 // Функция для снижения счетчика "dSecolach" и установки флага в false
 function decreaseDsecolachCount(item) {
   return {
     ...item,
-    count: item.count - 3,
+    count: item.count - COUNT_STAT_MIXTURE,
     dSecolach: false
-  };
+  }
 }
 
 // Функция для обновления параметров
 function updateParams(params, updateFunction) {
-  return params.map(item => {
+  return params.map((item) => {
     if (updateFunction(item)) {
-      return updateFunction(item);
+      return updateFunction(item)
     }
-    return item;
-  });
+    return item
+  })
+}
+
+const resetLostElix = () => {
+  removeOldLastElix()
+  store.commit('statChange/statChange', {
+    addParam: [{ base: addParam.value }],
+    type: 'elixStats',
+    idMannequin: props.idMannequin
+  })
+  lastElix.value = 'change'
+  hascountElix.value = false
+  hasddisabledLastElix.value = false
+  idrebut.value++
+}
+
+const resetElix = () => {
+  addParam.value = addParam.value.map((item) => {
+    return {
+      ...item,
+      count: 0,
+      type: 'elix',
+      dSecolach: false
+    }
+  })
+
+  store.commit('statChange/statChange', {
+    addParam: [{ base: addParam.value }],
+    type: 'elixStats',
+    idMannequin: props.idMannequin
+  })
+  lastElix.value = 'change'
+  hascountElix.value = false
+  idrebut.value++
 }
 
 function removeOldLastElix() {
-  addParam.value = updateParams(addParam.value, item => item.type === 'lastElix' ? decreaseLastElixCount(item) : item);
-  addParam.value = updateParams(addParam.value, item => item.dSecolach === true ? decreaseDsecolachCount(item) : item);
+  addParam.value = updateParams(addParam.value, (item) =>
+    item.type === 'lastElix' ? decreaseLastElixCount(item) : item
+  )
+  addParam.value = updateParams(addParam.value, (item) =>
+    item.dSecolach === true ? decreaseDsecolachCount(item) : item
+  )
 }
 
 const addLastElix = () => {
-  removeOldLastElix();
+  // проверяю перед изменением наличие старых эликсиров и сбрасываю значение
+  removeOldLastElix()
   if (lastElix.value !== 'dSecolach') {
-    const changeParam = updateParam(lastElix.value, 'increase', 3);
-    const newParam = updateParams(changeParam, item => item.key === lastElix.value ? { ...item, type: 'lastElix' } : item);
+    const changeParam = updateParam(lastElix.value, 'increase', COUNT_STAT_MIXTURE)
+    const newParam = updateParams(changeParam, (item) =>
+      item.key === lastElix.value ? { ...item, type: 'lastElix' } : item
+    )
     store.commit('statChange/statChange', {
       addParam: [{ base: newParam }],
       type: 'elixStats',
       idMannequin: props.idMannequin
-    });
-    addParam.value = newParam;
-  } 
+    })
+    addParam.value = newParam
+  }
 
-  if (lastElix.value === 'dSecolach' ) {
-    addParam.value = updateParams(addParam.value, increaseDsecolachCount);
+  if (lastElix.value === 'dSecolach') {
+    addParam.value = updateParams(addParam.value, increaseDsecolachCount)
     store.commit('statChange/statChange', {
       addParam: [{ base: addParam.value }],
       type: 'elixStats',
       idMannequin: props.idMannequin
-    });
+    })
   }
 }
-
-
-
 
 const isClose = () => {
   emits('isCloseElix')
@@ -356,3 +443,14 @@ export default {
   name: 'AddElixir'
 }
 </script>
+
+<style scoped>
+.elixBtn {
+  width: 170px;
+  height: 35px;
+}
+
+.elixBtn:hover {
+  background-color: #979fa700;
+}
+</style>
