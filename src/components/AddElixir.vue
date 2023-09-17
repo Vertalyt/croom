@@ -2,7 +2,7 @@
   <div class="modal" @click.stop="isClose"></div>
   <div class="modal-content">
     <span @click="isClose" class="close">&times;</span>
-    <h3>Доступно: {{ countElix }} | Использовано: {{ MAX_ELIX_FOR_LVL - countElix }}</h3>
+    <h3>Доступно: {{ countElix }} | Использовано: {{ numberDrinks }}</h3>
     <ManekenStatParams
       :statParams="statParams"
       :accessibleStats="countElix"
@@ -26,7 +26,7 @@
     </ManekenStatParams>
 
     <div class="form__items">
-      <select :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css">
+      <select :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css select-css-elix">
         <option value="change" disabled selected>Випити останнім</option>
         <option v-for="e in lastElixParam" :key="e.key" :value="e.key">
           {{ e.name }}
@@ -37,20 +37,20 @@
           <button
             :disabled="!hasLastElix"
             @click="resetLostElix"
-            class="tab-button elixBtn"
+            class="tab-button maneckenBtn"
             :class="{ 'tab-button-disabled': !hasLastElix }"
           >
-            <p class="p__tab-button">Обнулення мікстур</p>
+            <p class="p__tab-button p__tab-button-elix">Обнулення мікстур</p>
           </button>
         </div>
         <div class="checkbox">
           <button
             :disabled="MAX_ELIX_FOR_LVL - countElix === 0"
             @click="resetElix"
-            class="tab-button elixBtn"
+            class="tab-button maneckenBtn"
             :class="{ 'tab-button-disabled': MAX_ELIX_FOR_LVL - countElix === 0 }"
           >
-            <p class="p__tab-button">Скинути еліксири</p>
+            <p class="p__tab-button p__tab-button-elix">Скинути еліксири</p>
           </button>
         </div>
       </div>
@@ -86,7 +86,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits({
-  isCloseElix: null
+  isCloseElix: null,
+  numberDrinks: [Number, null]
 })
 // массив с изменениями параметров
 const addParam = ref([
@@ -125,6 +126,7 @@ const listManeken = computed(() => store.getters['listManeken'](props.idMannequi
 //получаю сами распредленные базовые статы
 const baseParamManecken = computed(() => store.getters['listManekenBase'](props.idMannequin))
 
+
 // флаг перерисовки ManekenSlot
 const oldValueInput = ref(true)
 // идентификатор перерисовки ManekenSlot
@@ -134,6 +136,14 @@ const hascountElix = ref(false)
 // возможное количество эликсиров
 const MAX_ELIX_FOR_LVL = ref(listManeken.value.lvl * 3 + 1)
 // функция расчета и перерасчета свободных стат эликсиров
+
+
+const numberDrinks = computed(() => MAX_ELIX_FOR_LVL.value - countElix.value  )
+
+watch(numberDrinks, val => {
+  emits('numberDrinks', val)
+})
+
 
 function addCountElix() {
   if (!elixStats.value) {
@@ -395,6 +405,7 @@ const resetElix = () => {
   })
   lastElix.value = 'change'
   hascountElix.value = false
+  hasddisabledLastElix.value = false
   idrebut.value++
 }
 
@@ -445,12 +456,22 @@ export default {
 </script>
 
 <style scoped>
-.elixBtn {
-  width: 170px;
-  height: 35px;
+
+.p__tab-button-elix {
+  font-size: 12px;
+  line-height: 14px;
+  font-family: "Times New Roman", serif;
 }
 
-.elixBtn:hover {
-  background-color: #979fa700;
+@media screen and (max-width: 400px) {
+
+  p {
+    padding: 2px 5px;
+}
+
+.select-css-elix {
+  padding: 2px 20px 2px 5px;
+}
+
 }
 </style>

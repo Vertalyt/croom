@@ -1456,5 +1456,3 @@ export const raseParams = [
     { name: 'Орк', id: 'ork'},
     { name: 'Троль', id: 'trol'},
     ]
-
-      

@@ -17,8 +17,7 @@
 
 <script setup>
 import { useStore } from 'vuex'
-import { ref, computed, watch, onMounted } from 'vue'
-// import { fetchAPIData } from '../api/fetchApi'
+import { ref, computed, watch } from 'vue'
 
 
 const props = defineProps({
@@ -29,9 +28,13 @@ const props = defineProps({
 })
 
 const store = useStore()
+const spellsReiting = ref(0)
+const rating = ref(0)
 
 const listManeken = computed(() => store.getters['listManeken'](props.idMannequin))
 const listStat = computed( () => store.getters['statChange/listStat'](props.idMannequin))
+const spells = computed( () => store.getters['spells/spells'](props.idMannequin).find((el) => el.spellsList) )
+
 
 const nameCost = ref([
   { key: 'life', name: 'Життя', cost: 15, link:'https://sabzero.biz/croomTemplate/assets/img/icon/svg/health.svg' },
@@ -39,21 +42,46 @@ const nameCost = ref([
   { key: 'dstamina', name: 'Енергія', cost: 100, link:'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg'  },
   { key: 'rating', name: 'Рейтинг', cost: 6, link:'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rating.svg'  }
 ])
-// const spells = ref([])
 
-// const filtersClasses = ref({
-//   category: 'spells'
-// })
 
-onMounted(async () => {
-    // spells.value = await fetchAPIData(filtersClasses.value)
-    // console.log(spells.value);
-} )
+function sunnRatingSpells(val) {
+  // переменная для хранения общей суммы значений rating
+let totalRating = 0;
+// Пройдитесь по каждой категории магии
+for (const category in val.spellsList) {
+    if (Object.prototype.hasOwnProperty.call(val.spellsList, category)) {
+        const spells = val.spellsList[category];
 
+        // Пройдитесь по каждому заклинанию в текущей категории
+        for (const spell of spells) {
+            // Проверьте, есть ли ключ "check" и он равен true
+            if (Object.prototype.hasOwnProperty.call(spell, "check") && spell.check === true) {
+                // Если условие выполняется, добавьте значение "rating" к общей сумме
+                totalRating += parseInt(spell.rating, 10);
+            }
+        }
+    }
+}
+return totalRating
+}
+
+watch(spells, val => {
+spellsReiting.value = sunnRatingSpells(val)
+rating.value += spellsReiting.value
+}, {deep : true}  )
+
+
+watch(rating, val => {
+  nameCost.value.forEach(item => {
+    if(item.key === 'rating') {
+      item.cost = val
+    }
+  })
+})
 
 watch(listManeken, (val) => {
   const lvl = val.lvl
-  const rating = ratingCalculation(val)
+  rating.value += ratingCalculation(val)
   const dwisdom = listManeken.value.statModule.find((item) => item.key === 'dwisdom').summStatBonusAndBase
   const dconst = listManeken.value.statModule.find((item) => item.key === 'dconst').summStatBonusAndBase
   const hp = Math.round((5*Number(dconst))*(1+(Number(lvl)/10)));
@@ -64,9 +92,6 @@ watch(listManeken, (val) => {
     }
     if(item.key === 'mana') {
       item.cost = Number(dwisdom) * 6
-    }
-    if(item.key === 'rating') {
-      item.cost = rating
     }
   })
 })

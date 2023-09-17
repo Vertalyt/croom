@@ -156,3 +156,10 @@ When a potion is selected, check for the presence of the potion and prohibit low
 Reset finishing elixirs
 Reset for potions.
 Numerous changes to the logic of how potions work
+
+
+
+
+## [1.1.00] - 2023-09-17
+Added loading and display of spells.
+Added spell rating calculation

@@ -17,6 +17,7 @@ $parent = isset($_GET['parent']) ? $_GET['parent'] : null;
 $typeid = isset($_GET['typeid']) ? $_GET['typeid'] : null;
 $minlevel = isset($_GET['minlevel']) ? $_GET['minlevel'] : null;
 $rarity = isset($_GET['rarity']) ? $_GET['rarity'] : null;
+$requiredSubclass = isset($_GET['requiredSubclass']) ? $_GET['requiredSubclass'] : array();
 
 $conditions = array();
 $bindTypes = "";
@@ -52,6 +53,13 @@ if ($rarity !== null && is_array($rarity) && count($rarity) > 0) {
     $conditions[] = "rarity IN ($inPlaceholders)";
     $bindTypes .= str_repeat("s", count($rarity)); // s - строка
     $bindValues = array_merge($bindValues, $rarity);
+}
+
+if (!empty($requiredSubclass)) {
+    $inPlaceholders = implode(', ', array_fill(0, count($requiredSubclass), '?'));
+    $conditions[] = "requiredSubclass IN ($inPlaceholders)";
+    $bindTypes .= str_repeat("s", count($requiredSubclass)); // s - строка
+    $bindValues = array_merge($bindValues, $requiredSubclass);
 }
 
 $conditionsString = implode(' AND ', $conditions);

@@ -60,20 +60,20 @@ export default {
     }
   },
   mutations: {
-    statChange(state, { addParam, type, idMannequin }) {
+    statChange(state, { addParam, type, name, idMannequin }) {
       state.listMannequins.filter((item) => {
         if (item.idMannequin === idMannequin) {
           item.listStat = item.listStat.map((item) => {
             if (item.type === type) {
               // Если тип совпадает, возвращаем объект с обновленным параметром
-              return { ...item, param: addParam }
+              return { ...item, name, param: addParam }
             }
             return item // Возвращаем неизмененный элемент
           })
           // Проверяем, есть ли тип в массиве, и добавляем новый элемент, если нет
           const existingTypes = item.listStat.map((item) => item.type)
           if (!existingTypes.includes(type)) {
-            item.listStat.push({ type, param: addParam })
+            item.listStat.push({ type, name, param: addParam })
           }
         }
       })
@@ -96,8 +96,8 @@ export default {
     }      
   },
   actions: {
-    statChange({ commit }, { addParam, type, idMannequin }) {
-      commit('statChange', { addParam, type, idMannequin })
+    statChange({ commit }, { addParam, type, name, idMannequin }) {
+      commit('statChange', { addParam, type, name, idMannequin })
     },
     listDelChange( { commit }, { type, idMannequin } ) {
       commit('listDelChange', { type, idMannequin })

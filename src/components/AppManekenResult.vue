@@ -60,6 +60,7 @@ const props = defineProps({
 
 const store = useStore()
 
+
 const nameCost = ref([
   {key: 'price', name: 'Тали', cost: 0},
   {key: 'goldprice', name: 'Золоті тали', cost: 0},

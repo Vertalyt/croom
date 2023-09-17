@@ -14,7 +14,7 @@ import { useStore } from 'vuex'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
 import AddElixir from './AddElixir.vue'
-
+import AppSpells from './AppSpells.vue'
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -46,6 +46,8 @@ const availabilityClassFlag = ref(true)
 const oldValueSubclass = ref()
 const elixFlag = ref(false)
 const classMinParam = ref()
+const spellsFlag = ref(false)
+
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -133,7 +135,7 @@ async function changingSubclassParameters() {
 }
 
 const handleParentClassSelectChange = async (parent) => {
-
+  
  availabilityClassFlag.value = checkSubclassChangeFeasibilityWithGearRequirements({id:props.idMannequin, ollParamClass: OllParamClass.value, parent })
 if(availabilityClassFlag.value === true) {
   oldValueSubclass.value = true
@@ -185,6 +187,7 @@ const addClassMinParam = [
     store.commit('statChange/statChange', {
       addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
       type: 'subclass',
+      name:  parent,
       idMannequin: props.idMannequin
     })
   } else {
@@ -276,11 +279,20 @@ const handleClothesChoice = async (param) => {
   emits('modalOpen', param)
 }
 
-
+const drinksElix = ref(0)
+const numberDrinks = (count) => {
+  drinksElix.value = count
+}
 
 const isCloseElix = () => {
   elixFlag.value = false
 }
+
+const isCloseSpells = () => {
+  spellsFlag.value = false
+}
+
+
 
 const handleFortressUpdate = (fortress) => {
   console.log(fortress)
@@ -341,7 +353,9 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <select v-model="lvlSelect" @change="lvlSelectChange" class="select-css">
+              <select v-model="lvlSelect" @change="lvlSelectChange" 
+              class="select-css"
+              >
                 <option value="change" disabled selected>Виберіть рівень</option>
                 <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
                   {{ l.lvl }}
@@ -395,6 +409,17 @@ export default {
                   <BasicSlotOpteons :items="availableFortressOptions" />
                 </template>
               </ManeckenSelectItems>
+
+          <div class="">
+          <button
+            class="tab-button maneckenBtn"
+            @click="spellsFlag = true"
+          >
+            <p class="p__tab-button p__tab-button-elix">Заклинания</p>
+          </button>
+        </div>
+
+
             </div>
 
             <AddElixir 
@@ -402,11 +427,19 @@ export default {
               :idMannequin="props.idMannequin"
               :statParams="statParams"
               :classMinParam="classMinParam"
+              @numberDrinks="numberDrinks"
               @isCloseElix="isCloseElix"/>
+
+
+            <AppSpells
+            v-if="spellsFlag"
+            :idMannequin="props.idMannequin"
+            @isCloseSpells="isCloseSpells"
+            />
 
             <div class="form__items">
               <a href="#" @click="elixFlag = true" class="form__link">Випити еліксир</a>
-              <p>Випито: 0</p>
+              <p>Випито: {{ drinksElix }}</p>
             </div>
 
             <div class="form__items">
@@ -429,3 +462,18 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+
+.maneckenBtn {
+    width: 125px;
+    height: 26px;
+}
+
+.p__tab-button {
+  font-weight: 800;
+  color: #e1dbdb;
+  font-family: cursive;
+}
+
+</style>

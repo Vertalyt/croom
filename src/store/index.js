@@ -1,6 +1,8 @@
 import { createStore } from 'vuex'
 import statChange from './modules/statChange.module'
 import dummy from './modules/dummy.module'
+import spells from './modules/spells.module'
+
 
 import { baseStatModule, basickParamsRase } from '../initialization/baseParams'
 const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
@@ -61,6 +63,7 @@ export default createStore({
   },
   modules: {
     statChange,
-    dummy
+    dummy,
+    spells
 }
 })
