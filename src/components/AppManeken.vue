@@ -1,20 +1,24 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { baseStatFromLvl } from '../utils/baseStatFromLvl'
-import { modifyStat, statInputChange } from '../utils/modifyStat'
+import { useStore } from 'vuex'
+
 import ManekenStatParams from './Manekenstatparams.vue'
 import ManekenSlot from './use/slots/ManekenSlot.vue'
-import { fetchAPIData } from '../api/fetchApi'
 import ManeckenSelectItems from './use/ManeckenSelectItems.vue'
-import { fortressParam, raseParams } from '../initialization/baseParams'
 import DummyPartSlot from './use/slots/DummyPartSlot.vue'
 import ManeckenOptionSelect from './use/slots/ManeckenOptionSelect.vue'
 import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
-import { useStore } from 'vuex'
-import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
-import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
 import AddElixir from './AddElixir.vue'
 import AppSpells from './AppSpells.vue'
+import AppLoader from './AppLoader.vue'
+
+import { baseStatFromLvl } from '../utils/baseStatFromLvl'
+import { modifyStat, statInputChange } from '../utils/modifyStat'
+import { fetchAPIData } from '../api/fetchApi'
+import { fortressParam, raseParams } from '../initialization/baseParams'
+import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
+import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
+
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -47,7 +51,8 @@ const oldValueSubclass = ref()
 const elixFlag = ref(false)
 const classMinParam = ref()
 const spellsFlag = ref(false)
-
+const raseMagicDefend = ref([])
+const isLoading = ref(false)
 
 // массив с изменениями параметров
 const addParam = ref([
@@ -89,9 +94,11 @@ const centerBottomDummyPart = computed(() =>
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 
 onMounted(async () => {
+  isLoading.value = true
   OllParamClass.value = await fetchAPIData(filtersClasses.value)
-  // OllParamClass.value = baseStatClasses
+  raseMagicDefend.value = await fetchAPIData({ category: 'raseMagicDefend' })
   parentClasses.value = OllParamClass.value.filter((p) => p.parent == 0)
+  isLoading.value = false
 })
 
 // слежение за изменением суммарного массива updatedStatConfigurations
@@ -251,6 +258,24 @@ watch(accessibleStats, (val) => {
   })
 })
 
+watch([lvlSelect, raseModel], val => {
+
+  if(val[0] > 0) {
+    const newRaseOllLvlDefend = raseMagicDefend.value.filter( rase => rase.rase === val[1])
+    const newRaseDefend = newRaseOllLvlDefend.find(item => Number(item.lvlPers) === Number(val[0]))
+    const update = [
+  { key: 'whitemagicprotection', count: newRaseDefend.whitemagicprotection },
+  { key: 'blackmagicprotection', count: newRaseDefend.blackmagicprotection },
+  { key: 'astralmagicprotection', count: newRaseDefend.astralmagicprotection },
+]
+    store.commit('statChange/statChange', {
+      addParam: [{ bonusAndBase: update }],
+      type: 'magickDefend',
+      idMannequin: props.idMannequin
+    })
+  }
+})
+
 const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
 }
@@ -306,6 +331,8 @@ export default {
 </script>
 
 <template>
+
+  <AppLoader v-if="isLoading"/>
   <div class="isDummyLoaded" v-if="isDummyLoaded">
     <div class="dummy__part">
       <DummyPartSlot :dummyItems="leftDummyPart" @handleClothesChoice="handleClothesChoice" />
@@ -353,7 +380,9 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <select v-model="lvlSelect" @change="lvlSelectChange" 
+              <select 
+              name="lvlSelectChange"
+              v-model="lvlSelect" @change="lvlSelectChange" 
               class="select-css"
               >
                 <option value="change" disabled selected>Виберіть рівень</option>
@@ -438,7 +467,14 @@ export default {
             />
 
             <div class="form__items">
-              <a href="#" @click="elixFlag = true" class="form__link">Випити еліксир</a>
+              <button
+          class="tab-button maneckenBtn"
+          @click="elixFlag = true" 
+        >
+          <p class="p__tab-button">Випити еліксир</p>
+        </button>
+
+           
               <p>Випито: {{ drinksElix }}</p>
             </div>
 
@@ -471,6 +507,9 @@ export default {
 }
 
 .p__tab-button {
+  font-size: 12px;
+  margin: 3px;
+  padding: 2px 5px;
   font-weight: 800;
   color: #e1dbdb;
   font-family: cursive;

@@ -34,10 +34,6 @@ defineProps({
     type: Array,
     requared: true
   },
-  accessibleStats: {
-    type: Number,
-    requared: true
-  },
   additionalCheck: {
     type: Boolean,
     requared: false

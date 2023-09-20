@@ -103,6 +103,7 @@ const minstats = computed(() => {
       <div class="conteiner">
         <ManeckenModal
           v-if="isOpen"
+          :lvlPerson="lvlPerson"
           :cellOptions="cellOptions"
           :minStats="minstats"
           :idMannequin="idMannequin"

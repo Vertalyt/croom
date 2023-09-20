@@ -1,5 +1,7 @@
 <template>
-  <select class="select-css"
+  <select 
+  :name="itemsName"
+  class="select-css"
   v-model="itemsvalue">
     <option value="none" disabled selected>{{ itemsName }}</option>
     <slot name="optionSelect"/>

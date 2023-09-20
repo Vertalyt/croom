@@ -35,9 +35,9 @@ export const baseStatModule = [
   { type: 'stat', key: 'dreaction', name: 'Реакція', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
   { type: 'stat', key: 'dwisdom', name: 'Мудрість', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
   { type: 'stat', key: 'dconst', name: 'Статура', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
-  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 6, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dawn.svg'},
-  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 6, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/full-Moon.svg' },
-  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 4, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/astral.svg' },
+  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dawn.svg'},
+  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/full-Moon.svg' },
+  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/astral.svg' },
   { type: 'armor', key: 'headarmor', name: 'Голова', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor_head.svg' },
   { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor.svg' },
   { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leftHend.svg' },
@@ -55,9 +55,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 3 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
-      {key: 'whitemagicprotection', count: 6 },
-      {key: 'blackmagicprotection', count: 6 },
-      {key: 'astralmagicprotection', count: 4 },
     ]
   },
   {
@@ -69,9 +66,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 4 },
       {key: 'dconst', count: 4 },
-      {key: 'whitemagicprotection', count: 4 },
-      {key: 'blackmagicprotection', count: 8 },
-      {key: 'astralmagicprotection', count: 4 },
     ]
   },
   {
@@ -83,9 +77,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
-      {key: 'whitemagicprotection', count: 8 },
-      {key: 'blackmagicprotection', count: 4 },
-      {key: 'astralmagicprotection', count: 4 },
     ]
   },
   {
@@ -97,9 +88,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
-      {key: 'whitemagicprotection', count: 6 },
-      {key: 'blackmagicprotection', count: 6 },
-      {key: 'astralmagicprotection', count: 4 },
     ]
   },
   {
@@ -111,9 +99,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 3 },
       {key: 'dwisdom', count: 1 },
       {key: 'dconst', count: 4 },
-      {key: 'whitemagicprotection', count: 9 },
-      {key: 'blackmagicprotection', count: 9 },
-      {key: 'astralmagicprotection', count: 0 },
     ]
   },
   {
@@ -125,9 +110,6 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 3 },
       {key: 'dwisdom', count: 2 },
       {key: 'dconst', count: 5 },
-      {key: 'whitemagicprotection', count: 7 },
-      {key: 'blackmagicprotection', count: 5 },
-      {key: 'astralmagicprotection', count: 4 },
       {key: 'fortress', count: 1 },
     ]
   },

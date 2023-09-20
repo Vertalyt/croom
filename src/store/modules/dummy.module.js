@@ -24,20 +24,22 @@ export default {
 
   },
   mutations: {
-    changeDummyEl(state, { idMannequin, imgLink, cellName, typeid }) {
+    changeDummyEl(state, { idMannequin, imgLink, cellName, typeid, key }) {
+        const img = key === 'artefact' 
+        ? `https://sabzero.biz/croomTemplate/assets/img/art.png` 
+        : `https://files.nura.biz/site/images/things100x100/${imgLink}.png`
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
         if (foundItem) {
-          
-            if(listTwoHandedTypes.includes(typeid)) {
+           if(listTwoHandedTypes.includes(typeid)) {
               foundItem.isDummy.forEach(item => {
                 if (item.typeid.includes(typeid)) {
-                  item.link = `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+                  item.link = img;
                 }
               });
             } else {
               foundItem.isDummy.find(item => {
                 if (item.name === cellName) {
-                  item.link = `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+                  item.link = img;
                 }
               });
             }
@@ -46,12 +48,12 @@ export default {
       }
   },
   actions: {
-    changeDummyEl( {dispatch, state, commit}, { addParam, typeid, idMannequin, imgLink, cellName } ) {
+    changeDummyEl( {dispatch, state, commit}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
 
         const dummy = foundItem.isDummy.find(item => item.name === cellName)
 
-        commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid }); 
+        commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid, key }); 
         dispatch('statChange/statChange', {
             addParam,
             type: dummy.name,

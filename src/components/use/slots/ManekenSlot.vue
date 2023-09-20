@@ -2,6 +2,7 @@
                   <td><input
                     :disabled="accessibleStats === null || hasddisabledLastElix"
                     type="number"
+                    :name="statParam.key"
                     :value="statParam.summStatBase"
                     @change="updateStatParam"
                     class="options__input" />
@@ -55,7 +56,7 @@ const props = defineProps({
   },
   addElix: {
     type: Object,
-    requared: true
+    requared: false
   },
   classCheck:{
     type: Boolean,

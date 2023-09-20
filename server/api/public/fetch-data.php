@@ -31,13 +31,14 @@ if ($parent !== null) {
 
 if ($typeid !== null) {
     if (is_array($typeid)) {
-        $inPlaceholders = implode(', ', array_fill(0, count($typeid), '?'));
-        $conditions[] = "typeid IN ($inPlaceholders)";
-        $bindTypes .= str_repeat("i", count($typeid));
+        // Используем точное совпадение
+        $conditions[] = "typeid IN (" . implode(',', array_fill(0, count($typeid), '?')) . ")";
+        $bindTypes .= str_repeat("s", count($typeid)); // s - строка
         $bindValues = array_merge($bindValues, $typeid);
     } else {
+        // Используем точное совпадение
         $conditions[] = "typeid = ?";
-        $bindTypes .= "i"; // i - целое число
+        $bindTypes .= "s"; // s - строка
         $bindValues[] = $typeid;
     }
 }

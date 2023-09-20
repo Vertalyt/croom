@@ -5,7 +5,6 @@
     <h3>Доступно: {{ countElix }} | Использовано: {{ numberDrinks }}</h3>
     <ManekenStatParams
       :statParams="statParams"
-      :accessibleStats="countElix"
       :elixCheck="true"
       :inputShow="true"
     >
@@ -26,7 +25,9 @@
     </ManekenStatParams>
 
     <div class="form__items">
-      <select :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css select-css-elix">
+      <select 
+      name="addLastElix"
+      :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css select-css-elix">
         <option value="change" disabled selected>Випити останнім</option>
         <option v-for="e in lastElixParam" :key="e.key" :value="e.key">
           {{ e.name }}
@@ -84,7 +85,6 @@ const props = defineProps({
     requared: true
   }
 })
-
 const emits = defineEmits({
   isCloseElix: null,
   numberDrinks: [Number, null]
