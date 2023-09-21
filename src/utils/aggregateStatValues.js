@@ -1,6 +1,7 @@
 import store from '../store'
 
 function updateStats(sourceStatsArray, arrUpdate, includeSummStatBase) {
+
   return arrUpdate.map((item) => {
     const common = sourceStatsArray.find((i) => i.key === item.key)
     if (common) {
@@ -36,7 +37,7 @@ export function aggregateStatValues({ baseUpdate, idMannequin }) {
   const sorted = sumChangeInfo.filter((item) => {
     return sortedChangesByType.some((changeType) => item.type.includes(changeType))
   })
-
+;
   // Обработка 'base' из массива sorted (необходимо для отбраковки базовых стат от вещей)
   processBase(sorted, bonusOllStats)
 

@@ -165,6 +165,10 @@ Added loading and display of spells.
 Added spell rating calculation
 
 
-## [1.2.00] - 2023-09-17
+## [1.2.00] - 2023-09-20
 The database has been filled with data on artifacts.
 Created display and equipping of artifacts
+
+## [1.2.01] - 2023-09-21
+Fixed a bug with incorrect stat calculations.
+Function refactoring

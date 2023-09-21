@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import AppHeader from '@/components/appHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
@@ -13,67 +13,58 @@ const updatedStatConfigurations = ref(baseStatModule) // передаю в та�
 const isOpen = ref(false)
 const cellOptions = ref()
 const store = useStore()
-const raseParams = ref('')
-const baseStatConfigurations = ref()
-const baseManekenConfig = ref()
-const lvlPerson = ref(0)
 
+
+const baseManekenConfig = computed( () => store.getters['listManeken'](idMannequin));// базовое значение конкретной расы, и их переменные, стартовое люди
+const raseParams = ref(baseManekenConfig.value.raseParams)
+const baseStatConfigurations = ref(baseManekenConfig.value.statModule)
+const lvlPerson = ref(0)
 const idMannequin = 1; // айди манекена, в будущем буду менять в зависимости от манекена
 const listStat = computed(() => store.getters['statChange/listStat'](idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 
 
-onMounted(() => {
-  baseManekenConfig.value = store.getters['listManeken'](idMannequin);// базовое значение конкретной расы, и их переменные, стартовое люди
-  baseStatConfigurations.value = baseManekenConfig.value.statModule
-} )
-
-const updateLvl = (lvl) => {
-  lvlPerson.value = lvl
-  store.dispatch('updateManekenInfo', {
-    ...baseManekenConfig.value,
-    lvl,
-  })
-
-}
-
-watch(listStat, (_) => {
-    //суммируем все колонки для итогового результата
-    const { arrUpdate } = aggregateStatValues({
-      baseUpdate: baseStatConfigurations.value,
-      idMannequin: idMannequin
-  }, { deep: true })
-  updatedStatConfigurations.value = arrUpdate
-
-  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl: lvlPerson.value})
-}, {deep: true})
-
-watch(raseParams, val => {
-  //изменяю зачение базовой расы на обновленную
-  const newBaseConfig = baseStatConfigurations.value.map((i) => {
-    const updatedStats = val
+function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
+  const updatedConfigurations = newBaseConfig.map((i) => {
+    const updatedStats = baseManekenConfig.value.raseParams
       ? {
-          summStatBase: val.find((param) => param.key === i.key)?.count || i.summStatBase,
-          summStatBonusAndBase:
-          val.find((param) => param.key === i.key)?.count || i.summStatBonusAndBase
+          summStatBase: baseManekenConfig.value.raseParams.find((param) => param.key === i.key)?.count || i.summStatBase,
+          summStatBonusAndBase: baseManekenConfig.value.raseParams.find((param) => param.key === i.key)?.count || i.summStatBonusAndBase
         }
-      : {}
+      : {};
     return {
       ...i,
       ...updatedStats
-    }
-  })
-  //суммирую в итоговый массив
+    };
+  });
+
   const { arrUpdate } = aggregateStatValues({
-    baseUpdate: newBaseConfig,
+    baseUpdate: updatedConfigurations,
     idMannequin: idMannequin
-  })
-  updatedStatConfigurations.value = arrUpdate
-  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl: lvlPerson.value })
-})
+  });
+
+  updatedStatConfigurations.value = arrUpdate;
+  store.dispatch('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl });
+}
+
+watch(raseParams, _ => {
+  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
+  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvlPerson.value);
+});
+
+watch(listStat, (_) => {
+  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
+  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvlPerson.value);
+}, { deep: true });
+
+const updateLvl = (lvl) => {
+  lvlPerson.value = lvl;
+  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
+  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl);
+}
 
 const changeRase = ({ raseModel }) => {
   //получаю все данные по ноой рассе
-  raseParams.value = basickParams.value.find((r) => r.availableRaces === raseModel)?.date
+  raseParams.value = basickParams.value.find((r) => r.availableRaces === raseModel).date
   store.commit('updateManekenInfo', { raseParams, idMannequin })
 }
 

@@ -242,6 +242,7 @@ const modifyStatAndEmit = (statKey, increment) => {
     increment,
     id:props.idMannequin
   })
+
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
   store.commit('statChange/statChange', {
