@@ -10,6 +10,7 @@
               class="accordionFaceImg"
             />
             <p>{{ c.otherInfo.name }}</p>
+            <p>Рівень: {{ c.otherInfo.minlevel }}</p>
           </div>
 
           <button class="button" @click.stop="dress(c)">Вдягти</button>

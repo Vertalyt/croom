@@ -172,3 +172,10 @@ Created display and equipping of artifacts
 ## [1.2.01] - 2023-09-21
 Fixed a bug with incorrect stat calculations.
 Function refactoring
+
+
+
+## [1.2.02] - 2023-09-23
+The ranking formula has been adjusted to take into account the bug in the game
+Fixed double rating
+Added selection of item level by range and memorization of the selected position

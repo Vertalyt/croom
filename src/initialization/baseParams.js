@@ -43,6 +43,7 @@ export const baseStatModule = [
   { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leftHend.svg' },
   { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rightHend.svg' },
   { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leg-armor.svg' },
+  { type: 'dstamina', key: 'dstamina', name: 'Енергія', summStatBase: 0, summStatBonusAndBase: 100, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg' },
 ]
 
 export const basickParamsRase = [
@@ -55,6 +56,9 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 3 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
+    //   {key: 'headarmor', count: 6 },
+    //   {key: 'bodyarmor', count: 6 },
+    //   {key: 'lagsarmor', count: 4 },
     ]
   },
   {
@@ -66,6 +70,9 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 4 },
       {key: 'dconst', count: 4 },
+    //   {key: 'headarmor', count: 4 },
+    //   {key: 'bodyarmor', count: 8 },
+    //   {key: 'lagsarmor', count: 4 },
     ]
   },
   {
@@ -77,6 +84,9 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
+    //   {key: 'headarmor', count: 8 },
+    //   {key: 'bodyarmor', count: 4 },
+    //   {key: 'lagsarmor', count: 4 },
     ]
   },
   {
@@ -88,6 +98,9 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 2 },
       {key: 'dwisdom', count: 3 },
       {key: 'dconst', count: 3 },
+    //   {key: 'headarmor', count: 6 },
+    //   {key: 'bodyarmor', count: 6 },
+    //   {key: 'lagsarmor', count: 4 },
     ]
   },
   {
@@ -99,6 +112,9 @@ export const basickParamsRase = [
       {key: 'dreaction', count: 3 },
       {key: 'dwisdom', count: 1 },
       {key: 'dconst', count: 4 },
+    //   {key: 'headarmor', count: 9 },
+    //   {key: 'bodyarmor', count: 9 },
+    //   {key: 'lagsarmor', count: 0 },
     ]
   },
   {
@@ -111,6 +127,9 @@ export const basickParamsRase = [
       {key: 'dwisdom', count: 2 },
       {key: 'dconst', count: 5 },
       {key: 'fortress', count: 1 },
+    //   {key: 'headarmor', count: 7 },
+    //   {key: 'bodyarmor', count: 5 },
+    //   {key: 'lagsarmor', count: 4 },
     ]
   },
 ]
@@ -1438,3 +1457,23 @@ export const raseParams = [
     { name: 'Орк', id: 'ork'},
     { name: 'Троль', id: 'trol'},
     ]
+
+
+export const arrayVariableStats = [
+    { key: 'dstrength', count: 0 },
+    { key: 'ddexterity', count: 0 },
+    { key: 'dintel', count: 0 },
+    { key: 'dluck', count: 0 },
+    { key: 'dreaction', count: 0 },
+    { key: 'dwisdom', count: 0 },
+    { key: 'dconst', count: 0 },
+    { key: 'whitemagicprotection', count: 0 },
+    { key: 'blackmagicprotection', count: 0 },
+    { key: 'astralmagicprotection', count: 0 },
+    { key: 'headarmor', count: 0 },
+    { key: 'bodyarmor', count: 0 },
+    { key: 'lefthandarmor', count: 0 },
+    { key: 'righthandarmor', count: 0 },
+    { key: 'lagsarmor', count: 0 },
+    { key: 'dstamina', count: 0 },
+  ]

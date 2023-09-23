@@ -95,12 +95,4 @@ export default {
       return state; // Возвращаем обновленное состояние
     }      
   },
-  actions: {
-    statChange({ commit }, { addParam, type, name, idMannequin }) {
-      commit('statChange', { addParam, type, name, idMannequin })
-    },
-    listDelChange( { commit }, { type, idMannequin } ) {
-      commit('listDelChange', { type, idMannequin })
-    }
-  }
 }

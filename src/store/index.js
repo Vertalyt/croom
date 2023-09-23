@@ -21,6 +21,12 @@ export default createStore({
         return item.idMannequin === id;
       });
     },
+    statModule: (state) => (id) => {
+      const mannequin = state.listManeken.find(item => item.idMannequin === id);
+      if (mannequin) { 
+        return mannequin.statModule
+      }
+    },
     listManekenBase: (state) => (id) => {
       const mannequin = state.listManeken.find(item => item.idMannequin === id);
       if (mannequin) {
@@ -51,14 +57,6 @@ export default createStore({
         }
         return c
       })
-    },
-  },
-  actions: {
-    addManekenInfo({ commit }, { idMannequin, statModule }) {
-      commit('addManekenInfo', { idMannequin, statModule })
-    },
-    updateManekenInfo({ commit }, update) {
-      commit('updateManekenInfo', update)
     },
   },
   modules: {

@@ -39,9 +39,4 @@ export default {
       }
     }
   },
-  actions: {
-    spellsChange({ commit }, update) {
-      commit('spellsChange', update)
-    }
-  }
 }

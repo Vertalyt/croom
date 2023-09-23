@@ -26,12 +26,15 @@
 
     <SelClothListSort
     v-if="checkboxType"
+      :lvlSearch="lvlSearch"
      :cellOptions="cellOptions"
      :minStats="minStats"
      :idMannequin="idMannequin"
+     :minLvl="minLvl"
+     :maxLvl="maxLvl"
      @isClose="$emit('isClose')"
+     @lvlMinMaxChange="handleLvlMinMaxChange"
     />
-
 
 
 
@@ -60,17 +63,38 @@ defineProps({
     type: Number,
     required: true
   },
+  lvlSearch: {
+    type: Array,
+    required: true
+  },
+  minLvl: {
+    type: [String, Number],
+    required: true
+  },
+  maxLvl: {
+    type: [String, Number],
+    required: true
+  },
 })
 
+const handleLvlMinMaxChange = ({ lvlMinMax, id }) => {
+  emits('lvlMinMaxChange', { lvlMinMax, id })
+}
+
 const emits =defineEmits({
-  isClose: null
+  isClose: null,
+  lvlMinMaxChange: Object,
 })
 
 const checkboxType = ref(true)
 
+
+
 const isClose = () => {
   emits('isClose')
 }
+
+
 
 
 </script>

@@ -1,53 +1,84 @@
-
 <template>
-    <div class="form__items">
-      <div class="form__items form__items_modal">
-        <input
-          class="custom-checkbox"
-          v-model="reqParameterVal"
-          @click="clothesfilter"
-          id="cloth"
-          type="checkbox"
-        />
-        <label for="cloth">Те, що можна одягнути</label>
-      </div>
-
-      <select 
-      name="loadingByFilters"
-      v-model="lvlSelect" @change="loadingByFilters" class="select-css">
-        <option value="change" disabled selected>Рівень</option>
-        <option>0</option>
-        <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
-      </select>
+  <div class="form__items">
+    <div class="form__items form__items_modal">
+      <input
+        class="custom-checkbox"
+        v-model="reqParameterVal"
+        @click="clothesfilter"
+        id="cloth"
+        type="checkbox"
+      />
+      <label for="cloth">Те, що можна одягнути</label>
     </div>
+  </div>
 
-    <div class="checkboxWrapper">
-      <div class="checkbox" v-for="t in rarity" :key="t.key">
-        <input
-          class="custom-checkbox"
-          type="checkbox"
-          :checked="t.checked"
-          :id="t.key"
-          :name="t.name"
-          :value="t.name"
-          v-model="t.checked"
-          @click="toggleCheckbox(t.key)"
-        />
-        <label :for="t.key" class="labelChexpox">{{ t.name }}</label>
-      </div>
+  <div class="form__items">
+    <select
+      name="minMaxLvlFilters"
+      :value="minLvl"
+      @change="minMaxLvlFilters('minLvl', $event)"
+      class="select-css"
+    >
+      <option value="change" disabled selected>Мін. рівень</option>
+      <option>0</option>
+      <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
+    </select>
+
+    <select
+      name="minMaxLvlFilters"
+      :value="maxLvl"
+      @change="minMaxLvlFilters('maxLvl', $event)"
+      class="select-css"
+    >
+      <option value="change" disabled selected>Макс. рівень</option>
+      <option>0</option>
+      <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
+    </select>
+ 
+    <button 
+    @click="loadingByFilters"
+    :disabled="!readyDownload"
+    class="tab-button tabLvlButton"
+    :class="{ 'disabled': !readyDownload }"
+    >
+
+              <p class="p__tab-button">Отправить</p>
+  </button>
+  </div>
+
+
+  <div class="checkboxWrapper">
+    <div class="checkbox" v-for="t in rarity" :key="t.key">
+      <input
+        class="custom-checkbox"
+        type="checkbox"
+        :checked="t.checked"
+        :id="t.key"
+        :name="t.name"
+        :value="t.name"
+        v-model="t.checked"
+        @click="toggleCheckbox(t.key)"
+      />
+      <label :for="t.key" class="labelChexpox">{{ t.name }}</label>
     </div>
+  </div>
 
-    <AppLoader v-if="isloading" />
+  <AppLoader v-if="isloading" />
 
-    <ListCloth v-if="newResult" :cellOptions="cellOptions" :newResult="newResult" :openAccordion="openAccordion" :idMannequin="idMannequin" @modalClose="isClose"/>
+  <ListCloth
+    v-if="newResult"
+    :cellOptions="cellOptions"
+    :newResult="newResult"
+    :openAccordion="openAccordion"
+    :idMannequin="idMannequin"
+    @modalClose="isClose"
+  />
 
-    <span v-if="spanErrorText" class="spanError"> {{ spanErrorText }} </span>
-
+  <span v-if="spanErrorText" class="spanError">{{ spanErrorText }} </span>
 </template>
 
-
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { fetchAPIData } from '../api/fetchApi'
 import AppLoader from '../components/AppLoader.vue'
@@ -62,26 +93,37 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  idMannequin:{
+  idMannequin: {
     type: Number,
+    required: true
+  },
+  lvlSearch: {
+    type: Array,
+    required: true
+  },
+  minLvl: {
+    type: [String, Number],
+    required: true
+  },
+  maxLvl: {
+    type: [String, Number],
     required: true
   },
 })
 
 const emits = defineEmits({
-  isClose: null
+  isClose: null,
+  lvlMinMaxChange: Object,
 })
-
-const lvlSelect = ref('change')
 
 const newResult = ref(null)
 const isloading = ref(false)
-const spanErrorText = ref('')
+const spanErrorText = ref()
 const openAccordion = ref(false)
 const reqParameterVal = ref(true)
 
 const store = useStore()
-const lvlPerson = computed( () => store.getters['listManeken'](props.idMannequin).lvl )
+const lvlPerson = computed(() => store.getters['listManeken'](props.idMannequin).lvl)
 
 const isClose = () => {
   emits('isClose')
@@ -104,7 +146,7 @@ const addParam = [
   { righthandarmor: 0 },
   { lefthandarmor: 0 },
   { lagsarmor: 0 },
-  { dstamina: 0 },
+  { dstamina: 0 }
 ]
 
 // массив для отображение требуемых стат
@@ -126,7 +168,7 @@ const otherInfo = [
   { id: 0 },
   { image: '' },
   { class: '' },
-  { typeid: '' },
+  { typeid: '' }
 ]
 // массив для отображение стоимостецй по вещи по вещи
 const priseInfo = [
@@ -135,7 +177,7 @@ const priseInfo = [
   { obmenprice: '' },
   { reliktprice: '' },
   { ratnikprice: '' },
-  { artcrystalsprice: '' },
+  { artcrystalsprice: '' }
 ]
 
 const dataSets = [
@@ -152,8 +194,8 @@ const rarity = ref([
   { key: 'reward', id: '5', name: 'Нагородна річ', checked: true },
   { key: 'epic', id: '6', name: 'Епична річ', checked: true },
   { key: 'ratnic', id: '7', name: 'Річ ратника', checked: true },
-  { key: 'mythical', id: '8', name: 'Міфічна річ', checked: true },
-  { key: 'unique', id: '9', name: 'Уникальна річ', checked: false }
+  { key: 'mythical', id: '8', name: 'Міфічна річ', checked: true }
+  // { key: 'unique', id: '9', name: 'Уникальна річ', checked: false }
 ])
 
 //меняем в массиве rarity состояние включенности в чекбоксе
@@ -171,7 +213,7 @@ const toggleCheckbox = (key) => {
     }
   })
   if (!isNaN(lvlSelect.value)) {
-    loadingByFilters()
+    minMaxLvlFilters()
   }
 }
 
@@ -261,23 +303,60 @@ function processMinStats(newResult, minStats) {
   })
 }
 
+
+const resultArray = []
+let readyDownload = ref(false)
+
+
+const checkDowland = computed( () => props.lvlSearch )
+watch(checkDowland, val => {
+  const ollLvlFalse = val.find((item) => item.count === 'change')
+  if(!ollLvlFalse) {
+  // Находим значения count для minLvl и maxLvl
+  const minCount = val.find((item) => item.id === 'minLvl').count
+  const maxCount = val.find((item) => item.id === 'maxLvl').count
+  // сортирую по возрастанию
+  const sort = [minCount, maxCount].sort((a, b) => a - b)
+  // Создаем массив чисел от минимального к максимальному
+  for (let i = sort[0]; i <= sort[1]; i++) {
+    resultArray.push(i)
+  }
+  readyDownload.value = true
+  }
+}, { immediate: true, deep: true })
+
+
 // загружаем данные с севера
-const loadingByFilters = async () => {
+const minMaxLvlFilters = async (id, event) => {
+  const lvlMinMax = props.lvlSearch
+  const ollLvl = lvlMinMax.find((item) => item.id === id)
+  ollLvl.count = Number(event.target.value)
+  emits('lvlMinMaxChange', { lvlMinMax, id })
+  const ollLvlFalse = lvlMinMax.find((item) => item.count === 'change')
+  if (ollLvlFalse) {
+    return
+  }
+}
+
+async function loadingByFilters() {
+    if(!readyDownload.value) {
+    console.log('Заполните диапазон уровней');
+    return
+  }
+  spanErrorText.value = null
   isloading.value = true
   openAccordion.value = false
   // записываем в массив название выбранных ключей раритетности
   rarityFilter()
+
   const filtersClasses = {
     category: 'items',
     typeid: sanitizedTypeids(), // очищаем от пустых строк
-    minlevel: parseInt(lvlSelect.value),
+    // minlevel: parseInt(lvlSelect.value),
+    minlevel: resultArray,
     rarity: rarityId
   }
-
   const request = await fetchAPIData(filtersClasses)
-  if (request.length === 0) {
-    spanErrorText.value = 'Нема результатів по фільтру'
-  }
 
   if (request.length !== 0) {
     //разбиваю массив на под элементы, согласно dataSets
@@ -293,27 +372,35 @@ const loadingByFilters = async () => {
       newResult.value = suitableThings()
     }
 
-    spanErrorText.value = null
+    // Отсортировать по возрастанию параметра "minlevel"
+    newResult.value = newResult.value.sort((a, b) => {
+      const minlevelA = parseInt(a.otherInfo.minlevel, 10)
+      const minlevelB = parseInt(b.otherInfo.minlevel, 10)
+      return minlevelA - minlevelB
+    })
+
+    if (newResult.value.length === 0) {
+      spanErrorText.value = 'Нема результатів по фільтру'
+    }
   }
   setTimeout(() => {
     isloading.value = false
     openAccordion.value = true
   }, 500)
-}
+} 
 
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
-  
-  if (newResult.value !== null && lvlSelect.value !== 'change') {
-    loadingByFilters()
+
+  if (newResult.value !== null && props.maxLvl !== 'change') {
+    minMaxLvlFilters()
   }
 }
-
 </script>
 
 <script>
 export default {
-  name: 'SelClothListSort',
+  name: 'SelClothListSort'
 }
 </script>
 
@@ -335,70 +422,76 @@ export default {
   margin-bottom: 0.4em;
 }
 
-
-
 .bg-checkbox-wrap * {
-	box-sizing: content-box;
-}	
+  box-sizing: content-box;
+}
 .bg-checkbox-wrap {
-    display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 #bg-checkbox {
-	display: none;
+  display: none;
 }
 #bg-checkbox-button {
-	position: relative;
-	display: block;
-	width: 225px;
-	height: 94px;
-	background-color: #337AB7;
-	border-radius: 87px;
-	cursor: pointer;
-	transition: 0.4s ease background-color;  
-    border: 4px solid #BFE2FF;
+  position: relative;
+  display: block;
+  width: 225px;
+  height: 94px;
+  background-color: #337ab7;
+  border-radius: 87px;
+  cursor: pointer;
+  transition: 0.4s ease background-color;
+  border: 4px solid #bfe2ff;
 }
 #bg-checkbox-button #knob {
-	width: 72px;
-	height: 72px;
-	background-image: url('http://images.vfl.ru/ii/1575406053/e9154da5/28793388.jpg');
-	background-size: 225px;
-	position: relative;
-	top: 7px;
-	left: 7px;
-	border-radius: 50%;
-	transition: 0.4s ease left, 0.4s ease background-position;
-	z-index: 2;
-	border: 4px solid #BFE2FF;
+  width: 72px;
+  height: 72px;
+  background-image: url('http://images.vfl.ru/ii/1575406053/e9154da5/28793388.jpg');
+  background-size: 225px;
+  position: relative;
+  top: 7px;
+  left: 7px;
+  border-radius: 50%;
+  transition:
+    0.4s ease left,
+    0.4s ease background-position;
+  z-index: 2;
+  border: 4px solid #bfe2ff;
 }
 #bg-checkbox-button #not-ok,
 #bg-checkbox-button #ok {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	color: #fff;
-	font-size: 13px;
-	font-weight: bold;
-	font-family: Verdana, sans-serif;
-	text-transform: uppercase;
-	margin-left: 102px;
-	z-index: 1;
-	transition: 0.4s ease opacity;   
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: Verdana, sans-serif;
+  text-transform: uppercase;
+  margin-left: 102px;
+  z-index: 1;
+  transition: 0.4s ease opacity;
 }
 #bg-checkbox-button #ok {
-	margin-left: 30px;
-	opacity: 0;
+  margin-left: 30px;
+  opacity: 0;
 }
 #bg-checkbox:checked + #bg-checkbox-button #ok {
-	opacity: 1;
+  opacity: 1;
 }
 #bg-checkbox:checked + #bg-checkbox-button #not-ok {
-	opacity: 0;
+  opacity: 0;
 }
 #bg-checkbox:checked + #bg-checkbox-button #knob {
-	left: 138px;
-	background-position: -125px 0;
+  left: 138px;
+  background-position: -125px 0;
 }
 
+.tabLvlButton {
+    height: 22px;
+}
 
+.disabled {
+  opacity: 0.6;
+}
 </style>

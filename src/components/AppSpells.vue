@@ -120,7 +120,7 @@ function updateSpellsCheck(spellsList) {
       {"astralmagic":spellsList.astralmagic}
        ],
     };
-    store.dispatch('spells/spellsChange', update);
+    store.commit('spells/spellsChange', update);
     openPanel.value = false;
     setTimeout(() => {
       emits('isCloseSpells')

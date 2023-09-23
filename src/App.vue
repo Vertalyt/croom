@@ -43,18 +43,15 @@ function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
   });
 
   updatedStatConfigurations.value = arrUpdate;
-  store.dispatch('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl });
+
+  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl });
 }
 
-watch(raseParams, _ => {
-  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvlPerson.value);
-});
-
-watch(listStat, (_) => {
+watch([raseParams, listStat], _ => {
   const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
   updateBaseConfigAndStats(newBaseConfig, idMannequin, lvlPerson.value);
 }, { deep: true });
+
 
 const updateLvl = (lvl) => {
   lvlPerson.value = lvl;
@@ -87,6 +84,26 @@ const minstats = computed(() => {
     })
 })
 
+const lvlSearch = ref([
+  { id: 'minLvl', count: 'change' },
+  { id: 'maxLvl', count: 'change' }
+])
+
+const minLvl = ref(lvlSearch.value[0].count)
+const maxLvl = ref(lvlSearch.value[1].count)
+
+const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
+  lvlSearch.value = lvlMinMax
+  const foundTypeLvl = lvlMinMax.find(item => item.id === id)
+  if(foundTypeLvl.id === 'minLvl') {
+    minLvl.value = foundTypeLvl.count
+  } else {
+    maxLvl.value = foundTypeLvl.count
+  }
+}
+
+
+
 </script>
 <template>
   <div class="room-container">
@@ -98,7 +115,11 @@ const minstats = computed(() => {
           :cellOptions="cellOptions"
           :minStats="minstats"
           :idMannequin="idMannequin"
+          :minLvl="minLvl"
+          :maxLvl="maxLvl"
+          :lvlSearch="lvlSearch"
           @isClose="isClose"
+          @lvlMinMaxChange="handleLvlMinMaxChange"
         />
         <AppHeader />
 

@@ -44,9 +44,18 @@ if ($typeid !== null) {
 }
 
 if ($minlevel !== null) {
-    $conditions[] = "minlevel = ?";
-    $bindTypes .= "i"; // i - целое число
-    $bindValues[] = $minlevel;
+    if (is_array($minlevel)) {
+        // Используем IN для массива чисел
+        $inPlaceholders = implode(', ', array_fill(0, count($minlevel), '?'));
+        $conditions[] = "minlevel IN ($inPlaceholders)";
+        $bindTypes .= str_repeat("i", count($minlevel)); // i - целое число
+        $bindValues = array_merge($bindValues, $minlevel);
+    } else {
+        // Используем точное совпадение для числа
+        $conditions[] = "minlevel = ?";
+        $bindTypes .= "i"; // i - целое число
+        $bindValues[] = $minlevel;
+    }
 }
 
 if ($rarity !== null && is_array($rarity) && count($rarity) > 0) {

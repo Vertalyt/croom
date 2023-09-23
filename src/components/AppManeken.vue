@@ -15,7 +15,7 @@ import AppLoader from './AppLoader.vue'
 import { baseStatFromLvl } from '../utils/baseStatFromLvl'
 import { modifyStat, statInputChange } from '../utils/modifyStat'
 import { fetchAPIData } from '../api/fetchApi'
-import { fortressParam, raseParams } from '../initialization/baseParams'
+import { fortressParam, raseParams, arrayVariableStats } from '../initialization/baseParams'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
 
@@ -55,18 +55,7 @@ const raseMagicDefend = ref([])
 const isLoading = ref(false)
 
 // массив с изменениями параметров
-const addParam = ref([
-  { key: 'dstrength', count: 0 },
-  { key: 'ddexterity', count: 0 },
-  { key: 'dintel', count: 0 },
-  { key: 'dluck', count: 0 },
-  { key: 'dreaction', count: 0 },
-  { key: 'dwisdom', count: 0 },
-  { key: 'dconst', count: 0 },
-  { key: 'whitemagicprotection', count: 0 },
-  { key: 'blackmagicprotection', count: 0 },
-  { key: 'astralmagicprotection', count: 0 }
-])
+const addParam = ref(arrayVariableStats)
 
 const fortress = ref('none')
 const availableFortressOptions = fortressParam

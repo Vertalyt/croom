@@ -102,6 +102,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { fetchAPIData } from '../../api/fetchApi'
 import AppLoader from '../AppLoader.vue'
+import { arrayVariableStats } from '../../initialization/baseParams'
 
 const emits = defineEmits({
   isClose: null
@@ -144,6 +145,8 @@ const COUNT_POINGHTS = [
   { type: 'protectionMagick', count: 3, maxEl: 'astralmagicprotection' }
 ]
 
+let addParamPoint = arrayVariableStats
+
 const artArrPersParams = ref(
   persParams.value.map((item) => {
     return {
@@ -166,9 +169,7 @@ function maxLvlArt(lvlPerson) {
 onMounted(async () => {
   isLoading.value = true
   filtersClasses.typeid = props.cellOptions.typeid
-  console.log('filtersClasses', filtersClasses);
   artTypeParams.value = await fetchAPIData(filtersClasses)
-  console.log('artTypeParams.value', artTypeParams.value);
   lvlArt.value = maxLvlArt(props.lvlPerson)
   isLoading.value = false
 })
@@ -243,6 +244,12 @@ const MAX_EL = statWithType ? statWithType.maxEl : null;
       }
     }
   })
+  addParamPoint.forEach(item => {
+  if (item.key === p.key) {
+    item.count = Number(finalAmount);
+  }
+});
+
 }
 const putOnThing = () => {
   if(breedingPoints.value !== 0) {
@@ -272,11 +279,13 @@ const putOnThing = () => {
 
 
 const handleStatDecrease = (p) => {
-  const newStat = finalAmount - 1
+  const findParamPoint = addParamPoint.find(item => item.key === p.key)
+  const newStat = findParamPoint.count - 1
   changeStat(p, newStat)
 }
 const handleStatIncrease = (p) => {
-  const newStat = finalAmount + 1
+  const findParamPoint = addParamPoint.find(item => item.key === p.key)
+  const newStat = findParamPoint.count + 1
   changeStat(p, newStat)
 }
 

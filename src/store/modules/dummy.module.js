@@ -48,13 +48,13 @@ export default {
       }
   },
   actions: {
-    changeDummyEl( {dispatch, state, commit}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
+    changeDummyEl( {commit, state}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
 
         const dummy = foundItem.isDummy.find(item => item.name === cellName)
 
         commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid, key }); 
-        dispatch('statChange/statChange', {
+        commit('statChange/statChange', {
             addParam,
             type: dummy.name,
             idMannequin

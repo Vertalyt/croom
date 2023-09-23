@@ -29,8 +29,8 @@ const store = useStore()
 const spellsReiting = ref(0)
 const rating = ref(0)
 
-const listManeken = computed(() => store.getters['listManeken'](props.idMannequin))
-const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
+const lvlPers = computed(() => store.getters['listManeken'](props.idMannequin).lvl)
+const statModule = computed(() => store.getters['statModule'](props.idMannequin))
 const spells = computed(() =>
   store.getters['spells/spells'](props.idMannequin).find((el) => el.spellsList)
 )
@@ -95,16 +95,23 @@ watch(rating, (val) => {
   })
 })
 
-watch(listManeken, (val) => {
-  const lvl = val.lvl
-  rating.value += ratingCalculation(val)
-  const dwisdom = listManeken.value.statModule.find(
+watch(statModule, (val) => {
+  rating.value = ratingCalculation(val, lvlPers.value)
+
+  const dwisdom = val.find(
     (item) => item.key === 'dwisdom'
   ).summStatBonusAndBase
-  const dconst = listManeken.value.statModule.find(
+
+  const dstamina = val.find(
+    (item) => item.key === 'dstamina'
+  ).summStatBonusAndBase
+
+
+  const dconst = val.find(
     (item) => item.key === 'dconst'
   ).summStatBonusAndBase
-  const hp = Math.round(5 * Number(dconst) * (1 + Number(lvl) / 10))
+
+  const hp = Math.round(5 * Number(dconst) * (1 + Number(lvlPers.value) / 10))
 
   nameCost.value.forEach((item) => {
     if (item.key === 'life') {
@@ -113,43 +120,68 @@ watch(listManeken, (val) => {
     if (item.key === 'mana') {
       item.cost = Number(dwisdom) * 6
     }
-  })
-})
-
-watch(listStat, (val) => {
-  const totalEnergy = val.reduce((total, item) => {
-    const bonusStat = item.param.find((characteristics) => characteristics.bonusAndBase)
-    if (bonusStat) {
-      const energy = bonusStat.bonusAndBase.find((d) => d.key === 'dstamina')
-      total += energy ? energy.count : 0
-    }
-    return total
-  }, 0)
-
-  nameCost.value.forEach((item) => {
     if (item.key === 'dstamina') {
-      item.cost = 100 + totalEnergy
+      item.cost = Number(dstamina)
     }
   })
 })
+let statSubclass = 0;
+let armorSubclass = 0;
+let protectionMagickSubClass = 0;
 
-function ratingCalculation(val) {
-  // const rating_v1 = ((0.3*all_params)+(all_armor*0.1)+(all_defsmag*0.2))*(1 + lvl/15) + RSPELLS1;
-  let rating = 0
+function unscribeSubclass() {
+const unscribeSubclass = store.getters['statChange/listStat'](props.idMannequin);
+const unscribeSubclassParam = unscribeSubclass.find(item => item.type === 'subclass')?.param;
+if (unscribeSubclassParam) {
+  const unscribeSubclassParamBonusAndBase = unscribeSubclassParam.find(item => item.bonusAndBase).bonusAndBase
+    const stat = ['dstrength', 'ddexterity', 'dintel', 'dluck', 'dreaction', 'dwisdom', 'dconst'];
+  const armor = ['headarmor', 'bodyarmor', 'lefthandarmor', 'righthandarmor', 'lagsarmor'];
+  const protectionMagick = ['whitemagicprotection', 'blackmagicprotection', 'astralmagicprotection'];
+  unscribeSubclassParamBonusAndBase.forEach((obj) => {
+    if (stat.includes(obj.key)) {
+      statSubclass += Number(obj.count);
+    } else if (armor.includes(obj.key)) {
+      armorSubclass += Number(obj.count);
+    } else if (protectionMagick.includes(obj.key)) {
+      protectionMagickSubClass += Number(obj.count);
+    }
+  });
+}
+}
+
+function ratingCalculation(val, lvl) {
+  // функция высчитывает бонусы подкласа для отнимания с ретийнга, он их не учитываает
+  unscribeSubclass()
+
+  let ollStat = 0
+  let ollArmor = 0
+  let ollProtectionMagick = 0
+  let ollDstamina = 0
+  // const rating_v1 = ((0.3*all_params)+(all_armor*0.1)+(all_defsmag*0.2) + ((dstamina -100)*3.6))*(1 + lvl/15) + RSPELLS1;
+  // let ratingCoast = 0
   // Пройдемся по каждому объекту в массиве
-  val.statModule.forEach((obj) => {
+  val.forEach((obj) => {
     if (obj.type === 'stat') {
       // Если тип "stat", умножаем на 3 и добавляем к общей сумме
-      rating += obj.summStatBonusAndBase * 0.3
+      ollStat += Number(obj.summStatBonusAndBase )
+      // ratingCoast += Number(obj.summStatBonusAndBase ) * 0.3
     } else if (obj.type === 'armor') {
       // Если тип "armor", просто записываем значение
-      rating += obj.summStatBonusAndBase * 0.1
+      ollArmor += Number(obj.summStatBonusAndBase)
+      // ratingCoast += Number(obj.summStatBonusAndBase) * 0.1
     } else if (obj.type === 'protectionMagick') {
       // Если тип "protectionMagick"
-      rating += obj.summStatBonusAndBase * 0.2
+      ollProtectionMagick += Number(obj.summStatBonusAndBase)
+      // ratingCoast += Number(obj.summStatBonusAndBase) * 0.2
+    } 
+    else if (obj.type === 'dstamina') {
+      // Если тип "dstamina"
+      ollDstamina += Number(obj.summStatBonusAndBase)
+      // ratingCoast += Number(obj.summStatBonusAndBase) * 0.2
     }
   })
-  return Math.floor(rating)
+  // return Math.floor(ratingCoast * (1 + lvl/15))
+  return Math.ceil((((ollStat - statSubclass) * 0.3) + ((ollArmor - armorSubclass) * 0.1) + ((ollProtectionMagick - protectionMagickSubClass) * 0.2) + ((ollDstamina - 100) * 3.6)  ) * (1 + lvl/15))
 }
 </script>
 
