@@ -179,3 +179,9 @@ Function refactoring
 The ranking formula has been adjusted to take into account the bug in the game
 Fixed double rating
 Added selection of item level by range and memorization of the selected position
+
+
+## [1.2.03] - 2023-09-24
+Corrected
+Doubling subclass rating
+Implemented functionality for distributing basic stats when there are free distribution points from the item card

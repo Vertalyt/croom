@@ -38,7 +38,7 @@ const emits = defineEmits({
 
 const raseModel = ref('human')
 const lvlSelect = ref('change')
-const accessibleStats = ref(null) //количество стат для распределения
+
 const baseStat = ref(baseStatFromLvl())
 const classModel = ref('none')
 const OllParamClass = ref([])
@@ -53,7 +53,8 @@ const classMinParam = ref()
 const spellsFlag = ref(false)
 const raseMagicDefend = ref([])
 const isLoading = ref(false)
-
+const computedAccessibleStats = computed(() => store.getters['listManeken'](props.idMannequin).accessibleStats) //количество стат для распределения
+const accessibleStats = ref(computedAccessibleStats.value) //количество стат для распределения
 // массив с изменениями параметров
 const addParam = ref(arrayVariableStats)
 
@@ -249,7 +250,6 @@ watch(accessibleStats, (val) => {
 })
 
 watch([lvlSelect, raseModel], val => {
-
   if(val[0] > 0) {
     const newRaseOllLvlDefend = raseMagicDefend.value.filter( rase => rase.rase === val[1])
     const newRaseDefend = newRaseOllLvlDefend.find(item => Number(item.lvlPers) === Number(val[0]))
@@ -265,6 +265,14 @@ watch([lvlSelect, raseModel], val => {
     })
   }
 })
+
+watch(accessibleStats, val => {
+  store.commit('updateManekenInfo', {
+    accessibleStats: val,
+    idMannequin: props.idMannequin
+  })
+})
+
 
 const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
@@ -339,19 +347,19 @@ export default {
       <div class="dummy__center__center">
         <div class="options">
           <div class="options__itemBlock">
-            <ManekenStatParams :statParams="statParams" :accessibleStats="accessibleStats">
+            <ManekenStatParams :statParams="statParams" :accessibleStats="computedAccessibleStats">
               <template #statManeken="{ summBase }">
                 <ManekenSlot
                   :statParam="summBase"
-                  :accessibleStats="accessibleStats"
+                  :accessibleStats="computedAccessibleStats"
                   @handleStatDecrease="handleStatDecrease"
                   @handleStatIncrease="handleStatIncrease"
                   @handleStatInputChange="handleStatInputChange"
                 />
               </template>
-              <tr v-if="accessibleStats !== null">
+              <tr v-if="computedAccessibleStats !== null">
                 <td class="options__table__title" colspan="5">
-                  <small>Очки розподілу:</small> {{ accessibleStats }}
+                  <small>Очки розподілу:</small> {{ computedAccessibleStats }}
                 </td>
               </tr>
             </ManekenStatParams>

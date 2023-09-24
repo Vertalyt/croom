@@ -18,6 +18,13 @@
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
+        <div v-if="foundShortageDifference(c.minParam)" class="addRequiredParameters">
+          <p class="smollText error">
+            Ваші параметри не достатні, але є достатня кількість балів розводілу. Розподілити?
+          </p>
+          <button @click.stop="addMinParamCloth(c)" class="button">Розподілити та вдягти</button>
+        </div>
+
         <ChildAccordeonItem
           v-if="Object.entries(c.minParam).length > 0"
           :items="c.minParam"
@@ -27,7 +34,7 @@
           @changeChildPanel="accordionChildOpen"
         />
         <ChildAccordeonItem
-        v-if="Object.entries(c.addParam).length > 0"
+          v-if="Object.entries(c.addParam).length > 0"
           :items="c.addParam"
           :openChildPanel="openChildPanel"
           label="Бонусные параметры"
@@ -40,11 +47,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
 import { useStore } from 'vuex'
-
-
+import { arrayVariableStats } from '../../initialization/baseParams'
 
 const props = defineProps({
   newResult: {
@@ -62,7 +68,7 @@ const props = defineProps({
   cellOptions: {
     type: Object,
     required: true
-  },
+  }
 })
 
 const emits = defineEmits({
@@ -82,20 +88,19 @@ const accordionOpen = (panelId) => {
 }
 
 function parameterConversion(params) {
-  const convertedData = [];
+  const convertedData = []
   for (const key in params) {
     if (Object.hasOwnProperty.call(params, key)) {
       convertedData.push({
         key: key,
         count: parseInt(params[key])
-      });
+      })
     }
   }
-  return convertedData;
+  return convertedData
 }
 
 const dress = (item) => {
-
   // Проверка наличия ключей с "class": "error" в minParam
   const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
 
@@ -108,28 +113,108 @@ const dress = (item) => {
   const minBaseParam = item.minParam
   const priseInfo = item.priseInfo
 
-// Создаем новый массив для хранения преобразованных минимальных базовых значений
-const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
-  return {
-    key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
-    count: parseInt(minBaseParam[key].value, 10),
-    class: minBaseParam[key].class
-  };
-});
+  // Создаем новый массив для хранения преобразованных минимальных базовых значений
+  const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
+    return {
+      key: key.replace('min', 'd'), // Преобразуем "minstrength" в "dstrength" и т.д.
+      count: parseInt(minBaseParam[key].value, 10),
+      class: minBaseParam[key].class
+    }
+  })
 
   // Преобразовываем данные с addParam
-const convertedAdd = parameterConversion(addParam)
+  const convertedAdd = parameterConversion(addParam)
   store.dispatch('dummy/changeDummyEl', {
     idMannequin: props.idMannequin,
-    addParam: [
-      {base: transformedMinBaseParam}, 
-      {bonusAndBase: convertedAdd}, 
-      {priseInfo} ],
+    addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }],
     typeid: item.otherInfo.typeid,
     imgLink: item.otherInfo.image,
     cellName: props.cellOptions.name
   })
   emits('modalClose')
+}
+
+const accessibleStats = computed(
+  () => store.getters['listManeken'](props.idMannequin).accessibleStats
+)
+
+
+const foundShortageDifference = (ollparam) => {
+  let sumShortageDifference = 0
+  for (const key in ollparam) {
+    if (Object.prototype.hasOwnProperty.call(ollparam, key)) {
+      sumShortageDifference += ollparam[key].shortageDifference
+    }
+  }
+  if (accessibleStats.value >= Math.abs(sumShortageDifference) && sumShortageDifference !== 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+
+function mofifyAddParam(key, addParam, item) {
+  const modifiedKey = key.replace(/^min/, 'd')
+      const statAddparam = addParam.find((item) => item.key === modifiedKey)
+      if (statAddparam) {
+        statAddparam.count += Math.abs(item.shortageDifference)
+      }
+}
+
+
+const statChange = computed(() => store.getters['statChange/listStat'](props.idMannequin))
+
+const addMinParamCloth = (cloth) => {
+  let summShortageDifference = 0
+  const updatedMinParam = {}
+  let addParam = []
+
+
+  const freestatFound = statChange.value.find((item) => item.type === 'freeStats')
+  // Массив с изменениями параметров
+  if (freestatFound) {
+    addParam = freestatFound.param[0].base
+  } else {
+    addParam = arrayVariableStats
+  }
+
+  // Переберите ключи в новом объекте minParam и обновите соответствующие элементы
+  for (const key in cloth.minParam) {
+    const item = cloth.minParam[key]
+
+    if (item.shortageDifference < 0) {
+
+      mofifyAddParam(key, addParam, item)
+      summShortageDifference += Math.abs(item.shortageDifference)
+
+      updatedMinParam[key] = {
+        ...item,
+        value: String(parseInt(item.value) + Math.abs(item.shortageDifference)),
+        shortageDifference: 0,
+        class: 'norm'
+      }
+    } else {
+      updatedMinParam[key] = { ...item }
+    }
+  }
+
+  store.commit('statChange/statChange', {
+    addParam: [{ base: addParam }],
+    type: 'freeStats',
+    idMannequin: props.idMannequin
+  })
+
+  const newAccessibleStats = Number(accessibleStats.value) - Number(summShortageDifference)
+
+  store.commit('updateManekenInfo', {
+    accessibleStats: newAccessibleStats,
+    idMannequin: props.idMannequin
+  })
+
+  // Сохраните обновленные minParam в cloth
+  cloth.minParam = updatedMinParam
+  dress(cloth)
 }
 </script>
 
@@ -141,6 +226,20 @@ export default {
 
 <style scoped>
 /* Style the buttons that are used to open and close the accordion panel */
+.addRequiredParameters {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.smollText {
+  font-size: 12px;
+}
+
+.error {
+  color: #af3f3f;
+}
 
 .active {
   opacity: 1;

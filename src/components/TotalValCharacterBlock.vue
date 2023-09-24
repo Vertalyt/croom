@@ -90,7 +90,7 @@ watch(
 watch(rating, (val) => {
   nameCost.value.forEach((item) => {
     if (item.key === 'rating') {
-      item.cost = val
+      item.cost = Number(val)
     }
   })
 })
@@ -130,6 +130,9 @@ let armorSubclass = 0;
 let protectionMagickSubClass = 0;
 
 function unscribeSubclass() {
+statSubclass = 0;
+armorSubclass = 0;
+protectionMagickSubClass = 0;
 const unscribeSubclass = store.getters['statChange/listStat'](props.idMannequin);
 const unscribeSubclassParam = unscribeSubclass.find(item => item.type === 'subclass')?.param;
 if (unscribeSubclassParam) {
@@ -152,7 +155,6 @@ if (unscribeSubclassParam) {
 function ratingCalculation(val, lvl) {
   // функция высчитывает бонусы подкласа для отнимания с ретийнга, он их не учитываает
   unscribeSubclass()
-
   let ollStat = 0
   let ollArmor = 0
   let ollProtectionMagick = 0
@@ -180,8 +182,10 @@ function ratingCalculation(val, lvl) {
       // ratingCoast += Number(obj.summStatBonusAndBase) * 0.2
     }
   })
+
+  const ollDstaminaMinusBaseCount = ollDstamina > 100 ? (ollDstamina - 100) * 3.6 : 0;
   // return Math.floor(ratingCoast * (1 + lvl/15))
-  return Math.ceil((((ollStat - statSubclass) * 0.3) + ((ollArmor - armorSubclass) * 0.1) + ((ollProtectionMagick - protectionMagickSubClass) * 0.2) + ((ollDstamina - 100) * 3.6)  ) * (1 + lvl/15))
+  return Math.ceil((((ollStat - statSubclass) * 0.3) + ((ollArmor - armorSubclass) * 0.1) + ((ollProtectionMagick - protectionMagickSubClass) * 0.2) + ollDstaminaMinusBaseCount ) * (1 + lvl/15))
 }
 </script>
 

@@ -4,7 +4,7 @@
       <input
         class="custom-checkbox"
         v-model="reqParameterVal"
-        @click="clothesfilter"
+        @click.stop="clothesfilter"
         id="cloth"
         type="checkbox"
       />
@@ -276,11 +276,12 @@ function filterDataSets(requestItem, dataSets) {
   return filteredData
 }
 
-function updateMinParamClass(p, key, value, classValue) {
+function updateMinParamClass(p, key, value, classValue, difference = 0) {
   if (Object.prototype.hasOwnProperty.call(p.minParam, key)) {
     p.minParam[key] = {
       value: value,
-      class: classValue
+      class: classValue,
+      shortageDifference: difference,
     }
   }
 }
@@ -292,9 +293,9 @@ function processMinStats(newResult, minStats) {
       if (statInfo) {
         const minParamValue = parseInt(p.minParam[key])
         const minStatValue = parseInt(statInfo.summStatBase)
-
+        const difference = minStatValue - minParamValue
         if (minStatValue < minParamValue) {
-          updateMinParamClass(p, key, p.minParam[key], 'error')
+          updateMinParamClass(p, key, p.minParam[key], 'error', difference)
         } else {
           updateMinParamClass(p, key, p.minParam[key], 'norm')
         }
@@ -391,10 +392,6 @@ async function loadingByFilters() {
 
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
-
-  if (newResult.value !== null && props.maxLvl !== 'change') {
-    minMaxLvlFilters()
-  }
 }
 </script>
 

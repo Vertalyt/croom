@@ -36,8 +36,6 @@
      @lvlMinMaxChange="handleLvlMinMaxChange"
     />
 
-
-
   </div>
 </template>
 
@@ -88,13 +86,9 @@ const emits =defineEmits({
 
 const checkboxType = ref(true)
 
-
-
 const isClose = () => {
   emits('isClose')
 }
-
-
 
 
 </script>
