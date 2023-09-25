@@ -35,17 +35,67 @@ const emits = defineEmits({
   modalOpen: Array,
   updateLvl: [Number, null]
 })
+const store = useStore()
 
+
+const lvlComputed = computed(() => store.getters['listManeken'](props.idMannequin).lvl) //количество стат для распределения
+const computedAccessibleStats = computed(() => store.getters['listManeken'](props.idMannequin).accessibleStats) //количество стат для распределения
+const raseNameComputed = computed(() => store.getters['listManeken'](props.idMannequin).raseName) //количество стат для распределения
+const classComputed = computed(() => store.getters['listManeken'](props.idMannequin).class) //количество стат для распределения
+const fortressComputed = computed(() => store.getters['listManeken'](props.idMannequin).fortress) //количество стат для распределения
+
+
+
+const availableRaces = raseParams
+const lvlSelect = ref(lvlComputed.value)
 const raseModel = ref('human')
-const lvlSelect = ref('change')
-
-const baseStat = ref(baseStatFromLvl())
 const classModel = ref('none')
+const refrech = ref(0)
+const fortress = ref('none')
+const availableFortressOptions = fortressParam
+
+const accessibleStats = ref(computedAccessibleStats.value) //количество стат для распределения
+const baseStat = ref(baseStatFromLvl())
+const itemsNameClass = ref('Виберіть класс')
+const itemsNameSubClass = ref('Вибери підкласс')
+const itemsNameRase = ref('Виберіть расу')
+const itemsNameFortress = ref('Крепость')
+const oldAccessibleStats = ref(computedAccessibleStats.value) // остаток не распределенных стат
+
+const controllIdManeken = computed (() => props.idMannequin )
+watch(controllIdManeken, _ => {
+  oldAccessibleStats.value = computedAccessibleStats.value
+  accessibleStats.value = computedAccessibleStats.value
+  lvlSelect.value = lvlComputed.value
+  if(raseNameComputed.value) {
+    raseModel.value = raseNameComputed.value
+    itemsNameRase.value = availableRaces.find(item => item.id === raseNameComputed.value).name
+  } else {
+    raseModel.value = 'human'
+    itemsNameRase.value = 'Виберіть расу'
+  }
+
+  if(classComputed.value) {
+    itemsNameClass.value = classComputed.value.className
+    itemsNameSubClass.value = classComputed.value.subClassName
+  } else {
+    itemsNameClass.value = 'Виберіть класс'
+    itemsNameSubClass.value ='Вибери підкласс'
+  }
+
+  if(fortressComputed.value) {
+    itemsNameFortress.value = availableFortressOptions.find(item => item.id === fortressComputed.value).name
+  } else {
+    itemsNameFortress.value = 'Крепость'
+  }
+    refrech.value++
+} ) 
+
+
 const OllParamClass = ref([])
 const parentClassItems = ref(null)
 const parentClassModel = ref('none')
 const parentClasses = ref([])
-const store = useStore()
 const availabilityClassFlag = ref(true)
 const oldValueSubclass = ref()
 const elixFlag = ref(false)
@@ -53,14 +103,11 @@ const classMinParam = ref()
 const spellsFlag = ref(false)
 const raseMagicDefend = ref([])
 const isLoading = ref(false)
-const computedAccessibleStats = computed(() => store.getters['listManeken'](props.idMannequin).accessibleStats) //количество стат для распределения
-const accessibleStats = ref(computedAccessibleStats.value) //количество стат для распределения
+
+
 // массив с изменениями параметров
 const addParam = ref(arrayVariableStats)
 
-const fortress = ref('none')
-const availableFortressOptions = fortressParam
-const availableRaces = raseParams
 
 const filtersClasses = ref({
   category: 'classes'
@@ -104,6 +151,7 @@ const handleRaseSelectChange = (availableRaces) => {
 
 const handleClassSelectChange = (className) => {
   parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
+  itemsNameClass.value = parentClasses.value.find(cl => cl.name_en === className).name
 }
 
 // массив с бонусами от класа
@@ -194,31 +242,38 @@ const addClassMinParam = [
   oldValueSubclass.value = false
 }
 
+itemsNameSubClass.value = parentClassItems.value.find(sub => sub.name_en === parent).name
+  store.commit('updateManekenInfo', {
+    idMannequin: props.idMannequin,
+    class: { className: itemsNameClass.value, subClassName: itemsNameSubClass.value,}
+  })
+
 }
 
-let oldAccessibleStats = 0 // остаток не распределенных стат
-let oldCountStat = 0 // старое количество стат на уровне
-const different = ref(0)
+// старое количество стат на уровне в каждом манекене, запись задана с избытком 
+let oldCountStat = [0, 0, 0, 0, 0]
+const different = [0, 0, 0, 0, 0]
 
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
 
-  oldAccessibleStats = accessibleStats.value // остаток не распределенных стат
-  const lvlStatDifference = Number(newCountStat) - Number(oldCountStat) // разница стат на уровне
-  different.value = lvlStatDifference + oldAccessibleStats
 
-  if (lvlStatDifference >= 0 || different.value > -1) {
-    updateStatsAndEmitEvent(different.value, newCountStat)
+  oldAccessibleStats.value = accessibleStats.value // остаток не распределенных стат
+
+  const lvlStatDifference = Number(newCountStat) - Number(oldCountStat[props.idMannequin - 1]) // разница стат на уровне
+  different[props.idMannequin - 1] = lvlStatDifference + oldAccessibleStats.value
+  if (lvlStatDifference >= 0 || different[props.idMannequin - 1] > -1) {
+    updateStatsAndEmitEvent(different[props.idMannequin - 1], newCountStat)
     emits('updateLvl', Number(lvlSelect.value))
   } else {
-    console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different.value)}`)
+    console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different[props.idMannequin - 1])}`)
   }
 }
 
 const updateStatsAndEmitEvent = (difference, newCountStat) => {
   accessibleStats.value = difference
-  oldCountStat = newCountStat
+  oldCountStat[props.idMannequin - 1] = Number(newCountStat)
   classModel.value = 'none'
 }
 
@@ -319,6 +374,10 @@ const isCloseSpells = () => {
 
 const handleFortressUpdate = (fortress) => {
   console.log(fortress)
+  store.commit('updateManekenInfo', {
+    fortress: fortress,
+    idMannequin: props.idMannequin
+  })
 }
 </script>
 
@@ -369,7 +428,8 @@ export default {
             <div class="form__items">
               <ManeckenSelectItems
                 v-if="availableRaces"
-                itemsName="Виберіть расу"
+                :key="refrech"
+                :itemsName="itemsNameRase"
                 v-model="raseModel"
                 @update:modelValue="handleRaseSelectChange"
               >
@@ -379,6 +439,7 @@ export default {
               </ManeckenSelectItems>
 
               <select 
+              :key="refrech"
               name="lvlSelectChange"
               v-model="lvlSelect" @change="lvlSelectChange" 
               class="select-css"
@@ -394,7 +455,7 @@ export default {
               <ManeckenSelectItems
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
-                itemsName="Виберіть класс"
+                :itemsName="itemsNameClass"
                 :disabled="!availabilityClassFlag"
                 :availabilityClassFlag="availabilityClassFlag"
                 @update:modelValue="handleClassSelectChange"
@@ -410,7 +471,7 @@ export default {
               <ManeckenSelectItems
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
-                itemsName="Вибери підкласс"
+                :itemsName="itemsNameSubClass"
                 :disabled="!availabilityClassFlag"
                 :oldValueCheck='oldValueSubclass'
                 @update:modelValue="handleParentClassSelectChange"
@@ -427,7 +488,8 @@ export default {
             <div class="form__items">
               <ManeckenSelectItems
                 v-if="availableFortressOptions"
-                itemsName="Крепость"
+                :key="refrech"
+                :itemsName="itemsNameFortress"
                 v-model="fortress"
                 @update:modelValue="handleFortressUpdate"
               >

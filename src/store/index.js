@@ -12,6 +12,7 @@ export default createStore({
     return {
       listManeken: [
         { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
+        { idMannequin: 2, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
       ]
     }
   },

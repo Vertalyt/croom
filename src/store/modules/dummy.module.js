@@ -1,13 +1,16 @@
 import { initialSetupEntries, listTwoHandedTypes } from '../../initialization/baseParams'
 
 
-let isDummy = [...initialSetupEntries]
+const isDummySaveMan1 = [...initialSetupEntries]
+const isDummySaveMan2 = [...initialSetupEntries]
+
 export default {
   namespaced: true,
   state() {
     return {
       listsDummy: [
-        { idMannequin: 1, isDummy:isDummy }
+        { idMannequin: 1, isDummy:isDummySaveMan1 },
+        { idMannequin: 2, isDummy:isDummySaveMan2 },
       ]
     }
   },
@@ -25,28 +28,31 @@ export default {
   },
   mutations: {
     changeDummyEl(state, { idMannequin, imgLink, cellName, typeid, key }) {
-        const img = key === 'artefact' 
+      const img = key === 'artefact' 
         ? `https://sabzero.biz/croomTemplate/assets/img/art.png` 
-        : `https://files.nura.biz/site/images/things100x100/${imgLink}.png`
-        const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
-        if (foundItem) {
-           if(listTwoHandedTypes.includes(typeid)) {
-              foundItem.isDummy.forEach(item => {
-                if (item.typeid.includes(typeid)) {
-                  item.link = img;
-                }
-              });
-            } else {
-              foundItem.isDummy.find(item => {
-                if (item.name === cellName) {
-                  item.link = img;
-                }
-              });
+        : `https://files.nura.biz/site/images/things100x100/${imgLink}.png`;
+  
+      const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
+  
+      if (foundItem) {
+        if (listTwoHandedTypes.includes(typeid)) {
+          foundItem.isDummy = foundItem.isDummy.map(item => {
+            if (item.typeid.includes(typeid)) {
+              return { ...item, link: img }; // Создаем глубокую копию объекта
             }
-
+            return item;
+          });
+        } else {
+          foundItem.isDummy = foundItem.isDummy.map(item => {
+            if (item.name === cellName) {
+              return { ...item, link: img }; // Создаем глубокую копию объекта
+            }
+            return item;
+          });
         }
       }
-  },
+    }
+  },  
   actions: {
     changeDummyEl( {commit, state}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);

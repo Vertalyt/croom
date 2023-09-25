@@ -2,7 +2,10 @@ export default {
   namespaced: true,
   state() {
     return {
-      listMannequins: [{ idMannequin: 1, listStat: [] }]
+      listMannequins: [
+        { idMannequin: 1, listStat: [] },
+        { idMannequin: 2, listStat: [] },
+      ]
     }
   },
   getters: {

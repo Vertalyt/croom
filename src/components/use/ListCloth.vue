@@ -70,7 +70,6 @@ const props = defineProps({
     required: true
   }
 })
-
 const emits = defineEmits({
   modalClose: null
 })

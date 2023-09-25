@@ -9,7 +9,14 @@ export default {
             { subclassList: [] },
             { spellsList: [{ whitemagic: [] }, { blackmagic: [] }, { astralmagic: [] }] }
           ]
-        }
+        },
+        {
+          idMannequin: 2,
+          spells: [
+            { subclassList: [] },
+            { spellsList: [{ whitemagic: [] }, { blackmagic: [] }, { astralmagic: [] }] }
+          ]
+        },
       ]
     }
   },

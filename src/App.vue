@@ -9,19 +9,27 @@ import { aggregateStatValues } from './utils/aggregateStatValues'
 import { useStore } from 'vuex'
 
 const basickParams = ref(basickParamsRase) // поиск значений по расе
+const store = useStore()
+const idMannequin = ref(1); // айди манекена, в будущем буду менять в зависимости от манекена
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
 const cellOptions = ref()
-const store = useStore()
 
-
-const baseManekenConfig = computed( () => store.getters['listManeken'](idMannequin));// базовое значение конкретной расы, и их переменные, стартовое люди
+const baseManekenConfig = computed( () => store.getters['listManeken'](idMannequin.value));// базовое значение конкретной расы, и их переменные, стартовое люди
 const raseParams = ref(baseManekenConfig.value.raseParams)
 const baseStatConfigurations = ref(baseManekenConfig.value.statModule)
 const lvlPerson = ref(0)
-const idMannequin = 1; // айди манекена, в будущем буду менять в зависимости от манекена
-const listStat = computed(() => store.getters['statChange/listStat'](idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 
+const listStat = computed(() => store.getters['statChange/listStat'](idMannequin.value)) // слежу за массивом, который хранит в себе все обьекты изменения стат
+const rezetManecken = ref(0)
+
+const mannequinShange = (val) => {
+  idMannequin.value = val
+  raseParams.value = baseManekenConfig.value.raseParams
+  baseStatConfigurations.value = baseManekenConfig.value.statModule
+  lvlPerson.value = baseManekenConfig.value.lvl
+  rezetManecken.value++
+}
 
 function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
   const updatedConfigurations = newBaseConfig.map((i) => {
@@ -39,30 +47,34 @@ function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
 
   const { arrUpdate } = aggregateStatValues({
     baseUpdate: updatedConfigurations,
-    idMannequin: idMannequin
+    idMannequin,
   });
 
   updatedStatConfigurations.value = arrUpdate;
 
-  store.commit('updateManekenInfo', { idMannequin: idMannequin, statModule: arrUpdate, lvl });
+  store.commit('updateManekenInfo', { idMannequin, statModule: arrUpdate, lvl });
 }
 
 watch([raseParams, listStat], _ => {
+
   const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvlPerson.value);
+  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvlPerson.value);
 }, { deep: true });
 
 
 const updateLvl = (lvl) => {
   lvlPerson.value = lvl;
   const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-  updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl);
+  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvl);
 }
 
 const changeRase = ({ raseModel }) => {
   //получаю все данные по ноой рассе
   raseParams.value = basickParams.value.find((r) => r.availableRaces === raseModel).date
-  store.commit('updateManekenInfo', { raseParams, idMannequin })
+  store.commit('updateManekenInfo', { 
+    raseParams : raseParams.value,
+    raseName: raseModel,
+    idMannequin : idMannequin.value })
 }
 
 const modalOpen = (param) => {
@@ -121,7 +133,9 @@ const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
           @isClose="isClose"
           @lvlMinMaxChange="handleLvlMinMaxChange"
         />
-        <AppHeader />
+        <AppHeader 
+        @mannequinShange="mannequinShange"
+        />
 
         <main class="main-wrapper">
           <AppManeken
