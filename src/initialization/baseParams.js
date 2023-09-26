@@ -135,11 +135,12 @@ export const basickParamsRase = [
 ]
 
 export const fortressParam = [
-{ name: 'Новичок', id: 'newbie'},
-{ name: 'Продвинутий', id: 'promotions'},
-{ name: 'Експерт', id: 'expert'},
-{ name: 'Мастер', id: 'master'},
-{ name: 'Грандмастер', id: 'grandmaster'},
+{ name: 'Нет', id: 'absent', minconst: 0, disabled: false, bonusHealthMutiplier: 1},
+{ name: 'Новичок', id: 'newbie', minconst: 6, disabled: false, bonusHealthMutiplier: 1.1},
+{ name: 'Продвинутий', id: 'promotions', minconst: 14, disabled: false, bonusHealthMutiplier: 1.17},
+{ name: 'Експерт', id: 'expert', minconst: 18, disabled: false, bonusHealthMutiplier: 1.24},
+{ name: 'Мастер', id: 'master', minconst: 27, disabled: false, bonusHealthMutiplier: 1.31},
+{ name: 'Грандмастер', id: 'grandmaster', minconst: 41, disabled: false, bonusHealthMutiplier: 1.38},
 ]
 
 export const raseParams = [

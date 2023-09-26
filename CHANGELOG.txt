@@ -185,3 +185,11 @@ Added selection of item level by range and memorization of the selected position
 Corrected
 Doubling subclass rating
 Implemented functionality for distributing basic stats when there are free distribution points from the item card
+
+
+
+## [1.2.03] - 2023-09-26
+Added
+Display and calculation of strength
+A modal window that triggers when you hover over an item of clothing. On mobile with a long touch
+Fixed styles on mobile for the item search window

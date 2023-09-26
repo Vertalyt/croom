@@ -28,6 +28,9 @@ const props = defineProps({
 const store = useStore()
 const spellsReiting = ref(0)
 const rating = ref(0)
+const hpWithoutFortress = ref(0)
+const fortressComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'fortress' }))
 
 const lvlPers = computed(() => store.getters['listManeken'](props.idMannequin).lvl)
 const statModule = computed(() => store.getters['statModule'](props.idMannequin))
@@ -78,13 +81,20 @@ function summRatingSpells(val) {
   return totalRating
 }
 
+watch([fortressComputed, hpWithoutFortress], val => {
+  if(val[0]) {
+   const newLife = nameCost.value.find((item) => item.key === 'life')
+   newLife.cost = Math.round(val[1] * Number(val[0].bonusHealthMutiplier))
+  }
+}, { immediate: true })
+
 watch(
   spells,
   (val) => {
     spellsReiting.value = summRatingSpells(val.spellsList)
     rating.value += spellsReiting.value
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 
 watch(rating, (val) => {
@@ -93,7 +103,11 @@ watch(rating, (val) => {
       item.cost = Number(val)
     }
   })
-})
+}, { immediate: true })
+
+let statSubclass = 0;
+let armorSubclass = 0;
+let protectionMagickSubClass = 0;
 
 watch(statModule, (val) => {
   rating.value = ratingCalculation(val, lvlPers.value)
@@ -111,11 +125,12 @@ watch(statModule, (val) => {
     (item) => item.key === 'dconst'
   ).summStatBonusAndBase
 
-  const hp = Math.round(5 * Number(dconst) * (1 + Number(lvlPers.value) / 10))
+
+  hpWithoutFortress.value = Math.round(5 * Number(dconst) * (1 + Number(lvlPers.value) / 10))
 
   nameCost.value.forEach((item) => {
     if (item.key === 'life') {
-      item.cost = hp
+      item.cost = hpWithoutFortress.value
     }
     if (item.key === 'mana') {
       item.cost = Number(dwisdom) * 6
@@ -124,10 +139,9 @@ watch(statModule, (val) => {
       item.cost = Number(dstamina)
     }
   })
-})
-let statSubclass = 0;
-let armorSubclass = 0;
-let protectionMagickSubClass = 0;
+}, { immediate: true })
+
+
 
 function unscribeSubclass() {
 statSubclass = 0;

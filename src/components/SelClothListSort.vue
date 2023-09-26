@@ -34,18 +34,16 @@
       <option>0</option>
       <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
     </select>
- 
-    <button 
-    @click="loadingByFilters"
-    :disabled="!readyDownload"
-    class="tab-button tabLvlButton"
-    :class="{ 'disabled': !readyDownload }"
+
+    <button
+      @click="loadingByFilters"
+      :disabled="!readyDownload"
+      class="tab-button tabLvlButton"
+      :class="{ disabled: !readyDownload }"
     >
-
-              <p class="p__tab-button">Отправить</p>
-  </button>
+      <p class="p__tab-button">Отправить</p>
+    </button>
   </div>
-
 
   <div class="checkboxWrapper">
     <div class="checkbox" v-for="t in rarity" :key="t.key">
@@ -108,12 +106,12 @@ const props = defineProps({
   maxLvl: {
     type: [String, Number],
     required: true
-  },
+  }
 })
 
 const emits = defineEmits({
   isClose: null,
-  lvlMinMaxChange: Object,
+  lvlMinMaxChange: Object
 })
 
 const newResult = ref(null)
@@ -281,7 +279,7 @@ function updateMinParamClass(p, key, value, classValue, difference = 0) {
     p.minParam[key] = {
       value: value,
       class: classValue,
-      shortageDifference: difference,
+      shortageDifference: difference
     }
   }
 }
@@ -304,28 +302,29 @@ function processMinStats(newResult, minStats) {
   })
 }
 
-
 const resultArray = []
 let readyDownload = ref(false)
 
-
-const checkDowland = computed( () => props.lvlSearch )
-watch(checkDowland, val => {
-  const ollLvlFalse = val.find((item) => item.count === 'change')
-  if(!ollLvlFalse) {
-  // Находим значения count для minLvl и maxLvl
-  const minCount = val.find((item) => item.id === 'minLvl').count
-  const maxCount = val.find((item) => item.id === 'maxLvl').count
-  // сортирую по возрастанию
-  const sort = [minCount, maxCount].sort((a, b) => a - b)
-  // Создаем массив чисел от минимального к максимальному
-  for (let i = sort[0]; i <= sort[1]; i++) {
-    resultArray.push(i)
-  }
-  readyDownload.value = true
-  }
-}, { immediate: true, deep: true })
-
+const checkDowland = computed(() => props.lvlSearch)
+watch(
+  checkDowland,
+  (val) => {
+    const ollLvlFalse = val.find((item) => item.count === 'change')
+    if (!ollLvlFalse) {
+      // Находим значения count для minLvl и maxLvl
+      const minCount = val.find((item) => item.id === 'minLvl').count
+      const maxCount = val.find((item) => item.id === 'maxLvl').count
+      // сортирую по возрастанию
+      const sort = [minCount, maxCount].sort((a, b) => a - b)
+      // Создаем массив чисел от минимального к максимальному
+      for (let i = sort[0]; i <= sort[1]; i++) {
+        resultArray.push(i)
+      }
+      readyDownload.value = true
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 // загружаем данные с севера
 const minMaxLvlFilters = async (id, event) => {
@@ -340,8 +339,8 @@ const minMaxLvlFilters = async (id, event) => {
 }
 
 async function loadingByFilters() {
-    if(!readyDownload.value) {
-    console.log('Заполните диапазон уровней');
+  if (!readyDownload.value) {
+    console.log('Заполните диапазон уровней')
     return
   }
   spanErrorText.value = null
@@ -388,7 +387,7 @@ async function loadingByFilters() {
     isloading.value = false
     openAccordion.value = true
   }, 500)
-} 
+}
 
 const clothesfilter = () => {
   reqParameterVal.value = !reqParameterVal.value
@@ -485,10 +484,24 @@ export default {
 }
 
 .tabLvlButton {
-    height: 22px;
+  height: 22px;
 }
 
 .disabled {
   opacity: 0.6;
+}
+
+@media screen and (max-width: 400px) {
+  .form__items {
+    flex-wrap: wrap;
+  }
+
+  .select-css {
+    margin-bottom: 10px;
+  }
+
+  .tabLvlButton {
+    height: 32px;
+  }
 }
 </style>

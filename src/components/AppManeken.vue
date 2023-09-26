@@ -11,6 +11,7 @@ import BasicSlotOpteons from './use/slots/BasicSlotOptions.vue'
 import AddElixir from './AddElixir.vue'
 import AppSpells from './AppSpells.vue'
 import AppLoader from './AppLoader.vue'
+import DetailedClothing from './use/DetailedClothing.vue'
 
 import { baseStatFromLvl } from '../utils/baseStatFromLvl'
 import { modifyStat, statInputChange } from '../utils/modifyStat'
@@ -18,7 +19,6 @@ import { fetchAPIData } from '../api/fetchApi'
 import { fortressParam, raseParams, arrayVariableStats } from '../initialization/baseParams'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
-
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -37,14 +37,23 @@ const emits = defineEmits({
 })
 const store = useStore()
 
+const lvlComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'lvl' }))
 
-const lvlComputed = computed(() => store.getters['listManeken'](props.idMannequin).lvl) //количество стат для распределения
-const computedAccessibleStats = computed(() => store.getters['listManeken'](props.idMannequin).accessibleStats) //количество стат для распределения
-const raseNameComputed = computed(() => store.getters['listManeken'](props.idMannequin).raseName) //количество стат для распределения
-const classComputed = computed(() => store.getters['listManeken'](props.idMannequin).class) //количество стат для распределения
-const fortressComputed = computed(() => store.getters['listManeken'](props.idMannequin).fortress) //количество стат для распределения
+const computedAccessibleStats = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'accessibleStats' }))
 
+const raseNameComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'raseName' }))
 
+const classComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'class' }))
+
+const fortressComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'fortress' }))
+
+const listManekenBase = computed(() =>
+  store.getters['listManekenBase'](props.idMannequin).find((stat) => stat.key === 'dconst'))
 
 const availableRaces = raseParams
 const lvlSelect = ref(lvlComputed.value)
@@ -52,7 +61,7 @@ const raseModel = ref('human')
 const classModel = ref('none')
 const refrech = ref(0)
 const fortress = ref('none')
-const availableFortressOptions = fortressParam
+const availableFortressOptions = ref(fortressParam)
 
 const accessibleStats = ref(computedAccessibleStats.value) //количество стат для распределения
 const baseStat = ref(baseStatFromLvl())
@@ -62,35 +71,36 @@ const itemsNameRase = ref('Виберіть расу')
 const itemsNameFortress = ref('Крепость')
 const oldAccessibleStats = ref(computedAccessibleStats.value) // остаток не распределенных стат
 
-const controllIdManeken = computed (() => props.idMannequin )
-watch(controllIdManeken, _ => {
+const controllIdManeken = computed(() => props.idMannequin)
+watch(controllIdManeken, (_) => {
   oldAccessibleStats.value = computedAccessibleStats.value
   accessibleStats.value = computedAccessibleStats.value
   lvlSelect.value = lvlComputed.value
-  if(raseNameComputed.value) {
+  if (raseNameComputed.value) {
     raseModel.value = raseNameComputed.value
-    itemsNameRase.value = availableRaces.find(item => item.id === raseNameComputed.value).name
+    itemsNameRase.value = availableRaces.find((item) => item.id === raseNameComputed.value).name
   } else {
     raseModel.value = 'human'
     itemsNameRase.value = 'Виберіть расу'
   }
 
-  if(classComputed.value) {
+  if (classComputed.value) {
     itemsNameClass.value = classComputed.value.className
     itemsNameSubClass.value = classComputed.value.subClassName
   } else {
     itemsNameClass.value = 'Виберіть класс'
-    itemsNameSubClass.value ='Вибери підкласс'
+    itemsNameSubClass.value = 'Вибери підкласс'
   }
 
-  if(fortressComputed.value) {
-    itemsNameFortress.value = availableFortressOptions.find(item => item.id === fortressComputed.value).name
+  if (fortressComputed.value) {
+    itemsNameFortress.value = availableFortressOptions.value.find(
+      (item) => item.id === fortressComputed.value.fortress
+    ).name
   } else {
     itemsNameFortress.value = 'Крепость'
   }
-    refrech.value++
-} ) 
-
+  refrech.value++
+})
 
 const OllParamClass = ref([])
 const parentClassItems = ref(null)
@@ -104,10 +114,8 @@ const spellsFlag = ref(false)
 const raseMagicDefend = ref([])
 const isLoading = ref(false)
 
-
 // массив с изменениями параметров
 const addParam = ref(arrayVariableStats)
-
 
 const filtersClasses = ref({
   category: 'classes'
@@ -151,8 +159,20 @@ const handleRaseSelectChange = (availableRaces) => {
 
 const handleClassSelectChange = (className) => {
   parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
-  itemsNameClass.value = parentClasses.value.find(cl => cl.name_en === className).name
+  itemsNameClass.value = parentClasses.value.find((cl) => cl.name_en === className).name
 }
+
+watch(fortressComputed, val => {
+  if(val) {
+    const findRanger = parentClasses.value.find(item => item.name_en === "Ranger");
+  if (findRanger) {
+    findRanger.disabled = val.fortress === 'absent' ? false : true;
+  }
+  }
+
+}, { immediate: true });
+
+
 
 // массив с бонусами от класа
 const addClassParam = addParam.value.map((item) => ({ ...item, count: 0 }))
@@ -180,84 +200,87 @@ async function changingSubclassParameters() {
 }
 
 const handleParentClassSelectChange = async (parent) => {
-  
- availabilityClassFlag.value = checkSubclassChangeFeasibilityWithGearRequirements({id:props.idMannequin, ollParamClass: OllParamClass.value, parent })
-if(availabilityClassFlag.value === true) {
-  oldValueSubclass.value = true
-// массив с требониями класа, что нужно автоматически распределить
-const addClassMinParam = [
-  { key: 'minstrength', count: 0 },
-  { key: 'mindexterity', count: 0 },
-  { key: 'minreaction', count: 0 },
-  { key: 'minconst', count: 0 },
-  { key: 'minintel', count: 0 },
-  { key: 'minwisdom', count: 0 },
-  { key: 'minluck', count: 0 }
-]
-  // проверяю есть ли уже запись о подклассе, если есть, обнуляю о ней запись и восстанавливаю количество очков
-  await changingSubclassParameters()
-
-  recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassParam })
-  recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassMinParam })
-
-
-  const updateMinParam = addClassMinParam.map((item) => {
-    switch (item.key) {
-      case 'minstrength':
-        return { key: 'dstrength', count: item.count }
-      case 'mindexterity':
-        return { key: 'ddexterity', count: item.count }
-      case 'minreaction':
-        return { key: 'dreaction', count: item.count }
-      case 'minconst':
-        return { key: 'dconst', count: item.count }
-      case 'minintel':
-        return { key: 'dintel', count: item.count }
-      case 'minwisdom':
-        return { key: 'dwisdom', count: item.count }
-      case 'minluck':
-        return { key: 'dluck', count: item.count }
-      default:
-        return item
-    }
+  availabilityClassFlag.value = checkSubclassChangeFeasibilityWithGearRequirements({
+    id: props.idMannequin,
+    ollParamClass: OllParamClass.value,
+    parent
   })
-  classMinParam.value = updateMinParam
-  // Проходим по каждой строке в updatedStatConfigurations преобразовывая данные
-  const updatedStats = updatedBaseStats({ arrMinParam: updateMinParam, ollStats: props.updatedStatConfigurations})
-  const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
-  // считаю можно ли сменить уровень ниже, в зависимости от количества оставшихся очков распределения, что бы
-  //выполнить минимальную проверку требований подкласса
-  if (accessibleStats.value > totalSum) {
-    accessibleStats.value -= totalSum
-    store.commit('statChange/statChange', {
-      addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
-      type: 'subclass',
-      name:  parent,
-      idMannequin: props.idMannequin
-    })
-  } else {
-    console.log('Не достаточно очков')
-  }
-} else {
-  oldValueSubclass.value = false
-}
+  if (availabilityClassFlag.value === true) {
+    oldValueSubclass.value = true
+    // массив с требониями класа, что нужно автоматически распределить
+    const addClassMinParam = [
+      { key: 'minstrength', count: 0 },
+      { key: 'mindexterity', count: 0 },
+      { key: 'minreaction', count: 0 },
+      { key: 'minconst', count: 0 },
+      { key: 'minintel', count: 0 },
+      { key: 'minwisdom', count: 0 },
+      { key: 'minluck', count: 0 }
+    ]
+    // проверяю есть ли уже запись о подклассе, если есть, обнуляю о ней запись и восстанавливаю количество очков
+    await changingSubclassParameters()
 
-itemsNameSubClass.value = parentClassItems.value.find(sub => sub.name_en === parent).name
+    recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassParam })
+    recalculationValues({ ollParamClass: OllParamClass.value, parent, items: addClassMinParam })
+
+    const updateMinParam = addClassMinParam.map((item) => {
+      switch (item.key) {
+        case 'minstrength':
+          return { key: 'dstrength', count: item.count }
+        case 'mindexterity':
+          return { key: 'ddexterity', count: item.count }
+        case 'minreaction':
+          return { key: 'dreaction', count: item.count }
+        case 'minconst':
+          return { key: 'dconst', count: item.count }
+        case 'minintel':
+          return { key: 'dintel', count: item.count }
+        case 'minwisdom':
+          return { key: 'dwisdom', count: item.count }
+        case 'minluck':
+          return { key: 'dluck', count: item.count }
+        default:
+          return item
+      }
+    })
+    classMinParam.value = updateMinParam
+    // Проходим по каждой строке в updatedStatConfigurations преобразовывая данные
+    const updatedStats = updatedBaseStats({
+      arrMinParam: updateMinParam,
+      ollStats: props.updatedStatConfigurations
+    })
+    const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
+    // считаю можно ли сменить уровень ниже, в зависимости от количества оставшихся очков распределения, что бы
+    //выполнить минимальную проверку требований подкласса
+    if (accessibleStats.value > totalSum) {
+      accessibleStats.value -= totalSum
+      store.commit('statChange/statChange', {
+        addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
+        type: 'subclass',
+        name: parent,
+        idMannequin: props.idMannequin
+      })
+    } else {
+      console.log('Не достаточно очков')
+    }
+  } else {
+    oldValueSubclass.value = false
+  }
+
+  itemsNameSubClass.value = parentClassItems.value.find((sub) => sub.name_en === parent).name
   store.commit('updateManekenInfo', {
     idMannequin: props.idMannequin,
-    class: { className: itemsNameClass.value, subClassName: itemsNameSubClass.value,}
+    class: { className: itemsNameClass.value, subClassName: itemsNameSubClass.value }
   })
-
 }
 
-// старое количество стат на уровне в каждом манекене, запись задана с избытком 
+// старое количество стат на уровне в каждом манекене, запись задана с избытком
 let oldCountStat = [0, 0, 0, 0, 0]
 const different = [0, 0, 0, 0, 0]
 
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
   const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
-
 
   oldAccessibleStats.value = accessibleStats.value // остаток не распределенных стат
 
@@ -267,7 +290,11 @@ const lvlSelectChange = () => {
     updateStatsAndEmitEvent(different[props.idMannequin - 1], newCountStat)
     emits('updateLvl', Number(lvlSelect.value))
   } else {
-    console.log(`Распределено стат больше, чем возможно на уровне на ${Math.abs(different[props.idMannequin - 1])}`)
+    console.log(
+      `Распределено стат больше, чем возможно на уровне на ${Math.abs(
+        different[props.idMannequin - 1]
+      )}`
+    )
   }
 }
 
@@ -277,15 +304,13 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
   classModel.value = 'none'
 }
 
-
-
 const modifyStatAndEmit = (statKey, increment) => {
   const { addParam: updatedAddParam, accessibleStats: updatedAccessibleStats } = modifyStat({
     accessibleStats: accessibleStats.value,
     addParam: addParam.value,
     statKey,
     increment,
-    id:props.idMannequin
+    id: props.idMannequin
   })
 
   addParam.value = updatedAddParam
@@ -304,15 +329,17 @@ watch(accessibleStats, (val) => {
   })
 })
 
-watch([lvlSelect, raseModel], val => {
-  if(val[0] > 0) {
-    const newRaseOllLvlDefend = raseMagicDefend.value.filter( rase => rase.rase === val[1])
-    const newRaseDefend = newRaseOllLvlDefend.find(item => Number(item.lvlPers) === Number(val[0]))
+watch([lvlSelect, raseModel], (val) => {
+  if (val[0] > 0) {
+    const newRaseOllLvlDefend = raseMagicDefend.value.filter((rase) => rase.rase === val[1])
+    const newRaseDefend = newRaseOllLvlDefend.find(
+      (item) => Number(item.lvlPers) === Number(val[0])
+    )
     const update = [
-  { key: 'whitemagicprotection', count: newRaseDefend.whitemagicprotection },
-  { key: 'blackmagicprotection', count: newRaseDefend.blackmagicprotection },
-  { key: 'astralmagicprotection', count: newRaseDefend.astralmagicprotection },
-]
+      { key: 'whitemagicprotection', count: newRaseDefend.whitemagicprotection },
+      { key: 'blackmagicprotection', count: newRaseDefend.blackmagicprotection },
+      { key: 'astralmagicprotection', count: newRaseDefend.astralmagicprotection }
+    ]
     store.commit('statChange/statChange', {
       addParam: [{ bonusAndBase: update }],
       type: 'magickDefend',
@@ -321,13 +348,12 @@ watch([lvlSelect, raseModel], val => {
   }
 })
 
-watch(accessibleStats, val => {
+watch(accessibleStats, (val) => {
   store.commit('updateManekenInfo', {
     accessibleStats: val,
     idMannequin: props.idMannequin
   })
 })
-
 
 const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
@@ -338,8 +364,12 @@ const handleStatDecrease = (statKey) => {
 
 const handleStatInputChange = (stat) => {
   // изменение стат через инпут
-  const { key, statChange } = statInputChange({ stat, statParams: statParams.value, accessibleStats: accessibleStats.value })
- modifyStatAndEmit(key, statChange)
+  const { key, statChange } = statInputChange({
+    stat,
+    statParams: statParams.value,
+    accessibleStats: accessibleStats.value
+  })
+  modifyStatAndEmit(key, statChange)
 }
 
 const handleResetManecken = () => {
@@ -372,13 +402,33 @@ const isCloseSpells = () => {
 
 
 
+watch([listManekenBase, classComputed],  (val) => {
+    const forbiddenClasses = ['Рейджер']
+    availableFortressOptions.value = availableFortressOptions.value.map((item) => {
+      const isMinconstGreaterThanSummStatBase = Number(item.minconst) > Number(val[0].summStatBase)
+      const isClassForbidden = forbiddenClasses.includes(val[1]?.className)
+      return {
+        ...item,
+        disabled: isMinconstGreaterThanSummStatBase || isClassForbidden
+      }
+    })
+  },
+  { immediate: true }
+)
+
 const handleFortressUpdate = (fortress) => {
-  console.log(fortress)
+  const fortnessParam = availableFortressOptions.value.find(item => item.id === fortress).bonusHealthMutiplier
   store.commit('updateManekenInfo', {
-    fortress: fortress,
-    idMannequin: props.idMannequin
+    fortress: {fortress, bonusHealthMutiplier: fortnessParam},
+    idMannequin: props.idMannequin,
   })
 }
+
+const isOpenInfoCloth = ref(false)
+const isClothInfo = (status) => {
+  isOpenInfoCloth.value = status
+}
+
 </script>
 
 <script>
@@ -388,17 +438,28 @@ export default {
 </script>
 
 <template>
+  <AppLoader v-if="isLoading" />
 
-  <AppLoader v-if="isLoading"/>
+    <DetailedClothing
+  v-if="isOpenInfoCloth"
+  :isOpenInfoCloth="isOpenInfoCloth"
+  @isClothInfo="isClothInfo"
+  />
+
   <div class="isDummyLoaded" v-if="isDummyLoaded">
     <div class="dummy__part">
-      <DummyPartSlot :dummyItems="leftDummyPart" @handleClothesChoice="handleClothesChoice" />
+      <DummyPartSlot :dummyItems="leftDummyPart" 
+      @handleClothesChoice="handleClothesChoice" 
+      @isClothInfo="isClothInfo"
+      />
     </div>
+
     <div class="dummy__center">
       <div class="dummy__center__top">
         <DummyPartSlot
           :dummyItems="centerTopDummyPart"
           @handleClothesChoice="handleClothesChoice"
+          @isClothInfo="isClothInfo"
           :sizeClass="'small'"
         />
       </div>
@@ -438,11 +499,12 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <select 
-              :key="refrech"
-              name="lvlSelectChange"
-              v-model="lvlSelect" @change="lvlSelectChange" 
-              class="select-css"
+              <select
+                :key="refrech"
+                name="lvlSelectChange"
+                v-model="lvlSelect"
+                @change="lvlSelectChange"
+                class="select-css"
               >
                 <option value="change" disabled selected>Виберіть рівень</option>
                 <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
@@ -461,10 +523,7 @@ export default {
                 @update:modelValue="handleClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect 
-                  :items="parentClasses" 
-                  :lvlSelect="Number(lvlSelect)"
-                  />
+                  <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)" />
                 </template>
               </ManeckenSelectItems>
 
@@ -473,14 +532,11 @@ export default {
                 v-model="parentClassModel"
                 :itemsName="itemsNameSubClass"
                 :disabled="!availabilityClassFlag"
-                :oldValueCheck='oldValueSubclass'
+                :oldValueCheck="oldValueSubclass"
                 @update:modelValue="handleParentClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect 
-                  :items="parentClassItems" 
-                  :lvlSelect="Number(lvlSelect)" 
-                  />
+                  <ManeckenOptionSelect :items="parentClassItems" :lvlSelect="Number(lvlSelect)" />
                 </template>
               </ManeckenSelectItems>
             </div>
@@ -499,42 +555,33 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-          <div class="">
-          <button
-            class="tab-button maneckenBtn"
-            @click="spellsFlag = true"
-          >
-            <p class="p__tab-button p__tab-button-elix">Заклинания</p>
-          </button>
-        </div>
-
-
+              <div class="">
+                <button class="tab-button maneckenBtn" @click="spellsFlag = true">
+                  <p class="p__tab-button p__tab-button-elix">Заклинания</p>
+                </button>
+              </div>
             </div>
 
-            <AddElixir 
+            <AddElixir
               v-if="elixFlag"
               :idMannequin="props.idMannequin"
               :statParams="statParams"
               :classMinParam="classMinParam"
               @numberDrinks="numberDrinks"
-              @isCloseElix="isCloseElix"/>
-
+              @isCloseElix="isCloseElix"
+            />
 
             <AppSpells
-            v-if="spellsFlag"
-            :idMannequin="props.idMannequin"
-            @isCloseSpells="isCloseSpells"
+              v-if="spellsFlag"
+              :idMannequin="props.idMannequin"
+              @isCloseSpells="isCloseSpells"
             />
 
             <div class="form__items">
-              <button
-          class="tab-button maneckenBtn"
-          @click="elixFlag = true" 
-        >
-          <p class="p__tab-button">Випити еліксир</p>
-        </button>
+              <button class="tab-button maneckenBtn" @click="elixFlag = true">
+                <p class="p__tab-button">Випити еліксир</p>
+              </button>
 
-           
               <p>Випито: {{ drinksElix }}</p>
             </div>
 
@@ -548,6 +595,7 @@ export default {
         <DummyPartSlot
           :dummyItems="centerBottomDummyPart"
           @handleClothesChoice="handleClothesChoice"
+          @isClothInfo="isClothInfo"
           :sizeClass="'big'"
         />
       </div>
@@ -560,10 +608,9 @@ export default {
 </template>
 
 <style scoped>
-
 .maneckenBtn {
-    width: 125px;
-    height: 26px;
+  width: 125px;
+  height: 26px;
 }
 
 .p__tab-button {
@@ -574,5 +621,4 @@ export default {
   color: #e1dbdb;
   font-family: cursive;
 }
-
 </style>

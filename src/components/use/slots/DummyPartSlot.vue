@@ -1,23 +1,29 @@
-
 <template>
-        <div
-          v-for="(d, idx) in dummyItems"
-          class="parameter__mat__img"
-          :class="addClass"
-
-          :key="d.name"
-          :id="`${d.name}_${idx}`"
-          @click="handleClothesChoice(d)"
-        >
-          <img class="mat_img" :src="d.link" :alt="d.name" />
-        </div>
+  <div
+    v-for="(d, idx) in dummyItems"
+    class="parameter__mat__img"
+    :class="addClass"
+    :key="d.name"
+    :id="`${d.name}_${idx}`"
+    @click="handleClothesChoice(d)"
+    @contextmenu.prevent
+    @touchstart="startTouch"
+    @touchend="endTouch"
+    @mouseenter="mouseEnterHandler"
+    @mouseleave="mouseLeaveHandler"
+  >
+    <img class="mat_img" :src="d.link" :alt="d.name" />
+  </div>
 </template>
 
-
 <script setup>
+import { ref } from 'vue'
+
 const emits = defineEmits({
-  handleClothesChoice: () => Array
-})
+  handleClothesChoice: () => Array,
+  isClothInfo: () => Boolean
+});
+
 const props = defineProps({
   dummyItems: {
     type: Array,
@@ -27,23 +33,87 @@ const props = defineProps({
     type: String,
     required: false
   }
-})
+});
 
 const classParametr = {
   'small': "parameter__mat__small",
-  'big': "parameter__mat__Armor__img",
+  'big': "parameter__mat__Armor__img"
 };
 
-const addClass = classParametr[props.sizeClass] || ''
+const addClass = classParametr[props.sizeClass] || '';
+
+let isOpen = false;
+let timer;
+const isLongPress = ref(false); // Флаг для отслеживания долгого касания
+let timeDelay = 0
+const TIME_DELAY_PC = 600
+const TIME_TOUCH_DURATION = 400
+let touchStartTime = 0; 
+
+const startTouch = () => {
+  touchStartTime = Date.now();
+};
+
+const endTouch = () => {
+  const touchEndTime = Date.now();
+  const touchDuration = touchEndTime - touchStartTime;
+
+  if (touchDuration >= TIME_TOUCH_DURATION) {
+    isInfoCloth('open');
+    isLongPress.value = true; // Устанавливаем флаг долгого касания
+  } else {
+    isInfoCloth('close');
+    isLongPress.value = false; // Сбрасываем флаг долгого касания
+  }
+};
+
+const mouseEnterHandler = () => {
+  if ('ontouchstart' in window === false) {
+    // Если устройство не сенсорное (десктоп)
+    timeDelay = TIME_DELAY_PC
+    isInfoCloth('open');
+  }
+};
+
+const mouseLeaveHandler = () => {
+  if ('ontouchstart' in window === false) {
+    // Если устройство не сенсорное (десктоп)
+    timeDelay = TIME_DELAY_PC
+    isInfoCloth('close');
+  }
+};
+
+const openCloth = () => {
+  emits('isClothInfo', true);
+  isOpen = true;
+};
+
+const closeCloth = () => {
+  if (isOpen) {
+    emits('isClothInfo', false);
+    isOpen = false;
+    isLongPress.value = false
+  }
+};
+
+const isInfoCloth = (status) => {
+  if (status === 'open') {
+    // Если окно было открыто ранее, отмените предыдущий таймер
+    clearTimeout(timer);
+
+    // Задайте новый таймер для открытия окна через 600 миллисекунд
+    timer = setTimeout(openCloth, timeDelay);
+  } else {
+    // Если окно закрыто, просто очистите таймер
+    clearTimeout(timer);
+    closeCloth();
+  }
+};
 
 const handleClothesChoice = (d) => {
-  emits('handleClothesChoice', d)
-}
+  if (!isLongPress.value) {
+    // Проверяем флаг долгого касания перед обработкой click
+    emits('handleClothesChoice', d);
+  }
+};
 </script>
-
-<script>
-export default {
-  name: 'DummyPartSlot',
-}
-</script>
-

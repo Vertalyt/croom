@@ -28,6 +28,12 @@ export default createStore({
         return mannequin.statModule
       }
     },
+    listManekenSearch: (state) => ({ id, element }) => {
+      const mannequin = state.listManeken.find(item => item.idMannequin === id);
+      if (mannequin) { 
+        return mannequin[element]
+      }
+    },
     listManekenBase: (state) => (id) => {
       const mannequin = state.listManeken.find(item => item.idMannequin === id);
       if (mannequin) {
@@ -42,7 +48,6 @@ export default createStore({
         return null;
       }
     }
-    
   },  
   mutations: {
     addManekenInfo(state, { idMannequin, statModule }) {

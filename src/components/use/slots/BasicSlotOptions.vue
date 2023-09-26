@@ -1,6 +1,11 @@
 
 <template>
-    <option  v-for="p in items" :value="p.id" :key="p.id">{{ p.name }}</option>
+    <option  
+    v-for="p in items" 
+    :value="p.id" 
+    :key="p.id"
+    :disabled="p.disabled"
+    >{{ p.name }}</option>
 </template>
 
 <script setup>
@@ -10,6 +15,7 @@ defineProps({
   requared: true
   },
 })
+
 </script>
 
 <script>
