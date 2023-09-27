@@ -261,7 +261,7 @@ const handleParentClassSelectChange = async (parent) => {
         idMannequin: props.idMannequin
       })
     } else {
-      console.log('Не достаточно очков')
+      store.dispatch('setMessage', 'Не достаточно очков')
     }
   } else {
     oldValueSubclass.value = false
@@ -290,11 +290,9 @@ const lvlSelectChange = () => {
     updateStatsAndEmitEvent(different[props.idMannequin - 1], newCountStat)
     emits('updateLvl', Number(lvlSelect.value))
   } else {
-    console.log(
-      `Распределено стат больше, чем возможно на уровне на ${Math.abs(
+    store.dispatch('setMessage', `Распределено стат больше, чем возможно на уровне на ${Math.abs(
         different[props.idMannequin - 1]
-      )}`
-    )
+      )}`)
   }
 }
 
@@ -358,9 +356,25 @@ watch(accessibleStats, (val) => {
 const handleStatIncrease = (statKey) => {
   modifyStatAndEmit(statKey, Number(1))
 }
+
+const computedFreeStats = computed(() => store.getters['statChange/foundCloth'](props.idMannequin, 'freeStats')?.param);
+
 const handleStatDecrease = (statKey) => {
-  modifyStatAndEmit(statKey, Number(-1))
-}
+  if (computedFreeStats.value) {
+    const freeStatKey = computedFreeStats.value.find(item => item.base).base;
+    if (freeStatKey) {
+
+      const statChange = freeStatKey.find(stat => stat.key === statKey && stat.key > 0).statKey;
+      if (statChange) {
+        modifyStatAndEmit(statKey, -1);
+      } else {
+        store.dispatch('setMessage', 'Не достаточно стат от свободных очков распределения')
+      }
+    }
+  }  else {
+        store.dispatch('setMessage', 'Не достаточно стат от свободных очков распределения')
+      }
+};
 
 const handleStatInputChange = (stat) => {
   // изменение стат через инпут
@@ -424,9 +438,17 @@ const handleFortressUpdate = (fortress) => {
   })
 }
 
+const nameElCloth = ref()
+const elementParam = ref()
 const isOpenInfoCloth = ref(false)
-const isClothInfo = (status) => {
-  isOpenInfoCloth.value = status
+
+const isClothInfo = ({ status, name}) => {
+    isOpenInfoCloth.value = status
+
+  if(status === true && name) {
+    nameElCloth.value = name
+    elementParam.value = store.getters['statChange/foundCloth'](props.idMannequin, name)
+  }
 }
 
 </script>
@@ -441,8 +463,9 @@ export default {
   <AppLoader v-if="isLoading" />
 
     <DetailedClothing
-  v-if="isOpenInfoCloth"
+  v-if="isOpenInfoCloth && elementParam"
   :isOpenInfoCloth="isOpenInfoCloth"
+  :elementParam="elementParam"
   @isClothInfo="isClothInfo"
   />
 

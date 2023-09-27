@@ -10,11 +10,19 @@
               class="accordionFaceImg"
             />
             <p>{{ c.otherInfo.name }}</p>
-            <p>Рівень: {{ c.otherInfo.minlevel }}</p>
+            <p>Рівень: <small>{{ c.otherInfo.minlevel }}</small></p>
           </div>
 
           <button class="button" @click.stop="dress(c)">Вдягти</button>
         </div>
+        <div class="priseInfo">
+          <p v-if="c.priseInfo.price">Тали: <small>{{ c.priseInfo.price }}</small></p>
+          <p v-if="c.priseInfo.goldprice">Золоті тали: <small>{{ c.priseInfo.goldprice }}</small></p> 
+          <p v-if="c.priseInfo.ratnikprice">Ратник: <small>{{ c.priseInfo.ratnikprice }}</small></p> 
+          <p v-if="c.priseInfo.obmenprice">Обміни: <small>{{ c.priseInfo.obmenprice }}</small></p> 
+          <p v-if="c.priseInfo.reliktprice">Реліквії: <small>{{ c.priseInfo.reliktprice }}</small></p>
+        </div>
+
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
@@ -105,13 +113,13 @@ const dress = (item) => {
 
   // Если есть ключи с "class": "error", выведите сообщение и завершите проверку
   if (errorKeys.length > 0) {
-    console.log('Ваши параметры ниже минимальных')
+    store.dispatch('setMessage', `Ваши параметры ниже минимальных`)
     return
   }
   const addParam = item.addParam
   const minBaseParam = item.minParam
   const priseInfo = item.priseInfo
-
+  const otherInfo = item.otherInfo
   // Создаем новый массив для хранения преобразованных минимальных базовых значений
   const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
     return {
@@ -125,7 +133,7 @@ const dress = (item) => {
   const convertedAdd = parameterConversion(addParam)
   store.dispatch('dummy/changeDummyEl', {
     idMannequin: props.idMannequin,
-    addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }],
+    addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }, { otherInfo }],
     typeid: item.otherInfo.typeid,
     imgLink: item.otherInfo.image,
     cellName: props.cellOptions.name
@@ -297,4 +305,15 @@ export default {
     opacity 0.5s ease-out,
     transform 0.5s ease-out;
 }
+
+.priseInfo {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+small {
+    font-weight: 400;
+    color: #9f6426;
+}
+
 </style>

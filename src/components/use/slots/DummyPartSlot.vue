@@ -8,8 +8,8 @@
     @click="handleClothesChoice(d)"
     @contextmenu.prevent
     @touchstart="startTouch"
-    @touchend="endTouch"
-    @mouseenter="mouseEnterHandler"
+    @touchend="endTouch(d.name)"
+    @mouseenter="mouseEnterHandler(d.name)"
     @mouseleave="mouseLeaveHandler"
   >
     <img class="mat_img" :src="d.link" :alt="d.name" />
@@ -21,7 +21,7 @@ import { ref } from 'vue'
 
 const emits = defineEmits({
   handleClothesChoice: () => Array,
-  isClothInfo: () => Boolean
+  isClothInfo: () => Object
 });
 
 const props = defineProps({
@@ -54,12 +54,12 @@ const startTouch = () => {
   touchStartTime = Date.now();
 };
 
-const endTouch = () => {
+const endTouch = (el_name) => {
   const touchEndTime = Date.now();
   const touchDuration = touchEndTime - touchStartTime;
 
   if (touchDuration >= TIME_TOUCH_DURATION) {
-    isInfoCloth('open');
+    isInfoCloth('open', el_name);
     isLongPress.value = true; // Устанавливаем флаг долгого касания
   } else {
     isInfoCloth('close');
@@ -67,11 +67,11 @@ const endTouch = () => {
   }
 };
 
-const mouseEnterHandler = () => {
+const mouseEnterHandler = (el_name) => {
   if ('ontouchstart' in window === false) {
     // Если устройство не сенсорное (десктоп)
     timeDelay = TIME_DELAY_PC
-    isInfoCloth('open');
+    isInfoCloth('open', el_name);
   }
 };
 
@@ -83,26 +83,26 @@ const mouseLeaveHandler = () => {
   }
 };
 
-const openCloth = () => {
-  emits('isClothInfo', true);
+const openCloth = (el_name) => {
+  emits('isClothInfo', {status: true, name: el_name});
   isOpen = true;
 };
 
 const closeCloth = () => {
   if (isOpen) {
-    emits('isClothInfo', false);
+    emits('isClothInfo', { status: false });
     isOpen = false;
     isLongPress.value = false
   }
 };
 
-const isInfoCloth = (status) => {
+const isInfoCloth = (status, el_name) => {
   if (status === 'open') {
     // Если окно было открыто ранее, отмените предыдущий таймер
     clearTimeout(timer);
 
     // Задайте новый таймер для открытия окна через 600 миллисекунд
-    timer = setTimeout(openCloth, timeDelay);
+    timer = setTimeout(openCloth(el_name), timeDelay);
   } else {
     // Если окно закрыто, просто очистите таймер
     clearTimeout(timer);

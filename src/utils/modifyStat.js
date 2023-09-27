@@ -31,7 +31,7 @@ let avaiStatFlag = true
 // функция расчета изменения статов.
 export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }) => {
   if (accessibleStats === null) {
-    console.log(`Выберите уровень персонажа`)
+    store.dispatch('setMessage', `Выберите уровень персонажа`)
     return { addParam, accessibleStats }
   }
 
@@ -72,7 +72,7 @@ function handleIncrement(addParam, foundParam, accessibleStats, increment) {
     foundParam.count += increment
     accessibleStats -= increment
   } else {
-    console.log(`Не достаточно очков`)
+    store.dispatch('setMessage', `Не достаточно очков`)
   }
 
   return { addParam, accessibleStats }
@@ -129,7 +129,7 @@ function handleDecrement(
       // смотрю в foundOllParam все распределенные статы,
       if (foundOllParam.count < 1) {
         if (foundOllParam.count === 0) {
-          console.log(`Значение ${foundParam.key} не может быть меньше базового`)
+          store.dispatch('setMessage', `Значение ${foundParam.key} не может быть меньше базового`)
         }
       } else {
         foundParam.count += increment
@@ -151,9 +151,7 @@ function handleDecrementSubclass(minParamsWithoutRaceBonus, minParamSubclass, st
       // сравниваю требования для подкласса и текущие распределенные базовые статы, если меньше, запрещаю обновление
       if (minParamsItem.count <= minParamSubclassItem.count) {
         if (statKey === minParamsItem.key) { // проверка что передаваемый стат именно тот что жмем
-          console.log(
-            `Нельзя понизить характеристику "${minParamsItem.key}", будет ниже требований подкласса`
-          )
+          store.dispatch('setMessage', `Нельзя понизить характеристику "${minParamsItem.key}", будет ниже требований подкласса`)
           flag = false
         }
       }
@@ -183,10 +181,10 @@ export function checkStatRequirementsForClothing(id, baseParamManecken, statKey 
 
       if (matchingStat && matchingStat.summStatBase <= baseItem.count) {
         if (statKey && statKey === baseItem.key) {
-          console.log(`Не возможно понизить ${statKey}, требования вещи ${item.type} больше.`);
+          store.dispatch('setMessage', `Не возможно понизить ${statKey}, требования вещи ${item.type} больше.`)
           flag = false;
         } if (statKey === null) {
-          console.log(`Не возможно понизить ${matchingStat.key}, требования вещи ${item.type} больше.`);
+          store.dispatch('setMessage', `Не возможно понизить ${matchingStat.key}, требования вещи ${item.type} больше.`)
           flag = false;
         }
       }

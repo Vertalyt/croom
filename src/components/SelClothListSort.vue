@@ -16,7 +16,7 @@
     <select
       name="minMaxLvlFilters"
       :value="minLvl"
-      @change="minMaxLvlFilters('minLvl', $event)"
+      @change ="minMaxLvlFilters('minLvl', $event)"
       class="select-css"
     >
       <option value="change" disabled selected>Мін. рівень</option>
@@ -166,7 +166,8 @@ const otherInfo = [
   { id: 0 },
   { image: '' },
   { class: '' },
-  { typeid: '' }
+  { typeid: '' },
+  { durability: '' }
 ]
 // массив для отображение стоимостецй по вещи по вещи
 const priseInfo = [
@@ -210,9 +211,6 @@ const toggleCheckbox = (key) => {
       }
     }
   })
-  if (!isNaN(lvlSelect.value)) {
-    minMaxLvlFilters()
-  }
 }
 
 // фильтруем готовый массив вещей от значений содержащих undefined и '0'
@@ -340,7 +338,7 @@ const minMaxLvlFilters = async (id, event) => {
 
 async function loadingByFilters() {
   if (!readyDownload.value) {
-    console.log('Заполните диапазон уровней')
+    store.dispatch('setMessage', 'Заполните диапазон уровней')
     return
   }
   spanErrorText.value = null

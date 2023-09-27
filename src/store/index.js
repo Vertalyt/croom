@@ -13,7 +13,8 @@ export default createStore({
       listManeken: [
         { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
         { idMannequin: 2, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
-      ]
+      ],
+      message: null,
     }
   },
   getters: {
@@ -47,9 +48,18 @@ export default createStore({
       } else {
         return null;
       }
-    }
+    },
+    message(state) {
+      return state.message
+  },
   },  
   mutations: {
+    setMessage(state, payload) {
+      return state.message = payload
+  },
+  clearMessage(state) {
+    state.message = null
+},
     addManekenInfo(state, { idMannequin, statModule }) {
       state.listManeken.push({ idMannequin, statModule })
     },
@@ -64,6 +74,14 @@ export default createStore({
         return c
       })
     },
+  },
+  actions: {
+    setMessage({ commit }, payload) {
+      commit('setMessage', payload)
+      setTimeout(() => {
+          commit('clearMessage')
+      }, 2500);
+  },
   },
   modules: {
     statChange,

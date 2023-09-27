@@ -3,6 +3,8 @@ import { ref, computed, watch } from 'vue'
 import AppHeader from '@/components/appHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
+import AppNotification from './components/AppNotification.vue'
+
 import { basickParamsRase, baseStatModule } from './initialization/baseParams'
 import ManeckenModal from './components/use/ManeckenModal.vue'
 import { aggregateStatValues } from './utils/aggregateStatValues'
@@ -23,7 +25,7 @@ const lvlPerson = ref(0)
 const listStat = computed(() => store.getters['statChange/listStat'](idMannequin.value)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 const rezetManecken = ref(0)
 
-const mannequinShange = (val) => {
+const mannequinChange = (val) => {
   idMannequin.value = val
   raseParams.value = baseManekenConfig.value.raseParams
   baseStatConfigurations.value = baseManekenConfig.value.statModule
@@ -117,8 +119,11 @@ const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
 
 
 </script>
+
+
 <template>
   <div class="room-container">
+    <AppNotification />
     <div class="wrapper">
       <div class="conteiner">
         <ManeckenModal
@@ -134,7 +139,7 @@ const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
           @lvlMinMaxChange="handleLvlMinMaxChange"
         />
         <AppHeader 
-        @mannequinShange="mannequinShange"
+        @mannequinChange="mannequinChange"
         />
 
         <main class="main-wrapper">

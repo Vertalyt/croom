@@ -146,7 +146,7 @@ const COUNT_POINGHTS = [
 ]
 
 let addParamPoint = arrayVariableStats
-
+console.log('persParams', persParams.value);
 const artArrPersParams = ref(
   persParams.value.map((item) => {
     return {
@@ -154,7 +154,7 @@ const artArrPersParams = ref(
       summStatBase: 0,
       summStatBonusAndBase: 0
     }
-  })
+  }).filter(item => item.type !== 'dstamina')
 )
 
 function maxLvlArt(lvlPerson) {
@@ -253,7 +253,6 @@ const MAX_EL = statWithType ? statWithType.maxEl : null;
 }
 const putOnThing = () => {
   if(breedingPoints.value !== 0) {
-    console.log('Распределите все статы');
     errorClassFlag.value = true
   } else {
     errorClassFlag.value = false
@@ -273,8 +272,10 @@ const putOnThing = () => {
     key: 'artefact'
   })
   }
+  if(!errorClassFlag.value) {
+    emits('isClose')
+  }
 
-  emits('isClose')
 }
 
 

@@ -165,5 +165,8 @@ export default {
 	background-position: -125px 0;
 }
 
-
+.modal-content {
+  top: 3%;
+  max-height: 100vh;
+}
 </style>

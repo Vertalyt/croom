@@ -21,7 +21,14 @@ export default {
         })
       }
       return [] // Возвращаем пустой массив, если элемент не найден
-    },    
+    },
+    foundCloth: (state) => (id, type) => {
+      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      if (foundItem) {
+        return foundItem.listStat.find(item => item.type === type)
+      }
+      return [] // Возвращаем пустой массив, если элемент не найден
+    },       
     minParamCloth: (state) => (id) => {
       // Найдем элемент с соответствующим idMannequin
       const foundItem = state.listMannequins.find((item) => item.idMannequin === id)

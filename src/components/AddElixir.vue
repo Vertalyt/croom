@@ -218,9 +218,7 @@ function subclassChecking(stat) {
     } else {
       flag = false
       idrebut.value++
-      console.log(
-        `Понижение не возможно, параметр '${minParamClass.key}' будет меньше требований подкласса: ${minParamClass.count} < ${statModule.summStatBase}`
-      )
+      store.dispatch('setMessage', `Понижение не возможно, параметр '${minParamClass.key}' будет меньше требований подкласса: ${minParamClass.count} < ${statModule.summStatBase}`)
     }
   }
   return flag
@@ -246,7 +244,7 @@ const handleStatDecrease = (val) => {
     availabilityElixFlag =
       hasLastElix.count > COUNT_STAT_MIXTURE
         ? true
-        : (console.log('Оставшиеся очки стата дает эликсир'), false)
+        : (store.dispatch('setMessage', `Оставшиеся очки стата дает эликсир`), false)
   }
 
   if (hasSecolach) {
@@ -254,7 +252,7 @@ const handleStatDecrease = (val) => {
   } else if (hasLastElix && hasLastElix.key === val) {
     availabilityElixFlag = hasLastElix.count > COUNT_STAT_MIXTURE
   }
-  if (!availabilityElixFlag) console.log('Оставшиеся очки стата дает эликсир')
+  if (!availabilityElixFlag)  store.dispatch('setMessage', 'Оставшиеся очки стата дает эликсир')
 
 
   // проверка на минимальные параметры вещей
