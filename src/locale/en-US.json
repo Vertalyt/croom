@@ -1,0 +1,52 @@
+{
+
+  "localeSite": "Site language",
+  "refresh": "Refresh",
+
+    "Account": "Аккаунт",
+    "AccountLinkingSuccess": "Аккаунти успішно пов'язані",
+    "MethodSuccessfullyUnbound": "Метод успішно відвязаний",
+    "PassReset": "Посилання для скидання пароля успішно надіслано на пошту",
+  
+
+  
+    "Email": "Емаил",
+    "Password": "Пароль",
+    "Enter": "Війти",
+    "NoAccount": "Немає облікового запису?",
+    "SignUp": "Зареєструватись",
+    "EnterEmail": "Введіть email",
+    "MustBeValidEmail": "Тут має бути валідний email",
+    "EnterPassword": "Введіть пароль",
+    "EnterName": "Введіть логін",
+    "PasswordCannotBeSmaller": "Пароль не може бути меншим",
+    "Symbols": "Symbols",
+
+    "addLoginPass": "Додати",
+    "ForgotPassword": "Забули пароль?",
+  
+    "GoOut": "Вийти",
+  
+    "DataUpdated": "Дані успішно оновлені",
+    "EntryAddedSuccessfully": "Запис успішно додано",
+    "CategoryAddedSuccessfully": "Категорія успішно оновлена",
+    "RegistrationCompleted": "Реєстрація пройшла успішно. Авторизуйтесь",
+    "AuthorizationSuccessful": "Авторизація успішна",
+  
+  
+    "logout": "Вихід пройшов успішно",
+      "auth/user-not-found": "Користувача з цією адресою електронної пошти не знайдено",
+      "auth/wrong-password": "Неправильний пароль",
+      "auth": "Будь ласка, увійдіть",
+      "PERMISSION_DENIED": "Доступ заборонено",
+      "auth/email-already-in-use": "Користувач з цією адресою електронної пошти вже зайнятий",
+      "auth/requires-recent-login": "Для аутентифікації потрібний недавній вхід. Увійдіть знову",
+      "auth/provider-already-linked": "авторизація поставщик вже зв'язан",
+  
+
+
+      "AddLoginPassword": "Додати вхід по логіну та паролю",
+      "NoElementsToEdit":"Відсутні елементи для редагування",
+      "NoElementsToRestor":"Відсутні елементи для відновлення"
+  }
+  

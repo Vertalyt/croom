@@ -2,19 +2,22 @@ export default {
   namespaced: true,
   state() {
     return {
-      listMannequins: [
+      listStatChange: [
         { idMannequin: 1, listStat: [] },
         { idMannequin: 2, listStat: [] },
       ]
     }
   },
   getters: {
+    getStatChangeState(state) {
+     return state.listStatChange
+    },
     listStat: (state) => (id) => {
-      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      const foundItem = state.listStatChange.find((item) => item.idMannequin === id)
       return foundItem ? foundItem.listStat : []
     },
     priseInfoCloth: (state) => (id) => {
-      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      const foundItem = state.listStatChange.find((item) => item.idMannequin === id)
       if (foundItem) {
         return foundItem.listStat.flatMap(item => {
           return item.param.filter(characteristics => characteristics.priseInfo)
@@ -23,7 +26,7 @@ export default {
       return [] // Возвращаем пустой массив, если элемент не найден
     },
     foundCloth: (state) => (id, type) => {
-      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      const foundItem = state.listStatChange.find((item) => item.idMannequin === id)
       if (foundItem) {
         return foundItem.listStat.find(item => item.type === type)
       }
@@ -31,7 +34,7 @@ export default {
     },       
     minParamCloth: (state) => (id) => {
       // Найдем элемент с соответствующим idMannequin
-      const foundItem = state.listMannequins.find((item) => item.idMannequin === id)
+      const foundItem = state.listStatChange.find((item) => item.idMannequin === id)
 
       if (foundItem) {
         // Создадим массив объектов с типом и базовым значением параметра
@@ -71,7 +74,7 @@ export default {
   },
   mutations: {
     statChange(state, { addParam, type, name, idMannequin }) {
-      state.listMannequins.filter((item) => {
+      state.listStatChange.filter((item) => {
         if (item.idMannequin === idMannequin) {
           item.listStat = item.listStat.map((item) => {
             if (item.type === type) {
@@ -89,7 +92,7 @@ export default {
       })
     },
     listDelChange(state, { type, idMannequin }) {
-      state.listMannequins.map((item) => {
+      state.listStatChange.map((item) => {
         if (item.idMannequin === idMannequin) {
           item.listStat = item.listStat.map((statItem) => {
             if (statItem.type !== type) {
@@ -103,6 +106,9 @@ export default {
         return item; // Возвращаем обновленный элемент списка манекенов
       });
       return state; // Возвращаем обновленное состояние
-    }      
+    },
+    addListStatChange(state, payload) {
+      state.listStatChange = JSON.parse(payload)
+    }    
   },
 }

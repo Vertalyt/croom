@@ -21,6 +21,9 @@ export default {
     }
   },
   getters: {
+    getSpellsState(state) {
+      return state.listSpellsMannequins
+     },
     spells: (state) => (id) => {
       const foundItem = state.listSpellsMannequins.find((item) => item.idMannequin === id)
       if(foundItem) {
@@ -44,6 +47,9 @@ export default {
               stateSpellList.spellsList = spellsList
           }
       }
+    },
+    addListSpellsMannequins(state, payload) {
+      state.listSpellsMannequins = JSON.parse(payload)
     }
   },
 }

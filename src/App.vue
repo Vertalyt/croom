@@ -4,6 +4,7 @@ import AppHeader from '@/components/appHeader.vue'
 import AppManeken from './components/AppManeken.vue'
 import AppManekenResult from './components/AppManekenResult.vue'
 import AppNotification from './components/AppNotification.vue'
+import AppProfile from './components/AppProfile.vue'
 
 import { basickParamsRase, baseStatModule } from './initialization/baseParams'
 import ManeckenModal from './components/use/ManeckenModal.vue'
@@ -12,7 +13,7 @@ import { useStore } from 'vuex'
 
 const basickParams = ref(basickParamsRase) // поиск значений по расе
 const store = useStore()
-const idMannequin = ref(1); // айди манекена, в будущем буду менять в зависимости от манекена
+const idMannequin = ref(1); // айди манекена, меняется в зависимости от манекена
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
 const cellOptions = ref()
@@ -20,10 +21,17 @@ const cellOptions = ref()
 const baseManekenConfig = computed( () => store.getters['listManeken'](idMannequin.value));// базовое значение конкретной расы, и их переменные, стартовое люди
 const raseParams = ref(baseManekenConfig.value.raseParams)
 const baseStatConfigurations = ref(baseManekenConfig.value.statModule)
-const lvlPerson = ref(0)
+const lvlPerson = ref(baseManekenConfig.value.lvl)
 
 const listStat = computed(() => store.getters['statChange/listStat'](idMannequin.value)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 const rezetManecken = ref(0)
+
+
+watch(baseManekenConfig, val => {
+  raseParams.value = val.raseParams
+  baseStatConfigurations.value = val.statModule
+}, {immediate : true, deep: true})
+
 
 const mannequinChange = (val) => {
   idMannequin.value = val
@@ -34,6 +42,7 @@ const mannequinChange = (val) => {
 }
 
 function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
+
   const updatedConfigurations = newBaseConfig.map((i) => {
     const updatedStats = baseManekenConfig.value.raseParams
       ? {
@@ -58,9 +67,10 @@ function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
 }
 
 watch([raseParams, listStat], _ => {
-
+  const lvlChange = store.getters['listManekenSearch']({ id: idMannequin.value, element: 'lvl' })
   const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvlPerson.value);
+
+  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvlChange);
 }, { deep: true });
 
 
@@ -116,14 +126,38 @@ const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
   }
 }
 
+const closeOpenProfile = ref(false)
+const closeOpenProfileChange = () => {
+  closeOpenProfile.value = !closeOpenProfile.value
+}
 
+const isProfileInfo = computed( () => store.getters['requests/clientInfo'] )
+const refrechProfile = ref(0)
+watch(isProfileInfo, _ => {
+  refrechProfile.value++
+})
+
+const globalRefrech = ref(1)
+
+const addProfile = () => {
+
+}
 
 </script>
-
 
 <template>
   <div class="room-container">
     <AppNotification />
+
+    <AppProfile 
+    v-if="closeOpenProfile"
+    :key="refrechProfile"
+    @isClose="closeOpenProfileChange"
+    @refrech="refrechProfile = refrechProfile + 1"
+    @globaRefrech="addProfile"
+    />
+
+
     <div class="wrapper">
       <div class="conteiner">
         <ManeckenModal
@@ -139,7 +173,9 @@ const handleLvlMinMaxChange = ({lvlMinMax, id}) => {
           @lvlMinMaxChange="handleLvlMinMaxChange"
         />
         <AppHeader 
+        :key="globalRefrech"
         @mannequinChange="mannequinChange"
+        @isOpenProfile="closeOpenProfile = true"
         />
 
         <main class="main-wrapper">

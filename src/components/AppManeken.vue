@@ -637,11 +637,10 @@ export default {
 }
 
 .p__tab-button {
-  font-size: 12px;
+  font-size: 11px;
   margin: 3px;
   padding: 2px 5px;
   font-weight: 800;
   color: #e1dbdb;
-  font-family: cursive;
 }
 </style>

@@ -458,7 +458,6 @@ export default {
 .p__tab-button-elix {
   font-size: 12px;
   line-height: 14px;
-  font-family: "Times New Roman", serif;
 }
 
 @media screen and (max-width: 400px) {

@@ -2,7 +2,8 @@ import { createStore } from 'vuex'
 import statChange from './modules/statChange.module'
 import dummy from './modules/dummy.module'
 import spells from './modules/spells.module'
-
+import auth from './modules/auth.module'
+import requests from './modules/requests.module'
 
 import { baseStatModule, basickParamsRase } from '../initialization/baseParams'
 const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
@@ -11,13 +12,16 @@ export default createStore({
   state() {
     return {
       listManeken: [
-        { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
-        { idMannequin: 2, statModule: baseStatModule, lvl: 0, raseParams: raseParams, accessibleStats: null},
+        { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
+        { idMannequin: 2, statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
       ],
       message: null,
     }
   },
   getters: {
+    getMainState(state) {
+      return state.listManeken
+     },
     listManeken: (state) => (id) => {
       return state.listManeken.find(item => {
         return item.idMannequin === id;
@@ -59,7 +63,11 @@ export default createStore({
   },
   clearMessage(state) {
     state.message = null
-},
+  },
+  addListManeken(state, payload) {
+    console.log(JSON.parse(payload));
+    state.listManeken = JSON.parse(payload)
+  },
     addManekenInfo(state, { idMannequin, statModule }) {
       state.listManeken.push({ idMannequin, statModule })
     },
@@ -86,6 +94,8 @@ export default createStore({
   modules: {
     statChange,
     dummy,
-    spells
+    spells,
+    auth,
+    requests
 }
 })

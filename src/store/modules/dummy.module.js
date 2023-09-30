@@ -15,6 +15,9 @@ export default {
     }
   },
   getters: {
+    getDummyState(state) {
+      return state.listsDummy
+     },
     listsDummy: (state) => (id) => {
       const foundItem = state.listsDummy.find(item => item.idMannequin === id);
       return foundItem ? foundItem.isDummy : [];
@@ -51,6 +54,9 @@ export default {
           });
         }
       }
+    },
+    addListsDummy(state, payload) {
+      state.listsDummy = JSON.parse(payload)
     }
   },  
   actions: {

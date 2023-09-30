@@ -144,7 +144,6 @@ export default {
 	color: #fff;
 	font-size: 13px;
 	font-weight: bold;
-	font-family: Verdana, sans-serif;
 	text-transform: uppercase;
 	margin-left: 102px;
 	z-index: 1;

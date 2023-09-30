@@ -232,7 +232,7 @@ export default {
 </script>
 
 <style scoped>
-/* Style the buttons that are used to open and close the accordion panel */
+
 .addRequiredParameters {
   display: grid;
   justify-items: center;

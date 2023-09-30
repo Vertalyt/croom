@@ -19,9 +19,18 @@
             </button>
             <!-- <button class="add-tab-button" /> -->
           </div>
+
+
           <div class="header__right">
-            <button class="tab-button">
+            <button 
+            class="tab-button">
               <p class="p__tab-button">Сводна таблица</p>
+            </button>
+
+            <button 
+            @click="$emit('isOpenProfile')"
+            class="tab-button">
+              <p class="p__tab-button">Профіль</p>
             </button>
           </div>
         </header>
@@ -32,8 +41,11 @@
 import { ref } from 'vue'
 
 const emits = defineEmits({
-  mannequinChange: Number
+  mannequinChange: Number,
+  isOpenProfile: null,
 })
+
+
 
 const IdButtom = ref(1)
 const mannequinIDChange = (id) => {
@@ -50,6 +62,12 @@ export default {
 </script>
 
 <style scoped>
+
+.header__right {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .active {
   width: 130px;
   height: 28px;
@@ -62,7 +80,5 @@ export default {
 .active > .active:hover {
     background-color: rgba(39, 90, 201, 0.761);
 }
-
-
 
 </style>

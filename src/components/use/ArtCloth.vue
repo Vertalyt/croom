@@ -146,7 +146,6 @@ const COUNT_POINGHTS = [
 ]
 
 let addParamPoint = arrayVariableStats
-console.log('persParams', persParams.value);
 const artArrPersParams = ref(
   persParams.value.map((item) => {
     return {
