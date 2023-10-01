@@ -65,7 +65,6 @@ export default createStore({
     state.message = null
   },
   addListManeken(state, payload) {
-    console.log(JSON.parse(payload));
     state.listManeken = JSON.parse(payload)
   },
     addManekenInfo(state, { idMannequin, statModule }) {

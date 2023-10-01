@@ -40,8 +40,9 @@ export default {
       if (foundItem) {
         if (listTwoHandedTypes.includes(typeid)) {
           foundItem.isDummy = foundItem.isDummy.map(item => {
+   // Создаем глубокую копию объекта на все ячейки с однаковым typeid (конкретно двуручное оружие)
             if (item.typeid.includes(typeid)) {
-              return { ...item, link: img }; // Создаем глубокую копию объекта
+              return { ...item, link: img };
             }
             return item;
           });
@@ -55,21 +56,54 @@ export default {
         }
       }
     },
+    clearDummyEl(state, { idMannequin, cellNames }) {
+      const initialSetups = {};
+    
+      // Создаем объект, где ключами являются имена ячеек, а значениями - ссылки на изображения
+      initialSetupEntries.forEach(item => {
+        initialSetups[item.name] = item.link;
+      });
+    
+      cellNames.forEach(cellName => {
+        const img = initialSetups[cellName];
+        const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
+    
+        if (foundItem) {
+          foundItem.isDummy = foundItem.isDummy.map(item => {
+            if (item.name === cellName) {
+              return { ...item, link: img };
+            }
+            return item;
+          });
+        }
+      });
+    },    
     addListsDummy(state, payload) {
       state.listsDummy = JSON.parse(payload)
     }
   },  
   actions: {
-    changeDummyEl( {commit, state}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
+  async changeDummyEl( { commit, state, dispatch}, { addParam, typeid, idMannequin, imgLink, cellName, key } ) {
         const foundItem = state.listsDummy.find(item => item.idMannequin === idMannequin);
-
         const dummy = foundItem.isDummy.find(item => item.name === cellName)
+
+       const searchElStatEl = await dispatch('statChange/searchELlist', { idMannequin }, { root: true })
+        if (searchElStatEl) {
+          commit('statChange/listDelChange', {
+            idMannequin,
+            type: ['weapons1', 'weapons2']
+          }, { root: true })
+          
+          const cellNames = ['weapons1', 'weapons2'];
+          commit('clearDummyEl', { idMannequin, cellNames });
+        } 
 
         commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid, key }); 
         commit('statChange/statChange', {
             addParam,
             type: dummy.name,
-            idMannequin
+            idMannequin,
+            typeid
         }, { root: true })
     }
   }

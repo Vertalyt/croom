@@ -92,7 +92,6 @@
 import { useStore } from 'vuex'
 import { ref, onMounted, computed, watch } from 'vue'
 import { getAuth } from 'firebase/auth'
-
 import AppLoader from './AppLoader.vue'
 import FormRegIsteredLogin from './use/FormRegIsteredLogin.vue'
 import LocaleChange from './use/LocaleChange.vue'
@@ -101,7 +100,6 @@ import LocaleChange from './use/LocaleChange.vue'
 const emits = defineEmits({
   isClose: null,
   refrech: null,
-  globaRefrech: null,
 })
 defineProps({})
 const store = useStore()
@@ -262,14 +260,13 @@ const delManecken = async (id) => {
 const addManecken = async (id) => {
   isLoading.value = true
   await store.dispatch('requests/addManecken', id)
-  emits('globaRefrech')
+  emits('refrech')
   isLoading.value = false
 }
 
 const saveManecken = async () => {
 await store.dispatch('requests/saveManecken')
 }
-
 
 </script>
 

@@ -33,7 +33,6 @@ const props = defineProps({
 const emits = defineEmits({
   changeRase: String,
   modalOpen: Array,
-  updateLvl: [Number, null]
 })
 const store = useStore()
 
@@ -55,6 +54,7 @@ const fortressComputed = computed(() =>
 const listManekenBase = computed(() =>
   store.getters['listManekenBase'](props.idMannequin).find((stat) => stat.key === 'dconst'))
 
+
 const availableRaces = raseParams
 const lvlSelect = ref(lvlComputed.value)
 const raseModel = ref('human')
@@ -71,34 +71,48 @@ const itemsNameRase = ref('Виберіть расу')
 const itemsNameFortress = ref('Крепость')
 const oldAccessibleStats = ref(computedAccessibleStats.value) // остаток не распределенных стат
 
-const controllIdManeken = computed(() => props.idMannequin)
-watch(controllIdManeken, (_) => {
-  oldAccessibleStats.value = computedAccessibleStats.value
-  accessibleStats.value = computedAccessibleStats.value
-  lvlSelect.value = lvlComputed.value
-  if (raseNameComputed.value) {
-    raseModel.value = raseNameComputed.value
-    itemsNameRase.value = availableRaces.find((item) => item.id === raseNameComputed.value).name
+watch(lvlComputed, val => {
+  lvlSelect.value = val
+})
+
+watch(computedAccessibleStats, val => {
+  accessibleStats.value = val
+}, { immediate: true})
+watch(raseNameComputed, val => {
+  if (val) {
+    raseModel.value = val
+    itemsNameRase.value = availableRaces.find((item) => item.id === val).name
   } else {
     raseModel.value = 'human'
     itemsNameRase.value = 'Виберіть расу'
   }
 
-  if (classComputed.value) {
-    itemsNameClass.value = classComputed.value.className
-    itemsNameSubClass.value = classComputed.value.subClassName
+})
+watch(classComputed, val => {
+  if (val) {
+    itemsNameClass.value = val.className
+    itemsNameSubClass.value = val.subClassName
   } else {
     itemsNameClass.value = 'Виберіть класс'
     itemsNameSubClass.value = 'Вибери підкласс'
   }
+})
 
-  if (fortressComputed.value) {
+watch(fortressComputed, val => {
+  if (val) {
     itemsNameFortress.value = availableFortressOptions.value.find(
-      (item) => item.id === fortressComputed.value.fortress
+      (item) => item.id === val.fortress
     ).name
   } else {
     itemsNameFortress.value = 'Крепость'
   }
+})
+
+const controllIdManeken = computed(() => props.idMannequin)
+watch(controllIdManeken, (_) => {
+  oldAccessibleStats.value = computedAccessibleStats.value
+  accessibleStats.value = computedAccessibleStats.value
+  lvlSelect.value = lvlComputed.value
   refrech.value++
 })
 
@@ -194,7 +208,7 @@ async function changingSubclassParameters() {
     }
     store.commit('statChange/listDelChange', {
       idMannequin: props.idMannequin,
-      type: 'subclass'
+      type: ['subclass']
     })
   }
 }
@@ -274,31 +288,51 @@ const handleParentClassSelectChange = async (parent) => {
   })
 }
 
-// старое количество стат на уровне в каждом манекене, запись задана с избытком
-let oldCountStat = [0, 0, 0, 0, 0]
-const different = [0, 0, 0, 0, 0]
+
+const computedOldCountStat = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'oldCountStat' }))
+
+// старое количество стат на уровне в каждом манекене
+const oldCountStat = ref([0, 0])
+
+
+watch(computedOldCountStat, val => {
+  if(val) {
+    oldCountStat.value = val
+  }
+})
+
 
 // сброс массива addParam изменения стат при смене уровня
 const lvlSelectChange = () => {
+  const different = ref([0, 0])
   const newCountStat = baseStat.value.find((l) => l.lvl === Number(lvlSelect.value)).stat // получаю стартовое количество стат на уровне
 
-  oldAccessibleStats.value = accessibleStats.value // остаток не распределенных стат
+  oldAccessibleStats.value = computedAccessibleStats.value // остаток не распределенных стат
 
-  const lvlStatDifference = Number(newCountStat) - Number(oldCountStat[props.idMannequin - 1]) // разница стат на уровне
-  different[props.idMannequin - 1] = lvlStatDifference + oldAccessibleStats.value
-  if (lvlStatDifference >= 0 || different[props.idMannequin - 1] > -1) {
-    updateStatsAndEmitEvent(different[props.idMannequin - 1], newCountStat)
-    emits('updateLvl', Number(lvlSelect.value))
+  const lvlStatDifference = Number(newCountStat) - Number(oldCountStat.value[props.idMannequin - 1]) // разница стат на уровне
+
+  different.value[props.idMannequin - 1] = lvlStatDifference + oldAccessibleStats.value
+
+  if (lvlStatDifference >= 0 || different.value[props.idMannequin - 1] > -1) {
+    updateStatsAndEmitEvent(different.value[props.idMannequin - 1], newCountStat)
+    store.commit('updateManekenInfo', { idMannequin: props.idMannequin, lvl: Number(lvlSelect.value) });
+    // emits('updateLvl', Number(lvlSelect.value))
   } else {
     store.dispatch('setMessage', `Распределено стат больше, чем возможно на уровне на ${Math.abs(
-        different[props.idMannequin - 1]
+        different.value[props.idMannequin - 1]
       )}`)
   }
 }
 
 const updateStatsAndEmitEvent = (difference, newCountStat) => {
+
   accessibleStats.value = difference
-  oldCountStat[props.idMannequin - 1] = Number(newCountStat)
+  oldCountStat.value[props.idMannequin - 1] = Number(newCountStat)
+
+  store.commit('updateManekenInfo', { 
+    oldCountStat : oldCountStat.value,
+    idMannequin : props.idMannequin })
   classModel.value = 'none'
 }
 
@@ -415,7 +449,6 @@ const isCloseSpells = () => {
 }
 
 
-
 watch([listManekenBase, classComputed],  (val) => {
     const forbiddenClasses = ['Рейджер']
     availableFortressOptions.value = availableFortressOptions.value.map((item) => {
@@ -441,11 +474,14 @@ const handleFortressUpdate = (fortress) => {
 const nameElCloth = ref()
 const elementParam = ref()
 const isOpenInfoCloth = ref(false)
+const dummyLocation = ref()
 
-const isClothInfo = ({ status, name}) => {
-    isOpenInfoCloth.value = status
-
+const isClothInfo = ({status, name, location}) => {
+  isOpenInfoCloth.value = status
   if(status === true && name) {
+    if(location) {
+      dummyLocation.value = location
+    }
     nameElCloth.value = name
     elementParam.value = store.getters['statChange/foundCloth'](props.idMannequin, name)
   }
@@ -462,9 +498,10 @@ export default {
 <template>
   <AppLoader v-if="isLoading" />
 
-    <DetailedClothing
+  <DetailedClothing
   v-if="isOpenInfoCloth && elementParam"
   :isOpenInfoCloth="isOpenInfoCloth"
+  :dummyLocation="dummyLocation"
   :elementParam="elementParam"
   @isClothInfo="isClothInfo"
   />
@@ -625,12 +662,18 @@ export default {
     </div>
 
     <div class="dummy__part">
-      <DummyPartSlot :dummyItems="rightDummyPart" @handleClothesChoice="handleClothesChoice" />
+      <DummyPartSlot 
+      :dummyItems="rightDummyPart" 
+      @handleClothesChoice="handleClothesChoice" 
+      @isClothInfo="isClothInfo"
+      />
     </div>
   </div>
 </template>
 
 <style scoped>
+
+
 .maneckenBtn {
   width: 125px;
   height: 26px;

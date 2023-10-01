@@ -151,7 +151,6 @@ export default {
             spellsState: JSON.stringify(spellsState)
           }
           const currentDate = new Date().getTime()
-          console.log('payload', payload);
           // Первый запрос: сохранение данных
           const path = `users/${uid}/saveManecken/${currentDate}/`
           await update(ref(db, path), payload)

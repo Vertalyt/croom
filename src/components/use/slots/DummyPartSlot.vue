@@ -9,7 +9,7 @@
     @contextmenu.prevent
     @touchstart="startTouch"
     @touchend="endTouch(d.name)"
-    @mouseenter="mouseEnterHandler(d.name)"
+    @mouseenter="mouseEnterHandler(d.name, d.location)"
     @mouseleave="mouseLeaveHandler"
   >
     <img class="mat_img" :src="d.link" :alt="d.name" />
@@ -67,11 +67,11 @@ const endTouch = (el_name) => {
   }
 };
 
-const mouseEnterHandler = (el_name) => {
+const mouseEnterHandler = (el_name, location) => {
   if ('ontouchstart' in window === false) {
     // Если устройство не сенсорное (десктоп)
     timeDelay = TIME_DELAY_PC
-    isInfoCloth('open', el_name);
+    isInfoCloth('open', el_name, location);
   }
 };
 
@@ -83,8 +83,8 @@ const mouseLeaveHandler = () => {
   }
 };
 
-const openCloth = (el_name) => {
-  emits('isClothInfo', {status: true, name: el_name});
+const openCloth = (el_name, location) => {
+  emits('isClothInfo', {status: true, name: el_name, location});
   isOpen = true;
 };
 
@@ -96,13 +96,13 @@ const closeCloth = () => {
   }
 };
 
-const isInfoCloth = (status, el_name) => {
+const isInfoCloth = (status, el_name, location) => {
   if (status === 'open') {
     // Если окно было открыто ранее, отмените предыдущий таймер
     clearTimeout(timer);
 
     // Задайте новый таймер для открытия окна через 600 миллисекунд
-    timer = setTimeout(openCloth(el_name), timeDelay);
+    timer = setTimeout(openCloth(el_name, location), timeDelay);
   } else {
     // Если окно закрыто, просто очистите таймер
     clearTimeout(timer);

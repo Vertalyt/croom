@@ -1,3 +1,7 @@
+import { listTwoHandedTypes } from '../../initialization/baseParams'
+
+
+
 export default {
   namespaced: true,
   state() {
@@ -73,42 +77,60 @@ export default {
     }
   },
   mutations: {
-    statChange(state, { addParam, type, name, idMannequin }) {
+    statChange(state, { addParam, type, name, idMannequin, typeid }) {
       state.listStatChange.filter((item) => {
         if (item.idMannequin === idMannequin) {
           item.listStat = item.listStat.map((item) => {
             if (item.type === type) {
               // Если тип совпадает, возвращаем объект с обновленным параметром
-              return { ...item, name, param: addParam }
+              return { ...item, name, param: addParam, typeid }
             }
             return item // Возвращаем неизмененный элемент
           })
           // Проверяем, есть ли тип в массиве, и добавляем новый элемент, если нет
           const existingTypes = item.listStat.map((item) => item.type)
           if (!existingTypes.includes(type)) {
-            item.listStat.push({ type, name, param: addParam })
+            item.listStat.push({ type, name, param: addParam, typeid })
           }
         }
       })
     },
     listDelChange(state, { type, idMannequin }) {
-      state.listStatChange.map((item) => {
+      state.listStatChange = state.listStatChange.map((item) => {
         if (item.idMannequin === idMannequin) {
-          item.listStat = item.listStat.map((statItem) => {
-            if (statItem.type !== type) {
-              // Если тип не совпадает, возвращаем объект без изменений
-              return statItem;
-            }
-            // Если тип совпадает, возвращаем null (или любое другое значение, которое будет игнорироваться)
-            return null;
-          }).filter((filteredItem) => filteredItem !== null); // Удаляем элементы, равные null
+          item.listStat = item.listStat.filter((statItem) => {
+            return !type.includes(statItem.type);
+          });
         }
-        return item; // Возвращаем обновленный элемент списка манекенов
+        return item;
       });
-      return state; // Возвращаем обновленное состояние
     },
     addListStatChange(state, payload) {
       state.listStatChange = JSON.parse(payload)
-    }    
+    },
+
+    searchELlist(state, { typeid, idMannequin }) {
+      const mannequin = state.listStatChange.find((item) => item.idMannequin === idMannequin);
+      if (mannequin) {
+        const hasTypeid = mannequin.listStat.some((statItem) => statItem.type === typeid);
+        return hasTypeid;
+      }
+      return false; // Если не найден соответствующий объект с idMannequin
+    },
+
+
   },
+  actions: {
+    searchELlist({ state }, {idMannequin }) {
+      const mannequin = state.listStatChange.find((item) => item.idMannequin === idMannequin);
+      if (mannequin) {
+        const hasTypeid = mannequin.listStat.some((statItem) => {
+          return listTwoHandedTypes.includes(statItem.typeid);
+        });
+        
+        return hasTypeid;
+      }
+      return false; // Если не найден соответствующий объект с idMannequin
+    },
+  }
 }

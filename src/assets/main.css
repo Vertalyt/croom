@@ -108,7 +108,7 @@ small {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 900px;
+  width: 930px;
   margin-top: 15px;
 }
 
@@ -425,7 +425,7 @@ option:disabled {
   flex-wrap: wrap;
   padding: 10px;
   min-height: 475px;
-  width: 317px;
+  width: 370px;
   background-color: rgba(245, 245, 220, 0.6);
 }
 

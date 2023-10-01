@@ -26,7 +26,7 @@
 
     <SelClothListSort
     v-if="checkboxType"
-      :lvlSearch="lvlSearch"
+    :lvlSearch="lvlSearch"
      :cellOptions="cellOptions"
      :minStats="minStats"
      :idMannequin="idMannequin"
@@ -40,11 +40,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { ref, computed } from 'vue'
 import SelClothListSort from '../SelClothListSort.vue'
 import ArtCloth from './ArtCloth.vue';
 
-defineProps({
+const props = defineProps({
   cellOptions: {
     type: Object,
     required: true
@@ -54,10 +55,6 @@ defineProps({
     required: true
   },
   idMannequin:{
-    type: Number,
-    required: true
-  },
-  lvlPerson:{
     type: Number,
     required: true
   },
@@ -74,6 +71,9 @@ defineProps({
     required: true
   },
 })
+const store = useStore()
+const lvlPerson = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'lvl' }))
 
 const handleLvlMinMaxChange = ({ lvlMinMax, id }) => {
   emits('lvlMinMaxChange', { lvlMinMax, id })

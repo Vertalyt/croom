@@ -3,7 +3,11 @@
   <div 
   v-if="isModalBackground"
   class="modal" @click.stop="isClose"></div>
-  <div class="modal-content modal-infiCloth">
+  <div 
+  class="modal-content modal-infiCloth"
+  :class="{ 'modal-rightInfiCloth' : dummyLocation === 'rightDummyPart', 'modal-topInfiCloth': dummyLocation === 'centerTopDummyPart'}"
+  >
+
     <span @click="isClose" class="close">&times;</span>
 
     <div class="wrapperAccordion">
@@ -70,8 +74,11 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  dummyLocation: {
+    type: String,
+    required: true
+  }
 })
-
 
 let isModalBackground = true
   if ('ontouchstart' in window === false) {
@@ -81,6 +88,8 @@ let isModalBackground = true
 
 const otherInfo = computed( () => props.elementParam.param.find(item => item.otherInfo).otherInfo);
 const priseInfo = computed( () => props.elementParam.param.find(item => item.priseInfo).priseInfo);
+
+
 
 const normalizeNameStat = [
   { key: "dstrength", name : 'Сила', type: 'stat' },
@@ -163,6 +172,15 @@ export default {
   left: 50%;
   right: auto;
   transform: translateX(-50%);
+}
+
+.modal-rightInfiCloth {
+  top: 20%;
+  left: 30%;
+}
+
+.modal-topInfiCloth {
+  top: 30%;
 }
 
 .accordionFace {

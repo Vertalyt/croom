@@ -27,21 +27,19 @@ const listStat = computed(() => store.getters['statChange/listStat'](idMannequin
 const rezetManecken = ref(0)
 
 
-watch(baseManekenConfig, val => {
-  raseParams.value = val.raseParams
-  baseStatConfigurations.value = val.statModule
-}, {immediate : true, deep: true})
+watch([raseParams, listStat], _ => {
+  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
+  updateBaseConfigAndStats(newBaseConfig, idMannequin.value);
+}, { deep: true });
 
 
 const mannequinChange = (val) => {
   idMannequin.value = val
-  raseParams.value = baseManekenConfig.value.raseParams
-  baseStatConfigurations.value = baseManekenConfig.value.statModule
   lvlPerson.value = baseManekenConfig.value.lvl
   rezetManecken.value++
 }
 
-function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
+function updateBaseConfigAndStats(newBaseConfig, idMannequin) {
 
   const updatedConfigurations = newBaseConfig.map((i) => {
     const updatedStats = baseManekenConfig.value.raseParams
@@ -50,6 +48,7 @@ function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
           summStatBonusAndBase: baseManekenConfig.value.raseParams.find((param) => param.key === i.key)?.count || i.summStatBonusAndBase
         }
       : {};
+      
     return {
       ...i,
       ...updatedStats
@@ -62,23 +61,9 @@ function updateBaseConfigAndStats(newBaseConfig, idMannequin, lvl) {
   });
 
   updatedStatConfigurations.value = arrUpdate;
-
-  store.commit('updateManekenInfo', { idMannequin, statModule: arrUpdate, lvl });
+  store.commit('updateManekenInfo', { idMannequin, statModule: arrUpdate });
 }
 
-watch([raseParams, listStat], _ => {
-  const lvlChange = store.getters['listManekenSearch']({ id: idMannequin.value, element: 'lvl' })
-  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-
-  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvlChange);
-}, { deep: true });
-
-
-const updateLvl = (lvl) => {
-  lvlPerson.value = lvl;
-  const newBaseConfig = baseStatConfigurations.value.map((i) => ({ ...i }));
-  updateBaseConfigAndStats(newBaseConfig, idMannequin.value, lvl);
-}
 
 const changeRase = ({ raseModel }) => {
   //получаю все данные по ноой рассе
@@ -137,11 +122,6 @@ watch(isProfileInfo, _ => {
   refrechProfile.value++
 })
 
-const globalRefrech = ref(1)
-
-const addProfile = () => {
-
-}
 
 </script>
 
@@ -151,10 +131,8 @@ const addProfile = () => {
 
     <AppProfile 
     v-if="closeOpenProfile"
-    :key="refrechProfile"
     @isClose="closeOpenProfileChange"
     @refrech="refrechProfile = refrechProfile + 1"
-    @globaRefrech="addProfile"
     />
 
 
@@ -162,7 +140,6 @@ const addProfile = () => {
       <div class="conteiner">
         <ManeckenModal
           v-if="isOpen"
-          :lvlPerson="lvlPerson"
           :cellOptions="cellOptions"
           :minStats="minstats"
           :idMannequin="idMannequin"
@@ -173,7 +150,6 @@ const addProfile = () => {
           @lvlMinMaxChange="handleLvlMinMaxChange"
         />
         <AppHeader 
-        :key="globalRefrech"
         @mannequinChange="mannequinChange"
         @isOpenProfile="closeOpenProfile = true"
         />
@@ -184,7 +160,6 @@ const addProfile = () => {
             :idMannequin="idMannequin"
             @changeRase="changeRase"
             @modalOpen="modalOpen"
-            @updateLvl="updateLvl"
 
           />
           <AppManekenResult
