@@ -142,7 +142,7 @@ watch(statModule, (val) => {
 }, { immediate: true })
 
 
-
+// убираю бонусф подкласса с рейтинга
 function unscribeSubclass() {
 statSubclass = 0;
 armorSubclass = 0;
@@ -165,7 +165,7 @@ if (unscribeSubclassParam) {
   });
 }
 }
-
+// подсчет рейтинга
 function ratingCalculation(val, lvl) {
   // функция высчитывает бонусы подкласа для отнимания с ретийнга, он их не учитываает
   unscribeSubclass()

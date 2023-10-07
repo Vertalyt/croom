@@ -168,4 +168,11 @@ export default {
   top: 3%;
   max-height: 100vh;
 }
+@media only screen and (min-device-width : 768px) {
+  .modal-content {
+  max-height: 85vh;
+}
+
+}
+
 </style>

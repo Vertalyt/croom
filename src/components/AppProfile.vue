@@ -4,19 +4,19 @@
     <span @click="isClose" class="close">&times;</span>
 
     <AppLoader v-if="isLoading" />
-
-    <p v-if="clientInfo">Профіль {{ clientInfo.name }}</p>
+    
+    <p v-if="clientInfo">{{ getLocalizedText('Profile') }} {{ clientInfo.name }}</p>
 
     <div v-if="!checkUser" class="accordeonContent">
       <div @click="accordionOpen(1)" class="accordion" :class="{ accordionOpen: openRegister }">
         <div class="accordionFace">
-          <div class="card-title">Реєстрація</div>
+          <div class="card-title">{{ getLocalizedText('Registration') }}</div>
         </div>
       </div>
 
       <div @click="accordionOpen(2)" class="accordion" :class="{ accordionOpen: openLogin }">
         <div class="accordionFace">
-          <div class="card-title">Авторизація</div>
+          <div class="card-title">{{ getLocalizedText('Authorization') }}</div>
         </div>
       </div>
 
@@ -41,11 +41,11 @@
     </div>
 
     <div 
-    v-if="checkUser"
+    v-if="checkUser"  
     class="profile_content">
-      <button v-if="checkUser" class="button" @click.stop="saveManecken">Зберегти манекен</button>
+      <button v-if="checkUser" class="button" @click.stop="saveManecken">{{ getLocalizedText('SaveDummy') }}</button>
     </div>
-    <h3>Доступні манекени</h3>
+    <h3>{{ getLocalizedText('MannequinsAvailable') }}</h3>
     <div 
     v-if="checkUser && markManeckenSave"
     class="profile_content">
@@ -58,16 +58,16 @@
           >{{ timeMarc(m.mark) }}</li>
         <button 
         @click="addManecken(m.mark)"
-        class="button btn_manecken" >Завантажити</button>
+        class="button btn_manecken" >{{ getLocalizedText('Download') }}</button>
         <button 
         @click="delManecken(m.mark)"
-        class="button btn_manecken" >Видалити</button>
+        class="button btn_manecken" >{{ getLocalizedText('Remove') }}</button>
         </div>
       </ul>
     </div>
 
     <div
-    v-if="markSave.length"
+    v-if="Object.keys(markSave).length > 0"
     class="saveManecken"
     >
           <button
@@ -75,14 +75,14 @@
             v-if="currentPage > 1"
             @click="currentPage = currentPage - 1"
          >
-            Назад
+         {{ getLocalizedText('Back') }}
           </button>
           <button
           class="button btn_manecken btn_currentPage"
           v-if=hasNextPage
             @click="currentPage = currentPage + 1"
           >
-            Вперед
+          {{ getLocalizedText('Next') }}
           </button>
       </div>
   </div>
@@ -95,7 +95,7 @@ import { getAuth } from 'firebase/auth'
 import AppLoader from './AppLoader.vue'
 import FormRegIsteredLogin from './use/FormRegIsteredLogin.vue'
 import LocaleChange from './use/LocaleChange.vue'
-
+import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   isClose: null,
@@ -115,6 +115,8 @@ watch(
   },
   { immediate: true }
 )
+
+
 
 const clientInfo = ref([])
 const isLoading = ref(true)
@@ -260,12 +262,13 @@ const delManecken = async (id) => {
 const addManecken = async (id) => {
   isLoading.value = true
   await store.dispatch('requests/addManecken', id)
-  emits('refrech')
+  emits('isClose')
   isLoading.value = false
 }
 
 const saveManecken = async () => {
 await store.dispatch('requests/saveManecken')
+emits('refrech')
 }
 
 </script>

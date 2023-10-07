@@ -8,17 +8,25 @@ import requests from './modules/requests.module'
 import { baseStatModule, basickParamsRase } from '../initialization/baseParams'
 const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
 
+const initialState = { statModule: baseStatModule, raseName: 'human', lvl: 0, raseParams: [...raseParams], accessibleStats: null};
+
 export default createStore({
   state() {
     return {
       listManeken: [
-        { idMannequin: 1, statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
-        { idMannequin: 2, statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
+        { idMannequin: 1, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
+        { idMannequin: 2, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
       ],
       message: null,
     }
   },
   getters: {
+    raseParams: (state) => (id) => {
+      const mannequin = state.listManeken.find(item => item.idMannequin === id);
+      if (mannequin) { 
+        return mannequin.raseParams
+      }
+    },
     getMainState(state) {
       return state.listManeken
      },
@@ -81,6 +89,27 @@ export default createStore({
         return c
       })
     },
+    clearlistManeken(state, idMannequin) {
+      try {
+        const mannequinIndex = state.listManeken.findIndex((item) => item.idMannequin === idMannequin);
+        if (mannequinIndex !== -1) {
+          // Создаем новый объект манекена только с полями из initialState и idMannequin
+            state.listManeken[mannequinIndex] = {
+            idMannequin: idMannequin,
+            statModule: initialState.statModule,
+            lvl: initialState.lvl,
+            raseParams: [...initialState.raseParams],
+            accessibleStats: initialState.accessibleStats,
+            raseName: initialState.raseName,
+          };
+          return true;
+        }
+        return false; // Если не найден соответствующий объект с idMannequin
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
   },
   actions: {
     setMessage({ commit }, payload) {
@@ -89,6 +118,13 @@ export default createStore({
           commit('clearMessage')
       }, 2500);
   },
+
+  clearManeken( { commit }, idMannequin ) {
+      commit('clearlistManeken', idMannequin)
+      commit('statChange/clearELlist', idMannequin)
+      commit('spells/clearSpells', idMannequin)
+      commit('dummy/clearDummy', idMannequin)
+  }
   },
   modules: {
     statChange,

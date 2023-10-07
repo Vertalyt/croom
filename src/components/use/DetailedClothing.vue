@@ -244,13 +244,13 @@ flex-wrap: wrap;
 
 
 
-@media screen and (max-width: 600px) {
+@media only screen and (max-device-width: 600px) {
   .accordionFace {
     margin-bottom: 0;
   }
 }
 
-@media screen and (max-width: 460px) {
+@media only screen and (max-device-width: 460px) {
 
   .modal-content {
     width: 380px;

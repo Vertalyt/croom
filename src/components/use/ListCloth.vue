@@ -10,19 +10,34 @@
               class="accordionFaceImg"
             />
             <p>{{ c.otherInfo.name }}</p>
-            <p>Рівень: <small>{{ c.otherInfo.minlevel }}</small></p>
+            <p>
+              Рівень: <small>{{ c.otherInfo.minlevel }}</small>
+            </p>
           </div>
-
-          <button class="button" @click.stop="dress(c)">Вдягти</button>
+          <div class="dressAddGrup">
+            <button 
+            v-if="ringsAndRelics || earrings"
+            class="button buttonx4" @click.stop="dressX(c)">{{ nameX }}</button>
+            <button class="button" @click.stop="dress(c)">Вдягти</button>
+          </div>
         </div>
         <div class="priseInfo">
-          <p v-if="c.priseInfo.price">Тали: <small>{{ c.priseInfo.price }}</small></p>
-          <p v-if="c.priseInfo.goldprice">Золоті тали: <small>{{ c.priseInfo.goldprice }}</small></p> 
-          <p v-if="c.priseInfo.ratnikprice">Ратник: <small>{{ c.priseInfo.ratnikprice }}</small></p> 
-          <p v-if="c.priseInfo.obmenprice">Обміни: <small>{{ c.priseInfo.obmenprice }}</small></p> 
-          <p v-if="c.priseInfo.reliktprice">Реліквії: <small>{{ c.priseInfo.reliktprice }}</small></p>
+          <p v-if="c.priseInfo.price">
+            Тали: <small>{{ c.priseInfo.price }}</small>
+          </p>
+          <p v-if="c.priseInfo.goldprice">
+            Золоті тали: <small>{{ c.priseInfo.goldprice }}</small>
+          </p>
+          <p v-if="c.priseInfo.ratnikprice">
+            Ратник: <small>{{ c.priseInfo.ratnikprice }}</small>
+          </p>
+          <p v-if="c.priseInfo.obmenprice">
+            Обміни: <small>{{ c.priseInfo.obmenprice }}</small>
+          </p>
+          <p v-if="c.priseInfo.reliktprice">
+            Реліквії: <small>{{ c.priseInfo.reliktprice }}</small>
+          </p>
         </div>
-
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
@@ -55,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
 import { useStore } from 'vuex'
 import { arrayVariableStats } from '../../initialization/baseParams'
@@ -85,6 +100,25 @@ const openPanel = ref(null)
 const openChildPanel = ref('')
 const store = useStore()
 
+
+const observerType = computed( () => props.cellOptions )
+const ringsAndRelics = ref()
+const earrings = ref()
+
+const nameX = ref('')
+
+watch(observerType, (val) => {
+  ringsAndRelics.value = val.typeid.find(item => item === 40 || item === 7)
+  if(ringsAndRelics.value) {
+    nameX.value = 'x4';
+  }
+  earrings.value = val.typeid.find(item => item === 55)
+  if(earrings.value) {
+    nameX.value = 'x2';
+  }
+}, { immediate: true });
+
+
 const accordionChildOpen = (panelId) => {
   openChildPanel.value = openChildPanel.value === panelId ? '' : panelId // Переключение состояния
 }
@@ -107,7 +141,7 @@ function parameterConversion(params) {
   return convertedData
 }
 
-const dress = (item) => {
+function checkingForImpossibility(item) {
   // Проверка наличия ключей с "class": "error" в minParam
   const errorKeys = Object.keys(item.minParam).filter((key) => item.minParam[key].class === 'error')
 
@@ -116,6 +150,10 @@ const dress = (item) => {
     store.dispatch('setMessage', `Ваши параметры ниже минимальных`)
     return
   }
+  return true
+}
+
+function preparingRequestArray(item) {
   const addParam = item.addParam
   const minBaseParam = item.minParam
   const priseInfo = item.priseInfo
@@ -128,23 +166,49 @@ const dress = (item) => {
       class: minBaseParam[key].class
     }
   })
-
   // Преобразовываем данные с addParam
   const convertedAdd = parameterConversion(addParam)
-  store.dispatch('dummy/changeDummyEl', {
-    idMannequin: props.idMannequin,
-    addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }, { otherInfo }],
-    typeid: item.otherInfo.typeid,
-    imgLink: item.otherInfo.image,
-    cellName: props.cellOptions.name
-  })
-  emits('modalClose')
+  //     addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }, { otherInfo }],
+  return [
+    { base: transformedMinBaseParam },
+    { bonusAndBase: convertedAdd },
+    { priseInfo },
+    { otherInfo }
+  ]
+}
+
+const dressX = (item) => {
+  checkingForImpossibility(item)
+  if (checkingForImpossibility) {
+    store.dispatch('dummy/changeDummyElX', {
+      idMannequin: props.idMannequin,
+      addParam: preparingRequestArray(item),
+      typeid: item.otherInfo.typeid,
+      imgLink: item.otherInfo.image,
+      cellName: props.cellOptions.name
+    })
+    emits('modalClose')
+  }
+}
+
+const dress = (item) => {
+  checkingForImpossibility(item)
+
+  if (checkingForImpossibility) {
+    store.dispatch('dummy/changeDummyEl', {
+      idMannequin: props.idMannequin,
+      addParam: preparingRequestArray(item),
+      typeid: item.otherInfo.typeid,
+      imgLink: item.otherInfo.image,
+      cellName: props.cellOptions.name
+    })
+    emits('modalClose')
+  }
 }
 
 const accessibleStats = computed(
   () => store.getters['listManeken'](props.idMannequin).accessibleStats
 )
-
 
 const foundShortageDifference = (ollparam) => {
   let sumShortageDifference = 0
@@ -160,15 +224,13 @@ const foundShortageDifference = (ollparam) => {
   }
 }
 
-
 function mofifyAddParam(key, addParam, item) {
   const modifiedKey = key.replace(/^min/, 'd')
-      const statAddparam = addParam.find((item) => item.key === modifiedKey)
-      if (statAddparam) {
-        statAddparam.count += Math.abs(item.shortageDifference)
-      }
+  const statAddparam = addParam.find((item) => item.key === modifiedKey)
+  if (statAddparam) {
+    statAddparam.count += Math.abs(item.shortageDifference)
+  }
 }
-
 
 const statChange = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 
@@ -176,7 +238,6 @@ const addMinParamCloth = (cloth) => {
   let summShortageDifference = 0
   const updatedMinParam = {}
   let addParam = []
-
 
   const freestatFound = statChange.value.find((item) => item.type === 'freeStats')
   // Массив с изменениями параметров
@@ -191,7 +252,6 @@ const addMinParamCloth = (cloth) => {
     const item = cloth.minParam[key]
 
     if (item.shortageDifference < 0) {
-
       mofifyAddParam(key, addParam, item)
       summShortageDifference += Math.abs(item.shortageDifference)
 
@@ -232,7 +292,6 @@ export default {
 </script>
 
 <style scoped>
-
 .addRequiredParameters {
   display: grid;
   justify-items: center;
@@ -312,8 +371,20 @@ export default {
 }
 
 small {
-    font-weight: 400;
-    color: #9f6426;
+  font-weight: 400;
+  color: #9f6426;
 }
 
+.dressAddGrup {
+  display: grid;
+
+  align-items: center;
+  justify-items: center;
+}
+
+.buttonx4 {
+  border-radius: 20px;
+  padding: 8px;
+  margin-bottom: 20px;
+}
 </style>

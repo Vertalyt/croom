@@ -27,6 +27,27 @@ ul {
   margin: 0;
 }
 
+.main-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 930px;
+  margin-top: 15px;
+}
+
+.wrapper {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background-image: url('./src/assets/img/AL.png');
+  /* background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL.png'); */
+  background-size: cover;
+}
+
+.conteiner {
+  border: 4px solid rgb(181, 198, 230);
+}
+
 /* Отключаем стрелочки для полей ввода с типом "number" */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -48,14 +69,6 @@ tr:nth-child(even) {
   background-color: #81797969; /* фон четных столбцов */
 }
 
-.armor_Wrapper {
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-  border: 1px solid rgb(85, 79, 79);
-  border-top: none;
-}
 
 .armor_Item,
 td {
@@ -67,13 +80,6 @@ small {
   font-style: italic;
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 40;
-}
 
 .room-container {
   display: flex;
@@ -85,31 +91,19 @@ small {
   background-color: #7e7450;
 }
 
-.wrapper {
-  width: 100vw;
+.armor_Wrapper {
   display: flex;
-  justify-content: center;
-  background-image: url('./src/assets/img/AL.png');
-  /* background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL.png'); */
-  background-size: cover;
-}
-
-.conteiner {
-  border: 4px solid rgb(181, 198, 230);
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  border: 1px solid rgb(85, 79, 79);
+  border-top: none;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-}
-
-.main-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 930px;
-  margin-top: 15px;
 }
 
 .header__left {
@@ -119,8 +113,13 @@ small {
   height: 35px;
 }
 
+.header__right {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .tab-button {
-  position: relative;
+  /* position: relative; */
   margin-left: 10px;
   display: flex;
   align-items: center;
@@ -545,6 +544,7 @@ td img {
 
 .armor_Item {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 }
@@ -567,8 +567,10 @@ td img {
 
 .armor__info {
   display: flex;
+  width: 130px;
   height: 20px;
   justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .armor__info > img {
@@ -650,7 +652,7 @@ body.modal-open {
   background-color: #979fa700;
 }
 
-@media screen and (max-width: 899px) {
+@media only screen and (max-device-width: 899px) {
   .main-wrapper {
     display: grid;
     width: 100vw;
@@ -675,7 +677,7 @@ body.modal-open {
   }
 }
 
-@media screen and (max-width: 600px) {
+@media only screen and (max-device-width: 600px) {
   .wrapper {
     background-image: url(https://sabzero.biz/croomTemplate/assets/img/AL_mobail.png);
     background-size: contain;
@@ -686,6 +688,10 @@ body.modal-open {
     display: grid;
     justify-items: center;
     height: 65px;
+  }
+
+  .header__right {
+    display: grid;
   }
 
   .tab-button {
@@ -721,19 +727,19 @@ body.modal-open {
   }
 
   .dummy__center__top {
-    width: 100%;
+    width: 90vW;
   }
 
   .dummy__center__buttom {
-    width: 100%;
+    width: 90vW;
   }
 
   .options__itemBlock {
-    margin: 5px 15px !important;
+    margin: 5px 15px;
   }
 
   .options__itemBlock_button {
-    width: 100%;
+    width: 90vW;
     margin: 0;
   }
 
@@ -743,7 +749,7 @@ body.modal-open {
 }
 
 
-@media screen and (max-width: 400px) {
+@media only screen and (max-device-width: 400px) {
 
   .tab-button {
       margin: 5px 5px 10px 3px;

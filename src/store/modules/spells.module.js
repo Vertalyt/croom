@@ -50,6 +50,21 @@ export default {
     },
     addListSpellsMannequins(state, payload) {
       state.listSpellsMannequins = JSON.parse(payload)
-    }
+    },
+    clearSpells(state, idMannequin) {
+        try {
+          const mannequin = state.listSpellsMannequins.find((item) => item.idMannequin === idMannequin);
+          if (mannequin) {
+            mannequin.spells = [
+              { subclassList: [] },
+              { spellsList: [{ whitemagic: [] }, { blackmagic: [] }, { astralmagic: [] }] }
+            ];
+            return true;
+          }
+          return false; // Если не найден соответствующий объект с idMannequin
+        } catch (error) {
+          console.log(error);
+        }
+    },
   },
 }

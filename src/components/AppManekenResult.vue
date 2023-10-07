@@ -7,11 +7,11 @@
         </template>
       </ManekenStatParams>
     </div>
-
+    
     <div class="options__itemBlock options__itemBlock_button">
-      <div class="armor__title"><h3>Броня</h3></div>
+      <div class="armor__title"><h3>{{ getLocalizedText('Armor') }}</h3></div>
 
-      <ParamItemsManeken :paramItems="armorParams" :withItemsManecken="true" />
+      <ParamItemsManeken :paramItems="finalyArmor" :withItemsManecken="true" />
 
       <ParamItemsManeken :paramItems="magicParams" :withItemsManecken="false" />
 
@@ -22,7 +22,7 @@
     <div class="options__itemBlock options__itemBlock_button">
       <table class="table">
         <thead>
-          <td class="options__table__title" colspan="5"><h3>Вартість</h3></td>
+          <td class="options__table__title" colspan="5"><h3>{{ getLocalizedText('Cost') }}</h3></td>
         </thead>
         <tbody>
           <tr>
@@ -46,6 +46,8 @@ import TotalValCharacterBlock from './TotalValCharacterBlock.vue'
 
 import { useStore } from 'vuex'
 import { totalCostCloth } from '../utils/totalCostCloth'
+import { getLocalizedText } from '@/locale/index'
+
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -62,12 +64,13 @@ const store = useStore()
 
 
 const nameCost = ref([
-  {key: 'price', name: 'Тали', cost: 0},
-  {key: 'goldprice', name: 'Золоті тали', cost: 0},
-  {key: 'ratnikprice', name: 'Ратник', cost: 0},
-  {key: 'obmenprice', name: 'Обміни', cost: 0},
-  {key: 'reliktprice', name: 'Реліквії', cost: 0},
+  {key: 'price', name: getLocalizedText('Tall'), cost: 0},
+  {key: 'goldprice', name: getLocalizedText('GoldTall'), cost: 0},
+  {key: 'ratnikprice', name: getLocalizedText('Warrior'), cost: 0},
+  {key: 'obmenprice', name: getLocalizedText('Exchanges'), cost: 0},
+  {key: 'reliktprice', name: getLocalizedText('Relics'), cost: 0},
 ])
+
 
 
 // Computed properties для улучшенной читаемости
@@ -77,6 +80,23 @@ const magicParams = computed(() => props.updatedStatConfigurations.filter((d) =>
 const priseInfo = computed( () => store.getters['statChange/priseInfoCloth'](props.idMannequin))
 
 
+const armorMasteryComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'armorMastery' }))
+
+  const finalyArmor = ref()
+
+  watch([armorParams, armorMasteryComputed], val => {
+    finalyArmor.value = val[0]
+    if(val[1]) {
+      finalyArmor.value = finalyArmor.value.map( item => {
+        return {
+          ...item,
+          summStatBonusAndBase: Math.floor(item.summStatBonusAndBase * val[1].bonusArmorMutiplier)
+        }
+      })
+    }
+}, { immediate: true })
+
 
 const totalPriseInfo = ref([]);
 watch(priseInfo, val => {
@@ -85,7 +105,7 @@ watch(priseInfo, val => {
   nameCost.value.forEach(item => {
     const priseFind = totalPriseInfo.value.find(priсe => Object.prototype.hasOwnProperty.call(priсe, item.key));
     if (priseFind) {
-      item.cost = priseFind[item.key];
+      item.cost = priseFind[item.key].toFixed(2);
     }
   });
 });

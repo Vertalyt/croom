@@ -143,6 +143,18 @@ export const fortressParam = [
 { name: 'Грандмастер', id: 'grandmaster', minconst: 41, disabled: false, bonusHealthMutiplier: 1.38},
 ]
 
+export const armorMasteryParam = [
+  { name: 'Нет', id: 'absent', disabled: false, bonusArmorMutiplier: 1},
+  { name: 'Новичок', id: 'newbie', disabled: false, bonusArmorMutiplier: 1.05},
+  { name: 'Продвинутий', id: 'promotions', disabled: false, bonusArmorMutiplier: 1.1},
+  { name: 'Експерт', id: 'expert', disabled: false, bonusArmorMutiplier: 1.15},
+  { name: 'Мастер', id: 'master', disabled: false, bonusArmorMutiplier: 1.20},
+  { name: 'Грандмастер', id: 'grandmaster', disabled: false, bonusArmorMutiplier: 1.25},
+  ]
+  
+
+
+
 export const raseParams = [
     { name: 'Человек', id: 'human'},
     { name: 'Гном', id: 'gnom'},

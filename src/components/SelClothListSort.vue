@@ -34,6 +34,8 @@
       <option>0</option>
       <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
     </select>
+  </div>
+  <div class="form__items">
 
     <button
       @click="loadingByFilters"
@@ -481,14 +483,14 @@ export default {
 }
 
 .tabLvlButton {
-  height: 22px;
+  height: 32px;
 }
 
 .disabled {
   opacity: 0.6;
 }
 
-@media screen and (max-width: 400px) {
+@media only screen and (max-device-width: 400px) {
   .form__items {
     flex-wrap: wrap;
   }

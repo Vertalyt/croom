@@ -108,16 +108,26 @@ export default {
     addListStatChange(state, payload) {
       state.listStatChange = JSON.parse(payload)
     },
-
-    searchELlist(state, { typeid, idMannequin }) {
+    searchELlist(state, { idMannequin }) {
       const mannequin = state.listStatChange.find((item) => item.idMannequin === idMannequin);
       if (mannequin) {
-        const hasTypeid = mannequin.listStat.some((statItem) => statItem.type === typeid);
+        const hasTypeid = mannequin.listStat.some((statItem) => state.listTwoHandedTypes.includes(statItem.type));
         return hasTypeid;
       }
       return false; // Если не найден соответствующий объект с idMannequin
+    },    
+    clearELlist(state, idMannequin) {
+        try {
+          const mannequin = state.listStatChange.find((item) => item.idMannequin === idMannequin);
+          if (mannequin) {
+            mannequin.listStat = [];
+            return true;
+          }
+          return false; // Если не найден соответствующий объект с idMannequin
+        } catch (error) {
+          console.log(error);
+        }
     },
-
 
   },
   actions: {
@@ -132,5 +142,9 @@ export default {
       }
       return false; // Если не найден соответствующий объект с idMannequin
     },
+    delEl({ commit }, {idMannequin, el }) {
+          commit('listDelChange', { type: [el], idMannequin })
+          commit('dummy/clearDummyEl', { idMannequin, cellNames: [el] }, { root: true })
+  },
   }
 }

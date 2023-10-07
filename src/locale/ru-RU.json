@@ -1,5 +1,67 @@
 {
 
+"Available": "Доступно",
+"Used": "Использовано",
+"VipityForTheRest" : "Выпить последним",
+"ResettingMixtures" : "Обнуление микстур",
+"ThrowOffElixirs" : "Сбросить эликсиры",
+
+"fstrength" : "Настой силы",
+"fdexterity" : "Настой ловкости",
+"fintel" : "Настой интеллекта",
+"fluck" : "Настой удачи",
+"freaction" : "Настой реакции",
+"fwisdom" : "Настой мудрости",
+"fconst" : "Настой сложения",
+"eSecolach" : "Еликсир Секолаха",
+
+"DowngradeNotPossibleParameter" : "Понижение не возможно, параметр ",
+"thereWillFewerSubclassRequirements" : "будет меньше требований подкласса",
+"remainingStatPointsGivenElixir" : "Оставшиеся очки стата дает эликсир",
+
+"Dummy" : "Манекен",
+"SelectRace" : "Выберите рассу",
+"SelectClass" : "Выберите клаcс",
+"SelectLevel" : "Выберите уровень",
+"ChooseSubclass" : "Выберите подкласс",
+"Fortress" : "Крепость",
+"ObjectWithKeyBaseNotFound" : "Объект с ключом base не найден в массиве param",
+
+"NotEnoughPoints" : "Не достаточно очков",
+
+"MoreStatsDistributedPossibleLevel" : "Распределено стат больше, чем возможно на уровне на ",
+"NotEnoughStatFreeDistributionPoints" : "Не достаточно стат от свободных очков распределения",
+"FreePoint" : "Свободные очки",
+"Spells" : "Заклинания",
+"DrinkElixir" : "Выпить эликсир",
+"Drink" : "Выпито",
+"Reseteverything" : "Сбросить все",
+"Armor": "Броня",
+"Cost" : "Стоимость",
+
+"Tall" : "Талы",
+"GoldTall" : "Золотые талы",
+"Warrior" : "Ратник",
+"Exchanges" : "Обмены",
+"Relics" : "Реликвии",
+
+
+"Profile": "Профиль",
+"Registration" : "Регистрация",
+"Authorization" : "Авторизация",
+"SaveDummy" : "Сохранить манекен",
+"MannequinsAvailable" : "Доступные манекены",
+"Download" : "Загрузить",
+"Remove" : "Удалить",
+"Back" : "Назад",
+"Next" : "Вперед",
+
+
+
+
+
+
+
   "refresh": "Обновить",
   "localeSite": "Язык сайта",
 

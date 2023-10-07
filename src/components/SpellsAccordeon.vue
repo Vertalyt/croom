@@ -176,7 +176,7 @@ export default {
     justify-content: space-between;
 }
 
-@media screen and (max-width: 450px) {
+@media only screen and (max-device-width: 450px) {
   .formSpells {
     margin: 6px 5px;
     width: calc(100% - 20px);

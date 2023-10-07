@@ -48,7 +48,7 @@ export default {
 .td_countParam_Cloth {
   font-size: 10px;
 }
-@media screen and (max-width: 460px) {
+@media only screen and (max-device-width: 460px) {
 
   .detail_Cloth {
     margin: 2px;

@@ -2,7 +2,7 @@
   <div class="modal" @click.stop="isClose"></div>
   <div class="modal-content">
     <span @click="isClose" class="close">&times;</span>
-    <h3>Доступно: {{ countElix }} | Использовано: {{ numberDrinks }}</h3>
+    <h3> {{ getLocalizedText('Available') }}: {{ countElix }} | {{ getLocalizedText('Used') }}: {{ numberDrinks }}</h3>
     <ManekenStatParams
       :statParams="statParams"
       :elixCheck="true"
@@ -28,7 +28,7 @@
       <select 
       name="addLastElix"
       :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css select-css-elix">
-        <option value="change" disabled selected>Випити останнім</option>
+        <option value="change" disabled selected>{{ getLocalizedText('VipityForTheRest') }}</option>
         <option v-for="e in lastElixParam" :key="e.key" :value="e.key">
           {{ e.name }}
         </option>
@@ -41,7 +41,7 @@
             class="tab-button maneckenBtn"
             :class="{ 'tab-button-disabled': !hasLastElix }"
           >
-            <p class="p__tab-button p__tab-button-elix">Обнулення мікстур</p>
+            <p class="p__tab-button p__tab-button-elix">{{ getLocalizedText('ResettingMixtures') }}</p>
           </button>
         </div>
         <div class="checkbox">
@@ -51,7 +51,7 @@
             class="tab-button maneckenBtn"
             :class="{ 'tab-button-disabled': MAX_ELIX_FOR_LVL - countElix === 0 }"
           >
-            <p class="p__tab-button p__tab-button-elix">Скинути еліксири</p>
+            <p class="p__tab-button p__tab-button-elix">{{ getLocalizedText('ThrowOffElixirs') }}</p>
           </button>
         </div>
       </div>
@@ -66,6 +66,7 @@ import { useStore } from 'vuex'
 import { computed, ref, onMounted, watch } from 'vue'
 import { statInputChange } from '../utils/modifyStat'
 import { checkStatRequirementsForClothing } from '../utils/modifyStat'
+import { getLocalizedText } from '@/locale/index'
 
 const props = defineProps({
   statParams: {
@@ -101,14 +102,14 @@ const addParam = ref([
 ])
 
 const lastElixParam = [
-  { key: 'dstrength', name: 'Настій сили', type: 'lastElix' },
-  { key: 'ddexterity', name: 'Настій ловкості', type: 'lastElix' },
-  { key: 'dintel', name: 'Настій інтелект', type: 'lastElix' },
-  { key: 'dluck', name: 'Настій удачи', type: 'lastElix' },
-  { key: 'dreaction', name: 'Настій реакції', type: 'lastElix' },
-  { key: 'dwisdom', name: 'Настій мудрості', type: 'lastElix' },
-  { key: 'dconst', name: 'Настій Статури', type: 'lastElix' },
-  { key: 'dSecolach', name: 'Еліксир Секолаха', type: 'elixSecolah' }
+  { key: 'dstrength', name: getLocalizedText('fstrength'), type: 'lastElix' },
+  { key: 'ddexterity', name: getLocalizedText('fdexterity'), type: 'lastElix' },
+  { key: 'dintel', name: getLocalizedText('fintel'), type: 'lastElix' },
+  { key: 'dluck', name: getLocalizedText('fluck'), type: 'lastElix' },
+  { key: 'dreaction', name: getLocalizedText('freaction'), type: 'lastElix' },
+  { key: 'dwisdom', name: getLocalizedText('fwisdom'), type: 'lastElix' },
+  { key: 'dconst', name: getLocalizedText('fconst'), type: 'lastElix' },
+  { key: 'dSecolach', name: getLocalizedText('eSecolach'), type: 'elixSecolah' }
 ]
 
 const store = useStore()
@@ -218,7 +219,7 @@ function subclassChecking(stat) {
     } else {
       flag = false
       idrebut.value++
-      store.dispatch('setMessage', `Понижение не возможно, параметр '${minParamClass.key}' будет меньше требований подкласса: ${minParamClass.count} < ${statModule.summStatBase}`)
+      store.dispatch('setMessage', `${getLocalizedText('DowngradeNotPossibleParameter')}'${minParamClass.key}' ${getLocalizedText('thereWillFewerSubclassRequirements')}: ${minParamClass.count} < ${statModule.summStatBase}`)
     }
   }
   return flag
@@ -244,7 +245,7 @@ const handleStatDecrease = (val) => {
     availabilityElixFlag =
       hasLastElix.count > COUNT_STAT_MIXTURE
         ? true
-        : (store.dispatch('setMessage', `Оставшиеся очки стата дает эликсир`), false)
+        : (store.dispatch('setMessage', getLocalizedText('remainingStatPointsGivenElixir')), false)
   }
 
   if (hasSecolach) {
@@ -252,7 +253,7 @@ const handleStatDecrease = (val) => {
   } else if (hasLastElix && hasLastElix.key === val) {
     availabilityElixFlag = hasLastElix.count > COUNT_STAT_MIXTURE
   }
-  if (!availabilityElixFlag)  store.dispatch('setMessage', 'Оставшиеся очки стата дает эликсир')
+  if (!availabilityElixFlag)  store.dispatch('setMessage', getLocalizedText('remainingStatPointsGivenElixir'))
 
 
   // проверка на минимальные параметры вещей
@@ -460,7 +461,7 @@ export default {
   line-height: 14px;
 }
 
-@media screen and (max-width: 400px) {
+@media only screen and (max-device-width: 400px) {
 
   p {
     padding: 2px 5px;

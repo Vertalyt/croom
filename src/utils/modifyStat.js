@@ -193,13 +193,23 @@ export function checkStatRequirementsForClothing(id, baseParamManecken, statKey 
   return flag
 }
 
-export function statInputChange({ stat, statParams, accessibleStats }) {
-
+export function statInputChange({ stat, statParams, accessibleStats, idMannequin }) {
   // изменение стат через инпут
+  const raseParams = store.getters['raseParams'](idMannequin);
+  const oneRaseParams = raseParams.find((s) => s.key === stat.key).count
   const oldBaseStat = statParams.find((s) => s.key === stat.key).summStatBase // ищу предыдущие значение стата
   let statChange = Number(stat.summStatBase) - Number(oldBaseStat) //высчитываю разницу, на которое буду изменять
+
   if (accessibleStats < statChange) {
     statChange = accessibleStats // при избыточной разнице
   }
+  // Проверяем, нужно ли уменьшить statChange c учетом не допустимости понижения ниже рассового модификатора
+  if ((Number(stat.summStatBase) - Number(oldBaseStat)) < 0) {
+    const decrese = (oldBaseStat  + Number(stat.summStatBase) - Number(oldBaseStat)) 
+    if(decrese < oneRaseParams) {
+    statChange = Number(stat.summStatBase) - Number(oldBaseStat) + oneRaseParams - decrese
+    }
+  }
+
   return {key: stat.key , statChange  }
 }

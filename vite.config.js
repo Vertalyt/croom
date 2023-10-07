@@ -11,4 +11,7 @@ export default defineConfig({
   optimizeDeps: {
     include: [], // Указать зависимости, которые нужно включить
   },
+  build: {
+    chunkSizeWarningLimit: 1000, // Установите желаемый лимит в килобайтах
+  },
 });

@@ -16,9 +16,11 @@ import DetailedClothing from './use/DetailedClothing.vue'
 import { baseStatFromLvl } from '../utils/baseStatFromLvl'
 import { modifyStat, statInputChange } from '../utils/modifyStat'
 import { fetchAPIData } from '../api/fetchApi'
-import { fortressParam, raseParams, arrayVariableStats } from '../initialization/baseParams'
+import { fortressParam, raseParams, arrayVariableStats, armorMasteryParam } from '../initialization/baseParams'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
+import { getLocalizedText } from '@/locale/index'
+
 
 const props = defineProps({
   updatedStatConfigurations: {
@@ -51,25 +53,35 @@ const classComputed = computed(() =>
 const fortressComputed = computed(() =>
   store.getters['listManekenSearch']({ id: props.idMannequin, element: 'fortress' }))
 
+  const armorMasteryComputed = computed(() =>
+  store.getters['listManekenSearch']({ id: props.idMannequin, element: 'armorMastery' }))
+
 const listManekenBase = computed(() =>
   store.getters['listManekenBase'](props.idMannequin).find((stat) => stat.key === 'dconst'))
 
 
 const availableRaces = raseParams
 const lvlSelect = ref(lvlComputed.value)
-const raseModel = ref('human')
+const raseModel = ref(raseNameComputed.value)
 const classModel = ref('none')
 const refrech = ref(0)
 const fortress = ref('none')
+const armorMastery = ref('none')
 const availableFortressOptions = ref(fortressParam)
+const availablearmorMasteryOptions = ref(armorMasteryParam)
 
 const accessibleStats = ref(computedAccessibleStats.value) //количество стат для распределения
 const baseStat = ref(baseStatFromLvl())
-const itemsNameClass = ref('Виберіть класс')
-const itemsNameSubClass = ref('Вибери підкласс')
-const itemsNameRase = ref('Виберіть расу')
-const itemsNameFortress = ref('Крепость')
+const itemsNameClass = ref(getLocalizedText('SelectClass'))
+const itemsNameSubClass = ref(getLocalizedText('ChooseSubclass'))
+const itemsNameRase = ref(getLocalizedText('SelectRace'))
+const itemsNameFortress = ref(getLocalizedText('Fortress'))
+const itemsArmorMastery = ref('Мастерство брони')
+const showArmorMastery = ref(true)
+const showFortress = ref(true)
 const oldAccessibleStats = ref(computedAccessibleStats.value) // остаток не распределенных стат
+const parentClassItems = ref(null)
+
 
 watch(lvlComputed, val => {
   lvlSelect.value = val
@@ -78,25 +90,39 @@ watch(lvlComputed, val => {
 watch(computedAccessibleStats, val => {
   accessibleStats.value = val
 }, { immediate: true})
+
 watch(raseNameComputed, val => {
   if (val) {
     raseModel.value = val
     itemsNameRase.value = availableRaces.find((item) => item.id === val).name
   } else {
     raseModel.value = 'human'
-    itemsNameRase.value = 'Виберіть расу'
+    itemsNameRase.value = getLocalizedText("SelectRace")
   }
-
 })
+
 watch(classComputed, val => {
   if (val) {
-    itemsNameClass.value = val.className
+    itemsNameClass.value = parentClasses.value.find((cl) => cl.name_en === val.className).name
     itemsNameSubClass.value = val.subClassName
+    parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === val.className)
+    
+  if(val.className === 'Juggernaut') {
+    showArmorMastery.value = false
   } else {
-    itemsNameClass.value = 'Виберіть класс'
-    itemsNameSubClass.value = 'Вибери підкласс'
+    showArmorMastery.value = true
   }
-})
+  if(classComputed.value && classComputed.value.className === 'Ranger') {
+    showFortress.value = true
+  } else {
+    showFortress.value = false
+  }
+
+  } else { 
+    itemsNameClass.value = getLocalizedText("SelectClass")
+    itemsNameSubClass.value = getLocalizedText("ChooseSubclass")
+  }
+}, { immediate: true })
 
 watch(fortressComputed, val => {
   if (val) {
@@ -104,7 +130,17 @@ watch(fortressComputed, val => {
       (item) => item.id === val.fortress
     ).name
   } else {
-    itemsNameFortress.value = 'Крепость'
+    itemsNameFortress.value = getLocalizedText("ChooseSubclass")
+  }
+})
+
+watch(armorMasteryComputed, val => {
+  if (val) {
+    itemsArmorMastery.value = availablearmorMasteryOptions.value.find(
+      (item) => item.id === val.armorId
+    ).name
+  } else {
+    itemsArmorMastery.value = 'Мастерство брони'
   }
 })
 
@@ -113,11 +149,31 @@ watch(controllIdManeken, (_) => {
   oldAccessibleStats.value = computedAccessibleStats.value
   accessibleStats.value = computedAccessibleStats.value
   lvlSelect.value = lvlComputed.value
+  raseModel.value = store.getters['listManekenSearch']({ id: props.idMannequin, element: 'raseName' })
+  if (raseModel.value) {
+    itemsNameRase.value = availableRaces.find((item) => item.id === raseModel.value).name
+  } else {
+    raseModel.value = 'human'
+    itemsNameRase.value = getLocalizedText("SelectRace")
+  }
+
+
+  if(classComputed.value?.className === 'Juggernaut') {
+    showArmorMastery.value = false
+  } else {
+    showArmorMastery.value = true
+  }
+  if(classComputed.value && classComputed.value.className === 'Ranger') {
+    showFortress.value = true
+  } else {
+    showFortress.value = false
+  }
+
   refrech.value++
 })
 
 const OllParamClass = ref([])
-const parentClassItems = ref(null)
+
 const parentClassModel = ref('none')
 const parentClasses = ref([])
 const availabilityClassFlag = ref(true)
@@ -127,6 +183,7 @@ const classMinParam = ref()
 const spellsFlag = ref(false)
 const raseMagicDefend = ref([])
 const isLoading = ref(false)
+
 
 // массив с изменениями параметров
 const addParam = ref(arrayVariableStats)
@@ -151,6 +208,8 @@ const centerBottomDummyPart = computed(() =>
 )
 
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
+
+
 
 onMounted(async () => {
   isLoading.value = true
@@ -204,7 +263,7 @@ async function changingSubclassParameters() {
 
       accessibleStats.value += sum
     } else {
-      console.log('Объект с ключом "base" не найден в массиве "param"')
+      console.log(getLocalizedText('ObjectWithKeyBaseNotFound'))
     }
     store.commit('statChange/listDelChange', {
       idMannequin: props.idMannequin,
@@ -275,16 +334,19 @@ const handleParentClassSelectChange = async (parent) => {
         idMannequin: props.idMannequin
       })
     } else {
-      store.dispatch('setMessage', 'Не достаточно очков')
-    }
+      store.dispatch('setMessage', getLocalizedText('NotEnoughPoints'))
+    } 
   } else {
     oldValueSubclass.value = false
   }
-
-  itemsNameSubClass.value = parentClassItems.value.find((sub) => sub.name_en === parent).name
+  itemsNameSubClass.value = parentClassItems.value.find((sub) => sub.name_en === parent)
   store.commit('updateManekenInfo', {
     idMannequin: props.idMannequin,
-    class: { className: itemsNameClass.value, subClassName: itemsNameSubClass.value }
+    class: { 
+      className: itemsNameSubClass.value.parent_name, 
+      subClassName: itemsNameSubClass.value.name,
+      idsubClassName: itemsNameSubClass.value.name_en, 
+    }
   })
 }
 
@@ -311,15 +373,14 @@ const lvlSelectChange = () => {
   oldAccessibleStats.value = computedAccessibleStats.value // остаток не распределенных стат
 
   const lvlStatDifference = Number(newCountStat) - Number(oldCountStat.value[props.idMannequin - 1]) // разница стат на уровне
-
   different.value[props.idMannequin - 1] = lvlStatDifference + oldAccessibleStats.value
 
   if (lvlStatDifference >= 0 || different.value[props.idMannequin - 1] > -1) {
     updateStatsAndEmitEvent(different.value[props.idMannequin - 1], newCountStat)
     store.commit('updateManekenInfo', { idMannequin: props.idMannequin, lvl: Number(lvlSelect.value) });
-    // emits('updateLvl', Number(lvlSelect.value))
-  } else {
-    store.dispatch('setMessage', `Распределено стат больше, чем возможно на уровне на ${Math.abs(
+
+  } else { 
+    store.dispatch('setMessage', `${getLocalizedText('MoreStatsDistributedPossibleLevel')} ${Math.abs(
         different.value[props.idMannequin - 1]
       )}`)
   }
@@ -397,16 +458,15 @@ const handleStatDecrease = (statKey) => {
   if (computedFreeStats.value) {
     const freeStatKey = computedFreeStats.value.find(item => item.base).base;
     if (freeStatKey) {
-
-      const statChange = freeStatKey.find(stat => stat.key === statKey && stat.key > 0).statKey;
+      const statChange = freeStatKey.find(stat => stat.key === statKey && stat.count > 0);
       if (statChange) {
         modifyStatAndEmit(statKey, -1);
-      } else {
-        store.dispatch('setMessage', 'Не достаточно стат от свободных очков распределения')
+      } else { 
+        store.dispatch('setMessage', getLocalizedText('NotEnoughStatFreeDistributionPoints'))
       }
     }
   }  else {
-        store.dispatch('setMessage', 'Не достаточно стат от свободных очков распределения')
+        store.dispatch('setMessage', getLocalizedText('NotEnoughStatFreeDistributionPoints'))
       }
 };
 
@@ -415,20 +475,16 @@ const handleStatInputChange = (stat) => {
   const { key, statChange } = statInputChange({
     stat,
     statParams: statParams.value,
-    accessibleStats: accessibleStats.value
+    accessibleStats: accessibleStats.value,
+    idMannequin: props.idMannequin
   })
   modifyStatAndEmit(key, statChange)
 }
 
 const handleResetManecken = () => {
-  addParam.value.map((p) => (p.count = 0))
-  emits('changeRase', {
-    raseModel: 'human'
-  })
-  raseModel.value = 'human'
-  lvlSelect.value = 'change'
-  accessibleStats.value = null
-  classModel.value = 'none'
+  oldCountStat.value = [0, 0]
+  store.dispatch('clearManeken', props.idMannequin)
+  refrech.value++
 }
 
 const handleClothesChoice = async (param) => {
@@ -471,6 +527,14 @@ const handleFortressUpdate = (fortress) => {
   })
 }
 
+const handleArmorMastery = (armorId) => {
+  const armorMastery = availablearmorMasteryOptions.value.find(item => item.id === armorId).bonusArmorMutiplier
+  store.commit('updateManekenInfo', {
+    armorMastery: {armorId, bonusArmorMutiplier: armorMastery},
+    idMannequin: props.idMannequin,
+  })
+}
+
 const nameElCloth = ref()
 const elementParam = ref()
 const isOpenInfoCloth = ref(false)
@@ -509,6 +573,7 @@ export default {
   <div class="isDummyLoaded" v-if="isDummyLoaded">
     <div class="dummy__part">
       <DummyPartSlot :dummyItems="leftDummyPart" 
+      :idMannequin="props.idMannequin"
       @handleClothesChoice="handleClothesChoice" 
       @isClothInfo="isClothInfo"
       />
@@ -518,6 +583,7 @@ export default {
       <div class="dummy__center__top">
         <DummyPartSlot
           :dummyItems="centerTopDummyPart"
+          :idMannequin="props.idMannequin"
           @handleClothesChoice="handleClothesChoice"
           @isClothInfo="isClothInfo"
           :sizeClass="'small'"
@@ -539,7 +605,9 @@ export default {
               </template>
               <tr v-if="computedAccessibleStats !== null">
                 <td class="options__table__title" colspan="5">
-                  <small>Очки розподілу:</small> {{ computedAccessibleStats }}
+
+                  
+                  <small>{{ getLocalizedText('FreePoint') }}:</small> {{ computedAccessibleStats }}
                 </td>
               </tr>
             </ManekenStatParams>
@@ -565,8 +633,8 @@ export default {
                 v-model="lvlSelect"
                 @change="lvlSelectChange"
                 class="select-css"
-              >
-                <option value="change" disabled selected>Виберіть рівень</option>
+              > 
+                <option value="change" disabled selected>{{ getLocalizedText('SelectLevel') }}</option>
                 <option :disabled="l.disabled" v-for="l in baseStat" :key="l.lvl">
                   {{ l.lvl }}
                 </option>
@@ -591,6 +659,7 @@ export default {
                 v-if="parentClassItems && lvlSelect >= 8"
                 v-model="parentClassModel"
                 :itemsName="itemsNameSubClass"
+                :key="refrech + 3"
                 :disabled="!availabilityClassFlag"
                 :oldValueCheck="oldValueSubclass"
                 @update:modelValue="handleParentClassSelectChange"
@@ -603,8 +672,8 @@ export default {
 
             <div class="form__items">
               <ManeckenSelectItems
-                v-if="availableFortressOptions"
-                :key="refrech"
+                v-if="availableFortressOptions && !showFortress"
+                :key="refrech + 2"
                 :itemsName="itemsNameFortress"
                 v-model="fortress"
                 @update:modelValue="handleFortressUpdate"
@@ -615,11 +684,20 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
-              <div class="">
-                <button class="tab-button maneckenBtn" @click="spellsFlag = true">
-                  <p class="p__tab-button p__tab-button-elix">Заклинания</p>
-                </button>
-              </div>
+
+              <ManeckenSelectItems
+                v-if="availablearmorMasteryOptions && !showArmorMastery"
+                :key="refrech + 1"
+                :itemsName="itemsArmorMastery"
+                v-model="armorMastery"
+                @update:modelValue="handleArmorMastery"
+              >
+                >
+                <template #optionSelect>
+                  <BasicSlotOpteons :items="availablearmorMasteryOptions" />
+                </template>
+              </ManeckenSelectItems>
+
             </div>
 
             <AddElixir
@@ -639,14 +717,20 @@ export default {
 
             <div class="form__items">
               <button class="tab-button maneckenBtn" @click="elixFlag = true">
-                <p class="p__tab-button">Випити еліксир</p>
+                <p class="p__tab-button">{{ getLocalizedText('DrinkElixir') }}</p>
               </button>
+              
+              <div class=""> 
+                <button class="tab-button maneckenBtn" @click="spellsFlag = true">
+                  <p class="p__tab-button p__tab-button-elix">{{ getLocalizedText('Spells') }}</p>
+                </button>
+              </div>
 
-              <p>Випито: {{ drinksElix }}</p>
             </div>
 
             <div class="form__items">
-              <a @click="handleResetManecken" href="#" class="form__link">Скинути все</a>
+              <p>{{ getLocalizedText('Drink') }}: {{ drinksElix }}</p>
+              <a @click="handleResetManecken" href="#" class="form__link">{{ getLocalizedText('Reseteverything') }}</a>
             </div>
           </div>
         </div>
@@ -654,6 +738,7 @@ export default {
       <div class="dummy__center__buttom">
         <DummyPartSlot
           :dummyItems="centerBottomDummyPart"
+          :idMannequin="props.idMannequin"
           @handleClothesChoice="handleClothesChoice"
           @isClothInfo="isClothInfo"
           :sizeClass="'big'"
@@ -664,6 +749,7 @@ export default {
     <div class="dummy__part">
       <DummyPartSlot 
       :dummyItems="rightDummyPart" 
+      :idMannequin="props.idMannequin"
       @handleClothesChoice="handleClothesChoice" 
       @isClothInfo="isClothInfo"
       />
@@ -672,7 +758,6 @@ export default {
 </template>
 
 <style scoped>
-
 
 .maneckenBtn {
   width: 125px;

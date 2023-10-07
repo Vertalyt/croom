@@ -1,9 +1,21 @@
 <template>
 
   <div class="artHeader">
-    <select name="loadingByFilters" v-model="lvlSelect" @change="loadingByFilters" class="select-css">
+    <select 
+    :disabled="!selectionResolution"
+    name="loadingByFilters" 
+    v-model="lvlSelect" 
+    @change="loadingByFilters" 
+    class="select-css">
     <option value="change" disabled selected>Рівень</option>
     <option v-for="l in lvlArt" :key="l">{{ l }}</option>
+  </select>
+
+  <select 
+  v-if="!selectionResolution"
+  name="loadingByFilters" v-model="wSelect" @change="loadingByWeaponFilters" class="select-css">
+    <option value="change" disabled selected>Тип</option>
+    <option v-for="w in typeWeapon" :key="w.type" :value="w.type">{{ w.name }}</option>
   </select>
 
   <button 
@@ -17,7 +29,10 @@
 <AppLoader 
 v-if="isLoading"
 />
-  <div v-if="Object.keys(artParams).length > 0">
+  <div 
+  class="art" 
+  :style="{ maxHeight: `${windowInnerHeight * 0.65}px` }"
+  v-if="Object.keys(artParams).length > 0">
     <p
     v-if="errorClassFlag"
     :class="{ error: errorClassFlag }"
@@ -98,7 +113,7 @@ v-if="isLoading"
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { fetchAPIData } from '../../api/fetchApi'
 import AppLoader from '../AppLoader.vue'
@@ -131,6 +146,7 @@ const artParams = ref([])
 const store = useStore()
 const persParams = computed(() => store.getters['listManeken'](props.idMannequin).statModule)
 const lvlSelect = ref('change')
+const wSelect = ref('change')
 const lvlArt = ref(0)
 const artTypeParams = ref([])
 const inputUpdate = ref(0)
@@ -145,6 +161,8 @@ const COUNT_POINGHTS = [
   { type: 'protectionMagick', count: 3, maxEl: 'astralmagicprotection' }
 ]
 
+const windowInnerHeight = document.documentElement.clientHeight
+
 let addParamPoint = arrayVariableStats
 const artArrPersParams = ref(
   persParams.value.map((item) => {
@@ -155,6 +173,36 @@ const artArrPersParams = ref(
     }
   }).filter(item => item.type !== 'dstamina')
 )
+
+
+const typeWeapon = [
+  { type : 8, name: 'Копье 2-р' },
+  { type : 9, name: 'Топор 2-р' },
+  { type : 12, name: 'Меч' },
+  { type : 14, name: 'Лук' },
+  { type : 15, name: 'Щит' },
+  { type : 30, name: 'Посох' },
+  { type : 31, name: 'Молот' },
+  { type : 32, name: 'Молот 2-р' },
+  { type : 33, name: 'Топор' },
+  { type : 35, name: 'Меч 2-р' },
+  { type : 37, name: 'Жезл' },
+  { type : 38, name: 'Кастет' },
+  { type : 39, name: 'Нож' },
+]
+
+const selectionResolution = ref(true)
+
+const observerType = computed( () => props.cellOptions )
+
+watch(observerType, val => {
+  const hasMatch = val.typeid.some((id) => {
+    return typeWeapon.some((item) => item.type === id);
+  });
+  if (hasMatch) {
+    selectionResolution.value = false;
+  }
+}, { immediate: true }  )
 
 function maxLvlArt(lvlPerson) {
   let arrRezult = []
@@ -168,10 +216,20 @@ function maxLvlArt(lvlPerson) {
 onMounted(async () => {
   isLoading.value = true
   filtersClasses.typeid = props.cellOptions.typeid
-  artTypeParams.value = await fetchAPIData(filtersClasses)
+  if(selectionResolution.value) {
+    artTypeParams.value = await fetchAPIData(filtersClasses)
+  }
   lvlArt.value = maxLvlArt(props.lvlPerson)
   isLoading.value = false
 })
+
+const loadingByWeaponFilters = async () => {
+  filtersClasses.typeid = wSelect.value
+  isLoading.value = true
+  artTypeParams.value = await fetchAPIData(filtersClasses)
+  selectionResolution.value = true
+  isLoading.value = false
+}
 
 const loadingByFilters = () => {
   
@@ -292,6 +350,9 @@ const handleStatIncrease = (p) => {
 const handleStatInputChange = (p, event) => {
   changeStat(p, event.target.value)
 }
+
+
+
 </script>
 
 <script>
@@ -320,4 +381,6 @@ export default {
 .error {
   color: brown;
 }
+
 </style>
+

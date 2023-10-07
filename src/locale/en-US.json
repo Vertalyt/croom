@@ -1,5 +1,65 @@
 {
 
+  "Available": "Available",
+  "Used": "Used",
+  "VipityForTheRest" : "Vipity for the rest",
+  "ResettingMixtures" : "Resetting Mixtures",
+  "ThrowOffElixirs" : "Throw off the elixirs",
+
+  "fstrength" : "Flask of Strength",
+  "fdexterity" : "Flask of Agility",
+  "fintel" : "Flask of Intelligence",
+  "fluck" : "Flask of Luck",
+  "freaction" : "Infusion of reaction",
+  "fwisdom" : "Flask of Wisdom",
+  "fconst" : "Flask of Addition",
+  "eSecolach" : "Elixir of Sekolah",
+
+  "DowngradeNotPossibleParameter" : "Downgrade is not possible, parameter",
+  "thereWillFewerSubclassRequirements" : "there will be fewer subclass requirements",
+  "remainingStatPointsGivenElixir" : "The remaining stat points are given by the elixir",
+
+  "Dummy" : "Dummy",
+  "SelectRace" : "Select race",
+  "SelectClass" : "Select class", 
+  "SelectLevel" : "Select a level",
+  "ChooseSubclass" : "Choose subclass",
+  "Fortress" : "Fortress",
+  "ObjectWithKeyBaseNotFound" : "Object with key base not found in array param",
+
+  "NotEnoughPoints" : "Not enough points",
+  "MoreStatsDistributedPossibleLevel" : "More stats distributed than possible at level",
+  "NotEnoughStatFreeDistributionPoints" : "Not enough stat from free distribution points",
+  "FreePoint" : "Free point",
+  "Spells" : "Spells",
+  "DrinkElixir" : "Drink elixir",
+  "Drink" : "Drink",
+  "Reseteverything" : "Reset everything",
+  "Armor": "Armor",
+  "Cost" : "Cost",
+
+  "Tall" : "Tall",
+  "GoldTall" : "Gold tall",
+  "Warrior" : "Warrior",
+  "Exchanges" : "Exchanges",
+  "Relics" : "Relics",
+
+  "Profile": "Profile",
+  "Registration" : "Registration",
+  "Authorization" : "Authorization",
+  "SaveDummy" : "Save dummy",
+  "MannequinsAvailable" : "Mannequins available",
+  "Download" : "Download",
+  "Remove" : "Remove",
+  "Back" : "Back",
+  "Next" : "Next",
+
+
+
+
+
+
+
   "localeSite": "Site language",
   "refresh": "Refresh",
 

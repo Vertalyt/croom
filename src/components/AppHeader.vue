@@ -7,14 +7,14 @@
             class="tab-button"
             :class="{ 'active' : IdButtom === 1 }"
             >
-              <p class="p__tab-button">Манекен 1</p>
+              <p class="p__tab-button">{{ getLocalizedText('Dummy') }} 1</p>
             </button>
             <button 
             @click="mannequinIDChange(2)"
             class="tab-button"
             :class="{ 'active' : IdButtom === 2 }"
             >
-              <p class="p__tab-button">Манекен 2</p>
+              <p class="p__tab-button">{{ getLocalizedText('Dummy') }} 2</p>
               <!-- <div class="delete-tab-icon"></div> -->
             </button>
             <!-- <button class="add-tab-button" /> -->
@@ -22,11 +22,10 @@
 
 
           <div class="header__right">
-            <button 
+            <!-- <button 
             class="tab-button">
               <p class="p__tab-button">Сводна таблица</p>
-            </button>
-
+            </button> -->
             <button 
             @click="$emit('isOpenProfile')"
             class="tab-button">
@@ -39,6 +38,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   mannequinChange: Number,
@@ -63,10 +63,6 @@ export default {
 
 <style scoped>
 
-.header__right {
-    display: flex;
-    flex-wrap: wrap;
-}
 
 .active {
   width: 130px;

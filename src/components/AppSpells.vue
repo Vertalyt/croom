@@ -205,7 +205,7 @@ export default {
   justify-content: space-around;
 }
 
-@media screen and (max-width: 600px) {
+@media only screen and (max-device-width: 600px) {
   .modal-content {
     width: 400px;
   }
@@ -215,7 +215,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 450px) {
+@media only screen and (max-device-width: 450px) {
   .modal-content {
     width: 300px;
   }

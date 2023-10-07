@@ -1,4 +1,64 @@
 {
+  "Available": "Доступно",
+  "Used": "Використано",
+  "VipityForTheRest" : "Випити останнім",
+  "ResettingMixtures" : "Обнулення мікстур",
+  "ThrowOffElixirs" : "Скинути еліксири",
+
+  "fstrength" : "Настій сили",
+  "fdexterity" : "Настій спритності",
+  "fintel" : "Настій інтелект",
+  "fluck" : "Настій вдачи",
+  "freaction" : "Настій реакції",
+  "fwisdom" : "Настій мудрості",
+  "fconst" : "Настій статури",
+  "eSecolach" : "Еліксир Секолаха",
+
+  "DowngradeNotPossibleParameter" : "Зниження неможливо, параметр",
+  "thereWillFewerSubclassRequirements" : "буде менше вимог підкласу",
+  "remainingStatPointsGivenElixir" : "Залишок статів, дає еліксир",
+
+  "Dummy" : "Манекен",
+  "SelectRace" : "Виберіть расу",
+  "SelectClass" : "Виберіть клас",
+  "SelectLevel" : "Виберіть рівень",
+  "ChooseSubclass" : "Вибери підклас",
+  "Fortress" : "Міцність",
+  "ObjectWithKeyBaseNotFound" : "Об'єкт з ключем base не знайдено в масиві param",
+
+  "NotEnoughPoints" : "Не достатньо балів",
+
+  "MoreStatsDistributedPossibleLevel" : "Розподілено стат більше, ніж можливо на рівні ",
+  "NotEnoughStatFreeDistributionPoints" : "Не достатньо стати від вільних очок розподілу",
+  "FreePoint" : "Очки розподілу",
+  "Spells" : "Закляття",
+  "DrinkElixir" : "Випити еліксир",
+  "Drink" : "Випито",
+  "Reseteverything" : "Скинути все",
+  "Armor": "Броня",
+  "Cost" : "Вартість",
+
+  "Tall" : "Тали",
+  "GoldTall" : "Золоті тали",
+  "Warrior" : "Ратник",
+  "Exchanges" : "Обміни",
+  "Relics" : "Реліквії",
+
+  "Profile": "Профіль",
+  "Registration" : "Регістрація",
+  "Authorization" : "Авторизація",
+  "SaveDummy" : "Зберегти манекен",
+  "MannequinsAvailable" : "Доступні манекени",
+  "Download" : "Завантажити",
+  "Remove" : "Видалити",
+  "Back" : "Назад",
+  "Next" : "Вперед",
+
+
+
+
+
+
 
   "localeSite": "Мова сайту",
   "refresh": "Оновити",

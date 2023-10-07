@@ -213,3 +213,14 @@ Fixed the ability to equip several weapons at once
 Fixed the picture changing when equipping a two-handed/one-handed weapon
 Fixed display of the location of the pop-up window for detailed information about clothing
 Fixed the detail window not being displayed on the right side of the mannequin
+
+
+
+
+## [1.2.102] - 2023-10-07
+Adding a main layout
+Added wearing of 4 rings and relics at a time, 2 for earrings.
+Work continues on multilingualism.
+Added Armor Mastery influence for the Juggernaut class
+Fixed a bug not deleting one-handed weapons when adding two-handed ones
+Fixed a bug where it was not possible to lower the stat / lower the stat of a race
