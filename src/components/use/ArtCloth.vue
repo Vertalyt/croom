@@ -7,7 +7,7 @@
     v-model="lvlSelect" 
     @change="loadingByFilters" 
     class="select-css">
-    <option value="change" disabled selected>Рівень</option>
+    <option value="change" disabled selected>{{ getLocalizedText('Level') }}</option>
     <option v-for="l in lvlArt" :key="l">{{ l }}</option>
   </select>
 
@@ -21,7 +21,7 @@
   <button 
   @click.stop="putOnThing"
   class="tab-button">
-              <p class="p__tab-button">Вдягти</p>
+              <p class="p__tab-button">{{ getLocalizedText('PutOn') }}</p>
   </button>
 
   </div>
@@ -36,18 +36,18 @@ v-if="isLoading"
     <p
     v-if="errorClassFlag"
     :class="{ error: errorClassFlag }"
-    >Розкиньте всі бали. Залишок {{ breedingPoints }}</p>
+    >{{ getLocalizedText('Remainder') }} {{ breedingPoints }}</p>
     <table class="table table_param">
       <thead>
         <tr>
           <td></td>
-          <td colspan="3">Максимум на точку</td>
+          <td colspan="3">{{ getLocalizedText('MaximumPoint') }}</td>
         </tr>
         <tr>
-          <td>Бали розподілу</td>
-          <td>Статів</td>
-          <td>Броні</td>
-          <td>Захисту від магіі</td>
+          <td>{{ getLocalizedText('DistributionPoints') }}</td>
+          <td>{{ getLocalizedText('Stats') }}</td>
+          <td>{{ getLocalizedText('Armor') }}</td>
+          <td>{{ getLocalizedText('ProtectMagic') }}</td>
         </tr>
       </thead>
       <tbody class="options__tbody">
@@ -63,8 +63,8 @@ v-if="isLoading"
     <table class="table">
       <thead>
         <tr>
-          <td>Параметри</td>
-          <td>Сума</td>
+          <td>{{ getLocalizedText('Parameters') }}</td>
+          <td>{{ getLocalizedText('Sum') }}</td>
 
           <td><span class="material-symbols-outlined">add</span></td>
           <td><span class="material-symbols-outlined">remove</span></td>
@@ -72,10 +72,10 @@ v-if="isLoading"
       </thead>
 
       <tbody class="options__tbody">
-        <tr v-for="p in artArrPersParams" :key="p.name">
+        <tr v-for="p in artArrPersParams" :key="p.key">
           <td>
-            <img :src="p.link" :alt="p.name" />
-            {{ p.name }}
+            <img :src="p.link" :alt="p.key" />
+            {{ getLocalizedText(p.key) }}
           </td>
           <td>
             <input
@@ -118,6 +118,8 @@ import { useStore } from 'vuex'
 import { fetchAPIData } from '../../api/fetchApi'
 import AppLoader from '../AppLoader.vue'
 import { arrayVariableStats } from '../../initialization/baseParams'
+import { getLocalizedText } from '@/locale/index'
+
 
 const emits = defineEmits({
   isClose: null
@@ -176,19 +178,19 @@ const artArrPersParams = ref(
 
 
 const typeWeapon = [
-  { type : 8, name: 'Копье 2-р' },
-  { type : 9, name: 'Топор 2-р' },
-  { type : 12, name: 'Меч' },
-  { type : 14, name: 'Лук' },
-  { type : 15, name: 'Щит' },
-  { type : 30, name: 'Посох' },
-  { type : 31, name: 'Молот' },
-  { type : 32, name: 'Молот 2-р' },
-  { type : 33, name: 'Топор' },
-  { type : 35, name: 'Меч 2-р' },
-  { type : 37, name: 'Жезл' },
-  { type : 38, name: 'Кастет' },
-  { type : 39, name: 'Нож' },
+  { type : 8, name: getLocalizedText('Spear2nd') },
+  { type : 9, name: getLocalizedText('Ax2nd') },
+  { type : 12, name: getLocalizedText('Sword') },
+  { type : 14, name: getLocalizedText('Bow') },
+  { type : 15, name: getLocalizedText('Shield') },
+  { type : 30, name: getLocalizedText('Staff') },
+  { type : 31, name: getLocalizedText('Hammer') },
+  { type : 32, name: getLocalizedText('Hammer2nd') },
+  { type : 33, name: getLocalizedText('Ax') },
+  { type : 35, name: getLocalizedText('Sword2nd') },
+  { type : 37, name: getLocalizedText('Rod') },
+  { type : 38, name: getLocalizedText('Chestnut') },
+  { type : 39, name: getLocalizedText('Knife') },
 ]
 
 const selectionResolution = ref(true)

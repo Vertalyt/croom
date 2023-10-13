@@ -13,7 +13,7 @@
 
       <ParamItemsManeken :paramItems="finalyArmor" :withItemsManecken="true" />
 
-      <ParamItemsManeken :paramItems="magicParams" :withItemsManecken="false" />
+      <ParamItemsManeken :paramItems="magicParams" :withItemsManecken="false" :full="true"/>
 
     </div>
 
@@ -26,10 +26,10 @@
         </thead>
         <tbody>
           <tr>
-            <td v-for="n in nameCost" :key="n.name">{{ n.name }}</td>
+            <td v-for="n in nameCost" :key="getLocalizedText(n.key) ">{{ getLocalizedText(n.key) }}</td>
           </tr>
           <tr>
-            <td v-for="n in nameCost" :key="n.key">{{ n.cost }}</td>
+            <td v-for="n in nameCost" :key="n.key">{{ n.count }}</td>
           </tr>
         </tbody>
       </table>
@@ -64,14 +64,19 @@ const store = useStore()
 
 
 const nameCost = ref([
-  {key: 'price', name: getLocalizedText('Tall'), cost: 0},
-  {key: 'goldprice', name: getLocalizedText('GoldTall'), cost: 0},
-  {key: 'ratnikprice', name: getLocalizedText('Warrior'), cost: 0},
-  {key: 'obmenprice', name: getLocalizedText('Exchanges'), cost: 0},
-  {key: 'reliktprice', name: getLocalizedText('Relics'), cost: 0},
+  {key: 'price', count: 0},
+  {key: 'goldprice', count: 0},
+  {key: 'ratnikprice', count: 0},
+  {key: 'obmenprice', count: 0},
+  {key: 'reliktprice', count: 0},
 ])
 
-
+watch(nameCost, val => {
+  store.commit('updateManekenInfo', {
+    idMannequin: props.idMannequin,
+    ollCoast: [...val]
+  })
+}, { deep: true, }  )
 
 // Computed properties для улучшенной читаемости
 const statParams = computed(() => props.updatedStatConfigurations.filter((d) => d.type === 'stat'))
@@ -100,12 +105,13 @@ const armorMasteryComputed = computed(() =>
 
 const totalPriseInfo = ref([]);
 watch(priseInfo, val => {
+  nameCost.value.forEach(item => item.count = 0)
   totalPriseInfo.value = totalCostCloth(val);
 
   nameCost.value.forEach(item => {
     const priseFind = totalPriseInfo.value.find(priсe => Object.prototype.hasOwnProperty.call(priсe, item.key));
     if (priseFind) {
-      item.cost = priseFind[item.key].toFixed(2);
+      item.count = priseFind[item.key].toFixed(2);
     }
   });
 });

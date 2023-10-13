@@ -22,6 +22,7 @@
 
 
 <script setup>
+import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   changeChildPanel: () => String
@@ -52,22 +53,22 @@ const accordionChildOpen = (panelId) => {
 
 
 const nameStat = [
-  { minParam: 'minstrength', addParam: 'dstrength', name: 'Сила' },
-  { minParam: 'mindexterity', addParam: 'ddexterity', name: 'Ловкість' },
-  { minParam: 'minconst', addParam: 'dconst', name: 'Статура' },
-  { minParam: 'minintel', addParam: 'dintel', name: 'Інтелект' },
-  { minParam: 'minwisdom', addParam: 'dwisdom', name: 'Мудрість' },
-  { minParam: 'minluck', addParam: 'dluck', name: 'Удача' },
-  { minParam: 'minreaction', addParam: 'dreaction', name: 'Реакція' },
-  { minParam: 'whitemagicprotection', addParam: 'whitemagicprotection', name: 'Магія Світанка' },
-  { minParam: 'blackmagicprotection', addParam: 'blackmagicprotection', name: 'Манія Повнолуння' },
-  { minParam: 'astralmagicprotection', addParam: 'astralmagicprotection', name: 'Астральна магія' },
-  { minParam: 'headarmor', addParam: 'headarmor', name: 'Броня голови' },
-  { minParam: 'bodyarmor', addParam: 'bodyarmor', name: 'Броня тулоба' },
-  { minParam: 'righthandarmor', addParam: 'righthandarmor', name: 'Броня права рука' },
-  { minParam: 'lefthandarmor', addParam: 'lefthandarmor', name: 'Броня ліва рука' },
-  { minParam: 'lagsarmor', addParam: 'lagsarmor', name: 'Броня ноги' },
-  { addParam: 'dstamina', name: 'Енергія' },
+  { minParam: 'minstrength', addParam: 'dstrength', name: getLocalizedText('dstamina') },
+  { minParam: 'mindexterity', addParam: 'ddexterity', name: getLocalizedText('ddexterity') },
+  { minParam: 'minconst', addParam: 'dconst', name: getLocalizedText('dconst') },
+  { minParam: 'minintel', addParam: 'dintel', name: getLocalizedText('dintel') },
+  { minParam: 'minwisdom', addParam: 'dwisdom', name: getLocalizedText('dwisdom') },
+  { minParam: 'minluck', addParam: 'dluck', name: getLocalizedText('dluck') },
+  { minParam: 'minreaction', addParam: 'dreaction', name: getLocalizedText('dreaction') },
+  { minParam: 'whitemagicprotection', addParam: 'whitemagicprotection', name: getLocalizedText('whitemagicprotection') },
+  { minParam: 'blackmagicprotection', addParam: 'blackmagicprotection', name: getLocalizedText('blackmagicprotection') },
+  { minParam: 'astralmagicprotection', addParam: 'astralmagicprotection', name: getLocalizedText('astralmagicprotection') },
+  { minParam: 'headarmor', addParam: 'headarmor', name: getLocalizedText('headarmor2') },
+  { minParam: 'bodyarmor', addParam: 'bodyarmor', name: getLocalizedText('bodyarmor2') },
+  { minParam: 'righthandarmor', addParam: 'righthandarmor', name: getLocalizedText('righthandarmor2') },
+  { minParam: 'lefthandarmor', addParam: 'lefthandarmor', name: getLocalizedText('lefthandarmor2') },
+  { minParam: 'lagsarmor', addParam: 'lagsarmor', name: getLocalizedText('lagsarmor2') },
+  { addParam: 'dstamina', name: getLocalizedText('dstamina')},
 ]
 
 const getStatName = (key, type) => {

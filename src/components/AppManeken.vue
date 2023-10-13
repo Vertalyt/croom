@@ -209,7 +209,7 @@ const centerBottomDummyPart = computed(() =>
 
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 
-
+const locale = store.getters['requests/clientInfo']
 
 onMounted(async () => {
   isLoading.value = true
@@ -232,7 +232,12 @@ const handleRaseSelectChange = (availableRaces) => {
 
 const handleClassSelectChange = (className) => {
   parentClassItems.value = OllParamClass.value.filter((p) => p.parent_name === className)
-  itemsNameClass.value = parentClasses.value.find((cl) => cl.name_en === className).name
+  if(locale?.locale === 'en-US') {
+  itemsNameClass.value = parentClasses.value.find((cl) => cl.name_en === className).name_en
+  } else {
+    itemsNameClass.value = parentClasses.value.find((cl) => cl.name_en === className).name
+  }
+
 }
 
 watch(fortressComputed, val => {
@@ -651,7 +656,11 @@ export default {
                 @update:modelValue="handleClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect :items="parentClasses" :lvlSelect="Number(lvlSelect)" />
+                  <ManeckenOptionSelect 
+                  :items="parentClasses" 
+                  :lvlSelect="Number(lvlSelect)" 
+                  :locale="locale"
+                  />
                 </template>
               </ManeckenSelectItems>
 
@@ -665,7 +674,9 @@ export default {
                 @update:modelValue="handleParentClassSelectChange"
               >
                 <template #optionSelect>
-                  <ManeckenOptionSelect :items="parentClassItems" :lvlSelect="Number(lvlSelect)" />
+                  <ManeckenOptionSelect 
+                  :locale="locale"
+                  :items="parentClassItems" :lvlSelect="Number(lvlSelect)" />
                 </template>
               </ManeckenSelectItems>
             </div>

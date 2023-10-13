@@ -5,10 +5,13 @@
     :value="p.id" 
     :key="p.id"
     :disabled="p.disabled"
-    >{{ p.name }}</option>
+    
+    >{{ getLocalizedText(p.id) }}</option>
 </template>
 
 <script setup>
+import { getLocalizedText } from '@/locale/index'
+
 defineProps({
   items : {
   type: Array,

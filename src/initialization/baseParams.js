@@ -25,25 +25,24 @@ export const initialSetupEntries = [
 
 export const listTwoHandedTypes = [8, 9, 14, 30, 32, 35, 36 ]
 
-
 // стартовый набор стат для первичного заполнения таблиц. Соотвествует расе человек. 
 export const baseStatModule = [
-  { type: 'stat', key: 'dstrength', name: 'Сила', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/strength.svg', minKey: 'minstrength' },
-  { type: 'stat', key: 'ddexterity', name: 'Ловкість', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dexterity.svg', minKey: 'mindexterity'  },
-  { type: 'stat', key: 'dintel', name: 'Інтелект', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/intelligence.svg', minKey: 'minintel'  },
-  { type: 'stat', key: 'dluck', name: 'Удача', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/luck.svg', minKey: 'minluck'  },
-  { type: 'stat', key: 'dreaction', name: 'Реакція', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
-  { type: 'stat', key: 'dwisdom', name: 'Мудрість', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
-  { type: 'stat', key: 'dconst', name: 'Статура', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
-  { type: 'protectionMagick', key: 'whitemagicprotection', name: 'Світанок', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dawn.svg'},
-  { type: 'protectionMagick', key: 'blackmagicprotection', name: 'Полнолуння', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/full-Moon.svg' },
-  { type: 'protectionMagick', key: 'astralmagicprotection', name: 'Астрал', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/astral.svg' },
-  { type: 'armor', key: 'headarmor', name: 'Голова', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor_head.svg' },
-  { type: 'armor', key: 'bodyarmor', name: 'Тулуб', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor.svg' },
-  { type: 'armor', key: 'lefthandarmor', name: 'Ліва рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leftHend.svg' },
-  { type: 'armor', key: 'righthandarmor', name: 'Права рука', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rightHend.svg' },
-  { type: 'armor', key: 'lagsarmor', name: 'Ноги', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leg-armor.svg' },
-  { type: 'dstamina', key: 'dstamina', name: 'Енергія', summStatBase: 0, summStatBonusAndBase: 100, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg' },
+  { type: 'stat', key: 'dstrength', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/strength.svg', minKey: 'minstrength' },
+  { type: 'stat', key: 'ddexterity', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dexterity.svg', minKey: 'mindexterity'  },
+  { type: 'stat', key: 'dintel', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/intelligence.svg', minKey: 'minintel'  },
+  { type: 'stat', key: 'dluck', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/luck.svg', minKey: 'minluck'  },
+  { type: 'stat', key: 'dreaction', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/reaction.svg', minKey: 'minreaction'  },
+  { type: 'stat', key: 'dwisdom', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/wisdom.svg', minKey: 'minwisdom'  },
+  { type: 'stat', key: 'dconst', summStatBase: 3, summStatBonusAndBase: 3, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/constitution.svg', minKey: 'minconst'  },
+  { type: 'protectionMagick', key: 'whitemagicprotection', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/dawn.svg'},
+  { type: 'protectionMagick', key: 'blackmagicprotection', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/full-Moon.svg' },
+  { type: 'protectionMagick', key: 'astralmagicprotection', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/astral.svg' },
+  { type: 'armor', key: 'headarmor', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor_head.svg' },
+  { type: 'armor', key: 'bodyarmor', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/armor.svg' },
+  { type: 'armor', key: 'lefthandarmor', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leftHend.svg' },
+  { type: 'armor', key: 'righthandarmor', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rightHend.svg' },
+  { type: 'armor', key: 'lagsarmor', summStatBase: 0, summStatBonusAndBase: 0, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/leg-armor.svg' },
+  { type: 'dstamina', key: 'dstamina', summStatBase: 0, summStatBonusAndBase: 100, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg' },
 ]
 
 export const basickParamsRase = [
@@ -135,35 +134,32 @@ export const basickParamsRase = [
 ]
 
 export const fortressParam = [
-{ name: 'Нет', id: 'absent', minconst: 0, disabled: false, bonusHealthMutiplier: 1},
-{ name: 'Новичок', id: 'newbie', minconst: 6, disabled: false, bonusHealthMutiplier: 1.1},
-{ name: 'Продвинутий', id: 'promotions', minconst: 14, disabled: false, bonusHealthMutiplier: 1.17},
-{ name: 'Експерт', id: 'expert', minconst: 18, disabled: false, bonusHealthMutiplier: 1.24},
-{ name: 'Мастер', id: 'master', minconst: 27, disabled: false, bonusHealthMutiplier: 1.31},
-{ name: 'Грандмастер', id: 'grandmaster', minconst: 41, disabled: false, bonusHealthMutiplier: 1.38},
+{ id: 'absent', minconst: 0, disabled: false, bonusHealthMutiplier: 1},
+{ id: 'newbie', minconst: 6, disabled: false, bonusHealthMutiplier: 1.1},
+{ id: 'promotions', minconst: 14, disabled: false, bonusHealthMutiplier: 1.17},
+{ id: 'expert', minconst: 18, disabled: false, bonusHealthMutiplier: 1.24},
+{ id: 'master', minconst: 27, disabled: false, bonusHealthMutiplier: 1.31},
+{ id: 'grandmaster', minconst: 41, disabled: false, bonusHealthMutiplier: 1.38},
 ]
 
 export const armorMasteryParam = [
-  { name: 'Нет', id: 'absent', disabled: false, bonusArmorMutiplier: 1},
-  { name: 'Новичок', id: 'newbie', disabled: false, bonusArmorMutiplier: 1.05},
-  { name: 'Продвинутий', id: 'promotions', disabled: false, bonusArmorMutiplier: 1.1},
-  { name: 'Експерт', id: 'expert', disabled: false, bonusArmorMutiplier: 1.15},
-  { name: 'Мастер', id: 'master', disabled: false, bonusArmorMutiplier: 1.20},
-  { name: 'Грандмастер', id: 'grandmaster', disabled: false, bonusArmorMutiplier: 1.25},
+  { id: 'absent', disabled: false, bonusArmorMutiplier: 1},
+  { id: 'newbie', disabled: false, bonusArmorMutiplier: 1.05},
+  { id: 'promotions', disabled: false, bonusArmorMutiplier: 1.1},
+  { id: 'expert', disabled: false, bonusArmorMutiplier: 1.15},
+  { id: 'master', disabled: false, bonusArmorMutiplier: 1.20},
+  { id: 'grandmaster', disabled: false, bonusArmorMutiplier: 1.25},
   ]
-  
-
 
 
 export const raseParams = [
-    { name: 'Человек', id: 'human'},
-    { name: 'Гном', id: 'gnom'},
-    { name: 'Эльф', id: 'elf'},
-    { name: 'Вампир', id: 'vampire'},
-    { name: 'Орк', id: 'ork'},
-    { name: 'Троль', id: 'trol'},
+    {id: 'human'},
+    { id: 'gnom'},
+    { id: 'elf'},
+    { id: 'vampire'},
+    { id: 'ork'},
+    { id: 'trol'},
     ]
-
 
 export const arrayVariableStats = [
     { key: 'dstrength', count: 0 },
@@ -182,3 +178,34 @@ export const arrayVariableStats = [
     { key: 'righthandarmor', count: 0 },
     { key: 'lagsarmor', count: 0 },
   ]
+
+export const genСharVal = [
+    {
+        "key": "life",
+        "count": 15,
+        "link": "https://sabzero.biz/croomTemplate/assets/img/icon/svg/health.svg"
+    },
+    {
+        "key": "mana",
+        "count": 18,
+        "link": "https://sabzero.biz/croomTemplate/assets/img/icon/svg/mana.svg"
+    },
+    {
+        "key": "dstamina",
+        "count": 100,
+        "link": "https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg"
+    },
+    {
+        "key": "rating",
+        "count": 7,
+        "link": "https://sabzero.biz/croomTemplate/assets/img/icon/svg/rating.svg"
+    }
+]
+
+export const nameCost = [
+  {key: 'price', count: 0},
+  {key: 'goldprice', count: 0},
+  {key: 'ratnikprice', count: 0},
+  {key: 'obmenprice', count: 0},
+  {key: 'reliktprice', count: 0},
+]

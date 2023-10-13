@@ -5,17 +5,26 @@ import spells from './modules/spells.module'
 import auth from './modules/auth.module'
 import requests from './modules/requests.module'
 
-import { baseStatModule, basickParamsRase } from '../initialization/baseParams'
+import { baseStatModule, basickParamsRase, genСharVal, nameCost } from '../initialization/baseParams'
 const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
 
-const initialState = { statModule: baseStatModule, raseName: 'human', lvl: 0, raseParams: [...raseParams], accessibleStats: null};
+const initialState = { statModule: baseStatModule, raseName: 'human', lvl: 0, raseParams: [...raseParams], accessibleStats: null, 
+genСharVal: genСharVal,
+ollCoast : nameCost,
+};
 
 export default createStore({
   state() {
     return {
       listManeken: [
-        { idMannequin: 1, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
-        { idMannequin: 2, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null},
+        { idMannequin: 1, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null, 
+        genСharVal: genСharVal,
+        ollCoast : nameCost,
+      },
+        { idMannequin: 2, raseName: 'human', statModule: baseStatModule, lvl: 0, raseParams: [...raseParams], accessibleStats: null, 
+        genСharVal: genСharVal,
+        ollCoast : nameCost,
+      },
       ],
       message: null,
     }
@@ -101,6 +110,8 @@ export default createStore({
             raseParams: [...initialState.raseParams],
             accessibleStats: initialState.accessibleStats,
             raseName: initialState.raseName,
+            genСharVal: initialState.genСharVal,
+            ollCoast : initialState.ollCoast,
           };
           return true;
         }

@@ -22,14 +22,15 @@
 
 
           <div class="header__right">
-            <!-- <button 
+            <button 
+            @click="$emit('isOpenPivot')"
             class="tab-button">
-              <p class="p__tab-button">Сводна таблица</p>
-            </button> -->
+              <p class="p__tab-button">{{ getLocalizedText('SummaryTable') }}</p>
+            </button>
             <button 
             @click="$emit('isOpenProfile')"
             class="tab-button">
-              <p class="p__tab-button">Профіль</p>
+              <p class="p__tab-button">{{ getLocalizedText('Profile') }}</p>
             </button>
           </div>
         </header>
@@ -43,6 +44,7 @@ import { getLocalizedText } from '@/locale/index'
 const emits = defineEmits({
   mannequinChange: Number,
   isOpenProfile: null,
+  isOpenPivot: null,
 })
 
 

@@ -8,7 +8,7 @@
         id="cloth"
         type="checkbox"
       />
-      <label for="cloth">Те, що можна одягнути</label>
+      <label for="cloth">{{ getLocalizedText('ThoseCanBeDressed') }}</label>
     </div>
   </div>
 
@@ -16,10 +16,10 @@
     <select
       name="minMaxLvlFilters"
       :value="minLvl"
-      @change ="minMaxLvlFilters('minLvl', $event)"
+      @change="minMaxLvlFilters('minLvl', $event)"
       class="select-css"
     >
-      <option value="change" disabled selected>Мін. рівень</option>
+      <option value="change" disabled selected>{{ getLocalizedText('MinLevel') }}</option>
       <option>0</option>
       <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
     </select>
@@ -30,20 +30,19 @@
       @change="minMaxLvlFilters('maxLvl', $event)"
       class="select-css"
     >
-      <option value="change" disabled selected>Макс. рівень</option>
+      <option value="change" disabled selected>{{ getLocalizedText('MaxLevel') }}</option>
       <option>0</option>
       <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
     </select>
   </div>
   <div class="form__items">
-
     <button
       @click="loadingByFilters"
       :disabled="!readyDownload"
       class="tab-button tabLvlButton"
       :class="{ disabled: !readyDownload }"
     >
-      <p class="p__tab-button">Отправить</p>
+      <p class="p__tab-button">{{ getLocalizedText('Send') }}</p>
     </button>
   </div>
 
@@ -64,6 +63,14 @@
   </div>
 
   <AppLoader v-if="isloading" />
+  <div class="wrapperSeachCloth">
+    <input
+      v-if="newResult"
+      :placeholder="getLocalizedText('Search3Letters')"
+      v-model="seachCloth"
+      class="seachCloth"
+    />
+  </div>
 
   <ListCloth
     v-if="newResult"
@@ -83,6 +90,7 @@ import { useStore } from 'vuex'
 import { fetchAPIData } from '../api/fetchApi'
 import AppLoader from '../components/AppLoader.vue'
 import ListCloth from '../components/use/ListCloth.vue'
+import { getLocalizedText } from '@/locale/index'
 
 const props = defineProps({
   cellOptions: {
@@ -121,6 +129,7 @@ const isloading = ref(false)
 const spanErrorText = ref()
 const openAccordion = ref(false)
 const reqParameterVal = ref(true)
+const fullrequests = ref()
 
 const store = useStore()
 const lvlPerson = computed(() => store.getters['listManeken'](props.idMannequin).lvl)
@@ -164,6 +173,7 @@ const minParam = [
 const otherInfo = [
   { minlevel: 0 },
   { name: 0 },
+  { name_en: 0 },
   { rarity: 0 },
   { id: 0 },
   { image: '' },
@@ -189,13 +199,13 @@ const dataSets = [
 ]
 
 const rarity = ref([
-  { key: 'goss', id: '1', name: 'Звичайна річ', checked: true },
-  { key: 'craft', id: '2', name: 'Крафтова річ', checked: true },
-  { key: 'rarity', id: '3', name: 'Раритетна річ', checked: true },
-  { key: 'reward', id: '5', name: 'Нагородна річ', checked: true },
-  { key: 'epic', id: '6', name: 'Епична річ', checked: true },
-  { key: 'ratnic', id: '7', name: 'Річ ратника', checked: true },
-  { key: 'mythical', id: '8', name: 'Міфічна річ', checked: true }
+  { key: 'goss', id: '1', name: getLocalizedText('goss'), checked: true },
+  { key: 'craft', id: '2', name: getLocalizedText('craft'), checked: true },
+  { key: 'rarity', id: '3', name: getLocalizedText('rarity'), checked: true },
+  { key: 'reward', id: '5', name: getLocalizedText('reward'), checked: true },
+  { key: 'epic', id: '6', name: getLocalizedText('epic'), checked: true },
+  { key: 'ratnic', id: '7', name: getLocalizedText('ratnic'), checked: true },
+  { key: 'mythical', id: '8', name: getLocalizedText('mythical'), checked: true }
   // { key: 'unique', id: '9', name: 'Уникальна річ', checked: false }
 ])
 
@@ -237,6 +247,16 @@ function suitableThings() {
   })
 }
 
+const seachCloth = ref()
+
+watch(seachCloth, (val) => {
+  if (val.length > 2) {
+    newResult.value = fullrequests.value.filter((item) => item.otherInfo.name.includes(val))
+  } else {
+    newResult.value = fullrequests.value
+  }
+})
+
 const rarityId = []
 
 function rarityFilter() {
@@ -247,7 +267,7 @@ function rarityFilter() {
   })
 
   if (rarityId.length === 0) {
-    spanErrorText.value = 'Заповни хоча б один фільтр'
+    spanErrorText.value = getLocalizedText('FillOneFilter')
     isloading.value = false
     openAccordion.value = true
     return
@@ -340,7 +360,7 @@ const minMaxLvlFilters = async (id, event) => {
 
 async function loadingByFilters() {
   if (!readyDownload.value) {
-    store.dispatch('setMessage', 'Заполните диапазон уровней')
+    store.dispatch('setMessage', getLocalizedText('FillRangeLevels'))
     return
   }
   spanErrorText.value = null
@@ -363,13 +383,14 @@ async function loadingByFilters() {
     newResult.value = request.map((requestItem) => {
       return filterDataSets(requestItem, dataSets)
     })
-
+    fullrequests.value = newResult.value
     // добавляю каждой строчке newResult класс
     processMinStats(newResult, props.minStats)
 
     // если стоит чекбокс, фильтрую массив по статам
     if (reqParameterVal.value === true) {
       newResult.value = suitableThings()
+      fullrequests.value = newResult.value
     }
 
     // Отсортировать по возрастанию параметра "minlevel"
@@ -380,7 +401,7 @@ async function loadingByFilters() {
     })
 
     if (newResult.value.length === 0) {
-      spanErrorText.value = 'Нема результатів по фільтру'
+      spanErrorText.value = getLocalizedText('AreNoResults')
     }
   }
   setTimeout(() => {
@@ -401,6 +422,16 @@ export default {
 </script>
 
 <style>
+.wrapperSeachCloth {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.seachCloth {
+  border-radius: 10px;
+  padding-left: 10px;
+}
 /* Style the buttons that are used to open and close the accordion panel */
 .form__items_modal {
   justify-content: flex-start;

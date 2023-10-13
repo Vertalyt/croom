@@ -12,7 +12,7 @@
 
 
 <script setup>
-defineEmits({}),
+defineEmits({});
 defineProps({})
 </script>
 

@@ -191,7 +191,6 @@ async function isLoadingParam() {
   } else {
     localeSait.value = 'uk-UA'
   }
-
 }
 
 onMounted(async () => {

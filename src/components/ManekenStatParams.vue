@@ -5,18 +5,18 @@
                 </thead>
                 <tbody class="options__tbody">
                   <tr>
-                    <td>Параметри</td>
-                    <td>Сума</td>
-                    <td>Базові</td>
-                    <td v-if="elixCheck">Еліксири</td>
+                    <td>{{ getLocalizedText('Parameters') }}</td>
+                    <td>{{ getLocalizedText('Sum') }}</td>
+                    <td>{{ getLocalizedText('Base') }}</td>
+                    <td v-if="elixCheck">{{ getLocalizedText('Elixirs') }}</td>
                     <td v-if="!additionalCheck"><span class="material-symbols-outlined">add</span></td>
                     <td v-if="!additionalCheck"><span class="material-symbols-outlined">remove</span></td>
                   </tr>
 
-                  <tr v-for="p in statParams" :key="p.name">
+                  <tr v-for="p in statParams" :key="p.key">
                   <td>
-                    <img :src="p.link" :alt="p.name" />
-                    {{ p.name }}
+                    <img :src="p.link" :alt="p.key" />
+                    {{ getLocalizedText(p.key) }}
                   </td>
                   <td>{{ p.summStatBonusAndBase }}</td>
                   <slot name="statManeken" :summBase="p" />
@@ -28,6 +28,7 @@
 
 
 <script setup>
+import { getLocalizedText } from '@/locale/index'
 
 defineProps({
   statParams: {

@@ -6,36 +6,36 @@
           <div class="accordionFaceInfo">
             <img
               :src="`https://files.nura.biz/site/images/things100x100/${c.otherInfo.image}.png`"
-              :alt="c.otherInfo.name"
+              :alt="c.otherInfo.name_en"
               class="accordionFaceImg"
             />
-            <p>{{ c.otherInfo.name }}</p>
+            <p>{{ localeName(c) }}</p>
             <p>
-              Рівень: <small>{{ c.otherInfo.minlevel }}</small>
+              {{ getLocalizedText('Level') }}: <small>{{ c.otherInfo.minlevel }}</small>
             </p>
           </div>
           <div class="dressAddGrup">
             <button 
             v-if="ringsAndRelics || earrings"
             class="button buttonx4" @click.stop="dressX(c)">{{ nameX }}</button>
-            <button class="button" @click.stop="dress(c)">Вдягти</button>
+            <button class="button" @click.stop="dress(c)">{{ getLocalizedText('Dress') }}</button>
           </div>
         </div>
         <div class="priseInfo">
           <p v-if="c.priseInfo.price">
-            Тали: <small>{{ c.priseInfo.price }}</small>
+            {{ getLocalizedText('Tall') }}: <small>{{ c.priseInfo.price }}</small>
           </p>
           <p v-if="c.priseInfo.goldprice">
-            Золоті тали: <small>{{ c.priseInfo.goldprice }}</small>
+            {{ getLocalizedText('goldprice') }}: <small>{{ c.priseInfo.goldprice }}</small>
           </p>
           <p v-if="c.priseInfo.ratnikprice">
-            Ратник: <small>{{ c.priseInfo.ratnikprice }}</small>
+            {{ getLocalizedText('Warrior') }}: <small>{{ c.priseInfo.ratnikprice }}</small>
           </p>
           <p v-if="c.priseInfo.obmenprice">
-            Обміни: <small>{{ c.priseInfo.obmenprice }}</small>
+            {{ getLocalizedText('Exchanges') }}: <small>{{ c.priseInfo.obmenprice }}</small>
           </p>
           <p v-if="c.priseInfo.reliktprice">
-            Реліквії: <small>{{ c.priseInfo.reliktprice }}</small>
+            {{ getLocalizedText('Relics') }}: <small>{{ c.priseInfo.reliktprice }}</small>
           </p>
         </div>
       </div>
@@ -43,16 +43,18 @@
       <div class="panel" :class="{ open: openPanel === idx }">
         <div v-if="foundShortageDifference(c.minParam)" class="addRequiredParameters">
           <p class="smollText error">
-            Ваші параметри не достатні, але є достатня кількість балів розводілу. Розподілити?
+            {{ getLocalizedText('distributeDress') }}
           </p>
-          <button @click.stop="addMinParamCloth(c)" class="button">Розподілити та вдягти</button>
+          <button @click.stop="addMinParamCloth(c)" class="button">
+            {{ getLocalizedText('DistributeAndDress') }}
+          </button>
         </div>
 
         <ChildAccordeonItem
           v-if="Object.entries(c.minParam).length > 0"
           :items="c.minParam"
           :openChildPanel="openChildPanel"
-          label="Требуемые параметры"
+          :label="getLocalizedText('RequiredParameters')"
           typeParam="minParam"
           @changeChildPanel="accordionChildOpen"
         />
@@ -60,7 +62,7 @@
           v-if="Object.entries(c.addParam).length > 0"
           :items="c.addParam"
           :openChildPanel="openChildPanel"
-          label="Бонусные параметры"
+          :label="getLocalizedText('BonusOptions')"
           typeParam="addParam"
           @changeChildPanel="accordionChildOpen"
         />
@@ -74,6 +76,7 @@ import { ref, computed, watch } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
 import { useStore } from 'vuex'
 import { arrayVariableStats } from '../../initialization/baseParams'
+import { getLocalizedText } from '@/locale/index'
 
 const props = defineProps({
   newResult: {
@@ -99,6 +102,17 @@ const emits = defineEmits({
 const openPanel = ref(null)
 const openChildPanel = ref('')
 const store = useStore()
+
+
+const locale = store.getters['requests/clientInfo']
+
+function localeName(c) {
+  if(locale && locale.locale === "en-US") {
+    return c.otherInfo.name_en
+  } else {
+    return c.otherInfo.name
+  }
+}
 
 
 const observerType = computed( () => props.cellOptions )

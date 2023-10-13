@@ -23,7 +23,7 @@
           class="tab-button maneckenBtn spellsBtn"
           @click.prevent="updateSpellsCheck(ollSpells)"
         >
-          <p class="p__tab-button p__tab-button-elix">Сразу обновить</p>
+          <p class="p__tab-button p__tab-button-elix">{{ getLocalizedText('UpdateImmediately') }}</p>
         </button>
       </div>
       </form>
@@ -35,6 +35,8 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+
+import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   updateSpellsCheck: Object,

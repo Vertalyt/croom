@@ -5,9 +5,9 @@
         <tr v-for="p in nameCost" :key="p.key">
           <td>
             <img :src="p.link" :alt="p.key" />
-            {{ p.name }}
+            {{ getLocalizedText(p.key) }}
           </td>
-          <td>{{ p.cost }}</td>
+          <td>{{ p.count }}</td>
         </tr>
       </tbody>
     </table>
@@ -17,6 +17,7 @@
 <script setup>
 import { useStore } from 'vuex'
 import { ref, computed, watch } from 'vue'
+import { getLocalizedText } from '@/locale/index'
 
 const props = defineProps({
   idMannequin: {
@@ -41,26 +42,22 @@ const spells = computed(() =>
 const nameCost = ref([
   {
     key: 'life',
-    name: 'Життя',
-    cost: 15,
+    count: 15,
     link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/health.svg'
   },
   {
     key: 'mana',
-    name: 'Мана',
-    cost: 18,
+    count: 18,
     link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/mana.svg'
   },
   {
     key: 'dstamina',
-    name: 'Енергія',
-    cost: 100,
+    count: 100,
     link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg'
   },
   {
     key: 'rating',
-    name: 'Рейтинг',
-    cost: 6,
+    count: 6,
     link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/rating.svg'
   }
 ])
@@ -81,15 +78,22 @@ function summRatingSpells(val) {
   return totalRating
 }
 
+watch(nameCost, val => {
+  store.commit('updateManekenInfo', {
+    idMannequin: props.idMannequin,
+    genСharVal: [...val]
+  })
+}, { deep: true, })
+
+
 watch([fortressComputed, hpWithoutFortress], val => {
   if(val[0]) {
    const newLife = nameCost.value.find((item) => item.key === 'life')
-   newLife.cost = Math.round(val[1] * Number(val[0].bonusHealthMutiplier))
+   newLife.count = Math.round(val[1] * Number(val[0].bonusHealthMutiplier))
   }
 }, { immediate: true })
 
-watch(
-  spells,
+watch(spells,
   (val) => {
     spellsReiting.value = summRatingSpells(val.spellsList)
     rating.value += spellsReiting.value
@@ -100,7 +104,7 @@ watch(
 watch(rating, (val) => {
   nameCost.value.forEach((item) => {
     if (item.key === 'rating') {
-      item.cost = Number(val)
+      item.count = Number(val)
     }
   })
 }, { immediate: true })
@@ -130,13 +134,13 @@ watch(statModule, (val) => {
 
   nameCost.value.forEach((item) => {
     if (item.key === 'life') {
-      item.cost = hpWithoutFortress.value
+      item.count = hpWithoutFortress.value
     }
     if (item.key === 'mana') {
-      item.cost = Number(dwisdom) * 6
+      item.count = Number(dwisdom) * 6
     }
     if (item.key === 'dstamina') {
-      item.cost = Number(dstamina)
+      item.count = Number(dstamina)
     }
   })
 }, { immediate: true })

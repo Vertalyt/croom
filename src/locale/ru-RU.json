@@ -5,6 +5,15 @@
 "VipityForTheRest" : "Выпить последним",
 "ResettingMixtures" : "Обнуление микстур",
 "ThrowOffElixirs" : "Сбросить эликсиры",
+"Elixirs" : "Еликсиры",
+"ThoseCanBeDressed" : "То что можно одеть",
+"MinLevel" : "Мин. уровень",
+"MaxLevel" : "Макс. уровень",
+"Send" : "Отправить",
+"Search3Letters" : "Поиск от 3 букв",
+"Dress" : "Одеть",
+
+"SummaryTable" : "Сводная таблица",
 
 "fstrength" : "Настой силы",
 "fdexterity" : "Настой ловкости",
@@ -40,7 +49,6 @@
 "Cost" : "Стоимость",
 
 "Tall" : "Талы",
-"GoldTall" : "Золотые талы",
 "Warrior" : "Ратник",
 "Exchanges" : "Обмены",
 "Relics" : "Реликвии",
@@ -57,21 +65,113 @@
 "Next" : "Вперед",
 
 
+"ProtectMagic" : "Защита от магии",
+"other" : "Иное",
+
+"price" : "Талы",
+"goldprice" : "Золотые талы",
+"ratnikprice" : "Ратник",
+"obmenprice" : "Обмены",
+"reliktprice" : "Реликты",
+"distributeDress" : "Ваших параметров недостаточно, но количество баллов дистрибьютору достаточно. Распределить?",
+"DistributeAndDress" : "Распределить и одеть",
+
+"RequiredParameters" : "Требуемые параметры",
+"BonusOptions" : "Бонусные параметры",
+
+
+"headarmor" : "Голова",
+"bodyarmor" : "Туловище",
+"lefthandarmor" : "Левая рука",
+"righthandarmor" : "Правая рука",
+"lagsarmor" : "Ноги",
+
+"headarmor2": "Броня головы",
+"bodyarmor2": "Броня туловища",
+"lefthandarmor2": "Броня левой руки",
+"righthandarmor2": "Броня правой руки",
+"lagsarmor2": "Броня ног",
+
+"whitemagicprotection" : "Рассвет",
+"blackmagicprotection" : "Полнолуние",
+"astralmagicprotection" : "Астрал",
 
 
 
 
+"life" : "Жизни",
+"mana" : "Манна",
+"dstamina" : "Енергия",
+"rating" : "Рейтинг",
+
+"absent" : "Нет",
+"newbie" : "Новичок",
+"promotions" : "Продвинутий",
+"expert" : "Експерт",
+"master" : "Мастер",
+"grandmaster" : "Грандмастер",
+
+"human" : "Человек",
+"gnom" : "Гном",
+"elf" : "Эльф",
+"vampire" : "Вампир",
+"ork" : "Орк",
+"trol" : "Троль",
+
+"dstrength" : "Сила",
+"ddexterity" : "Ловкость",
+"dintel" : "Интелект",
+"dluck" : "Удача",
+"dreaction" : "Реакция",
+"dwisdom" : "Мудрость",
+"dconst" : "Сложение",
+
+
+"PutOn" : "Одеть",
+"Level" : "Уровень",
+"Remainder" : "Раскиньте все балы, остаток",
+"MaximumPoint" : "Максимум на точку",
+"DistributionPoints" : "Балы распределения",
+"Stats" : "Статов",
+"Parameters" : "Параметры",
+"Sum" : "Сумма",
+"Base" : "Базовые",
+
+
+"Spear2nd" : "Копье 2-р",
+"Ax2nd" : "Топор 2-р",
+"Sword" : "Меч",
+"Bow" : "Лук",
+"Shield" : "Щит",
+"Staff" : "Посох",
+"Hammer" : "Молот",
+"Hammer2nd" : "Молот 2-р",
+"Ax" : "Топор",
+"Sword2nd" : "Меч 2-р",
+"Rod" : "Жезл",
+"Chestnut" : "Кастет",
+"Knife" : "Нож",
+
+
+"goss" : "Обычная вещь",
+"craft" : "Крафтовая вещь",
+"rarity" : "Раритетная вещь",
+"reward" : "Наградная вещь",
+"epic" : "Епическая вещь",
+"ratnic" : "Вещь ратника",
+"mythical" : "Міфічна вещь",
+
+"FillOneFilter'" : "Заполни хотя бы один фильтр",
+"FillRangeLevels'" : "Заполните диапазон уровней",
+"AreNoResults" : "Нет результатат по фильтру",
+"UpdateImmediately" : "Сразу обновить",
 
   "refresh": "Обновить",
-  "localeSite": "Язык сайта",
 
-    "Account": "Аккаунт",
-    "AccountLinkingSuccess": "Аккаунти успішно пов'язані",
-    "MethodSuccessfullyUnbound": "Метод успішно відвязаний",
-    "PassReset": "Посилання для скидання пароля успішно надіслано на пошту",
-  
+  "ItemLevel": "Уровень вещи",  
+  "MaxStrength": "Макс. прочность",
+  "Requirements" : "Требования",
 
-  
     "Email": "Емаил",
     "Password": "Пароль",
     "Enter": "Війти",
@@ -84,17 +184,7 @@
     "PasswordCannotBeSmaller": "Пароль не може бути меншим",
     "Symbols": "Символов",
 
-    "addLoginPass": "Додати",
-    "ForgotPassword": "Забули пароль?",
-  
-    "GoOut": "Вийти",
-  
-    "DataUpdated": "Дані успішно оновлені",
-    "EntryAddedSuccessfully": "Запис успішно додано",
-    "CategoryAddedSuccessfully": "Категорія успішно оновлена",
-    "RegistrationCompleted": "Реєстрація пройшла успішно. Авторизуйтесь",
-    "AuthorizationSuccessful": "Авторизація успішна",
-  
+    "DataUpdated": "Данные успешно обновлены",
   
     "logout": "Вихід пройшов успішно",
       "auth/user-not-found": "Користувача з цією адресою електронної пошти не знайдено",
@@ -103,12 +193,10 @@
       "PERMISSION_DENIED": "Доступ заборонено",
       "auth/email-already-in-use": "Користувач з цією адресою електронної пошти вже зайнятий",
       "auth/requires-recent-login": "Для аутентифікації потрібний недавній вхід. Увійдіть знову",
-      "auth/provider-already-linked": "авторизація поставщик вже зв'язан",
+      "auth/provider-already-linked": "авторизація поставщик вже зв'язан"
   
 
 
-      "AddLoginPassword": "Додати вхід по логіну та паролю",
-      "NoElementsToEdit":"Відсутні елементи для редагування",
-      "NoElementsToRestor":"Відсутні елементи для відновлення"
+
   }
   

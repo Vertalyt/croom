@@ -27,6 +27,7 @@ const mannequinChange = (val) => {
   idMannequin.value = val
 }
 
+const openPivot = ref(false)
 </script>
 
 <template>
@@ -45,17 +46,16 @@ const mannequinChange = (val) => {
         <AppHeader 
         @mannequinChange="mannequinChange"
         @isOpenProfile="closeOpenProfile = true"
+        @isOpenPivot="openPivot = !openPivot"
         />
 
           <MainLayout 
           :idMannequin="idMannequin"
+          :openPivot="openPivot"
           @OpenProfile="closeOpenProfile = true"/>
 
 
         </div>
       </div>
-
-
     </div>
-
 </template>
