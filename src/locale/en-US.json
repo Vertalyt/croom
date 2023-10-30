@@ -160,6 +160,9 @@
   "DistributeAndDress" : "Distribute and dress",
   "RequiredParameters" : "Required parameters",
   "BonusOptions" : "Bonus options",
+  "art" : "Artifact",
+  "Things" : "Things",
+
 
   "Email": "Емаил",
   "Password": "Пароль",
@@ -182,5 +185,7 @@
   "PERMISSION_DENIED": "Доступ заборонено",
   "auth/email-already-in-use": "Користувач з цією адресою електронної пошти вже зайнятий",
   "auth/requires-recent-login": "Для аутентифікації потрібний недавній вхід. Увійдіть знову",
-  "auth/provider-already-linked": "авторизація поставщик вже зв'язан"
+  "auth/provider-already-linked": "авторизація поставщик вже зв'язан",
+  "PermissionDenied" : "Please login for saved mannequins and languages."
+
 }

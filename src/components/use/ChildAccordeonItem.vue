@@ -53,7 +53,7 @@ const accordionChildOpen = (panelId) => {
 
 
 const nameStat = [
-  { minParam: 'minstrength', addParam: 'dstrength', name: getLocalizedText('dstamina') },
+  { minParam: 'minstrength', addParam: 'dstrength', name: getLocalizedText('dstrength') },
   { minParam: 'mindexterity', addParam: 'ddexterity', name: getLocalizedText('ddexterity') },
   { minParam: 'minconst', addParam: 'dconst', name: getLocalizedText('dconst') },
   { minParam: 'minintel', addParam: 'dintel', name: getLocalizedText('dintel') },
@@ -68,7 +68,7 @@ const nameStat = [
   { minParam: 'righthandarmor', addParam: 'righthandarmor', name: getLocalizedText('righthandarmor2') },
   { minParam: 'lefthandarmor', addParam: 'lefthandarmor', name: getLocalizedText('lefthandarmor2') },
   { minParam: 'lagsarmor', addParam: 'lagsarmor', name: getLocalizedText('lagsarmor2') },
-  { addParam: 'dstamina', name: getLocalizedText('dstamina')},
+  { minParam: 'lagsarmor', addParam: 'dstamina', name: getLocalizedText('dstamina')},
 ]
 
 const getStatName = (key, type) => {
@@ -144,7 +144,7 @@ export default {
 
 .open {
   height: fit-content;
-  max-height: 200px; /* Максимальная высота для открытой панели */
+  max-height: 300px; /* Максимальная высота для открытой панели */
   opacity: 1; /* Полная непрозрачность */
   transform: translateY(0); /* Смещение отсутствует */
   transition:

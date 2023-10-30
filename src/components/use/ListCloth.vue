@@ -49,7 +49,7 @@
             {{ getLocalizedText('DistributeAndDress') }}
           </button>
         </div>
-
+        <p class="descriptionInfo">{{ c.otherInfo.description }}</p>
         <ChildAccordeonItem
           v-if="Object.entries(c.minParam).length > 0"
           :items="c.minParam"
@@ -102,7 +102,6 @@ const emits = defineEmits({
 const openPanel = ref(null)
 const openChildPanel = ref('')
 const store = useStore()
-
 
 const locale = store.getters['requests/clientInfo']
 
@@ -400,5 +399,11 @@ small {
   border-radius: 20px;
   padding: 8px;
   margin-bottom: 20px;
+}
+
+.descriptionInfo {
+    font-size: 12px;
+    font-style: italic;
+    text-align-last: center;
 }
 </style>

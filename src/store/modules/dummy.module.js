@@ -119,14 +119,14 @@ export default {
       }
     },
     async changeDummyEl(
-      { commit, dispatch, state },
-      { addParam, typeid, idMannequin, imgLink, cellName, key = '' }
+      { commit, dispatch, state }, { addParam, typeid, idMannequin, imgLink, cellName, key = '' }
     ) {
       const foundItem = state.listsDummy.find((item) => item.idMannequin === idMannequin)
 
       if (foundItem) {
-       await dispatch('inspectionCleaning', { typeid, idMannequin })
-
+        if(listTwoHandedTypes.includes(typeid)) {
+          await dispatch('inspectionCleaning', { typeid, idMannequin })
+        }
         commit('changeDummyEl', { idMannequin, imgLink, cellName, typeid, key })
         commit(
           'statChange/statChange',

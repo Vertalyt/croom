@@ -94,7 +94,7 @@ watch(computedAccessibleStats, val => {
 watch(raseNameComputed, val => {
   if (val) {
     raseModel.value = val
-    itemsNameRase.value = availableRaces.find((item) => item.id === val).name
+    itemsNameRase.value = availableRaces.find((item) => item.id === val).id
   } else {
     raseModel.value = 'human'
     itemsNameRase.value = getLocalizedText("SelectRace")

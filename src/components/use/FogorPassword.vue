@@ -1,63 +1,26 @@
+
 <template>
-	<div class="container">
-  
-	  <section class="content">
-		<form @submit.prevent="onSubmit" class="login-form">
-		  <input
-      :id="fieldNames.email"
-      class="email"
-      type="text"
-      autocomplete="email username"
-			v-model="eValue"
-			:class="{ invalid: eError }"
-			@blur="eBlur"
-		  />
-		  <label :for="fieldNames.email">Email</label>
-		  <small class="helper-text" :class="{ invalid: eError }">{{ eError}}</small>
-  
-		  <input
-      :id="fieldNames.password"
-      class="password"
-			type="password"
-      autocomplete="new-password"
-			:class="{ invalid: pError }"
-			v-model="pValue"
-			@blur="pBlur"
-		  />
-		  <label :for="fieldNames.password">{{ getLocalizedText("Password") }}</label>
-		  <small class="helper-text" :class="{ invalid: pError }">{{ pError}}</small>
-  
-		  <template v-if="loginFlag === 'register'">
-			<input
-      :id="fieldNames.username"
-      type="text"
-        class="username"
-        autocomplete="username"
-			  v-model="nValue"
-			  :class="{ invalid: nError }"
-			  @blur="nBlur"
+  <div>
+    <form 
+    @submit.prevent="fogotPass" 
+    action="">
+        <input
+        id="fogotPass"
+        class="email"
+			  type="text"
+        autocomplete="email username"
+        placeholder="Введите емаил"
+        :class="{ invalid: fError }"
+			  v-model="fValue"
 			/>
-			<label :for="fieldNames.username">Им'я</label>
-			<small class="helper-text" :class="{ invalid: nError }">{{ nError }}</small>
-		  </template>
-  
-		  <div>
-			<input type="submit" value="Log in" />
-      <a 
-      @click.prevent="fogot = !fogot"
-      >Lost your password?</a>
-		  </div>
-		</form>
 
-    <FogorPassword 
-    v-if="fogot"
-    @isClose="$emit('isClose')"
-    />
+      <input 
+      type="submit" value="Сбросить"/>
 
-	  </section>
-  
-	</div>
-  </template>
+    </form>
+  </div>
+</template>
+
 
 <script setup>
 import { ref } from 'vue'
@@ -65,102 +28,26 @@ import { useStore } from 'vuex'
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { getLocalizedText } from '@/locale'
-import FogorPassword from './FogorPassword.vue';
 
 const emits = defineEmits({
-  isClose: null
-});
-const props = defineProps({
-	loginFlag: {
-		type: String,
-		required: false
-	}
-});
+  isClose: null,
+})
 
 const store = useStore()
-const fogot = ref(false)
-
-const MIN_LENGHT_PASS = 6;
-
-const fieldNames = {
-  email: `email${props.loginFlag}`,
-  password: `password${props.loginFlag}`,
-  username: `username${props.loginFlag}`,
-};
-
-// Функция для создания правил для поля
-function getFieldRules(fieldName) {
-  let rules = yup.string().trim();
-  
-  switch (fieldName) {
-    case fieldNames.email:
-      rules = rules.required(getLocalizedText("EnterEmail")).email(getLocalizedText("MustBeValidEmail"));
-      break;
-    case fieldNames.password:
-      rules = rules.required(getLocalizedText("EnterPassword")).min(
-        MIN_LENGHT_PASS,
-        `${getLocalizedText("PasswordCannotBeSmaller")} ${MIN_LENGHT_PASS} ${getLocalizedText("Symbols")}.`
-      );
-      break;
-    case fieldNames.username:
-      if (props.loginFlag === 'register') {
-        rules = rules.required(getLocalizedText("EnterName"));
-      }
-      break;
-    default:
-      break;
-  }
-
-  return rules;
-}
-
 const { handleSubmit } = useForm();
 
 const {
-  value: eValue,
-  errorMessage: eError,
-  handleBlur: eBlur,
+  value: fValue,
+  errorMessage: fError,
 } = useField(
-  fieldNames.email,
-  getFieldRules(fieldNames.email)
+  'fogotPass',
+  yup.string().trim().required(getLocalizedText("EnterEmail")).email(getLocalizedText("MustBeValidEmail"))
 );
 
-const {
-  value: pValue,
-  errorMessage: pError,
-  handleBlur: pBlur,
-} = useField(
-  fieldNames.password,
-  getFieldRules(fieldNames.password)
-);
-
-const {
-  value: nValue,
-  errorMessage: nError,
-  handleBlur: nBlur,
-} = useField(
-  fieldNames.username,
-  getFieldRules(fieldNames.username)
-);
-
-const onSubmit = handleSubmit(async (val, { resetForm }) => {
-  const date = {
-    email: val[fieldNames.email], 
-    password: val[fieldNames.password],
-  }
-  if(val[fieldNames.username]) {
-    date.name = val[fieldNames.username]
-  }
+const fogotPass = handleSubmit(async (val, { resetForm }) => {
   try {
-    const localLocale = store.getters['requests/clientInfo']
-    const rezult = await store.dispatch(`auth/${props.loginFlag}`, date);
-    if (rezult) {
-      if(localLocale !== null) {
-        rezult.locale = localLocale.locale
-        await store.dispatch(`requests/updateInfo`, rezult);
-      }
+    store.dispatch('auth/resetPassword', { email: fValue.value })
       emits('isClose')
-   }
     resetForm();
   } catch (error) {
     /* empty */
@@ -168,13 +55,12 @@ const onSubmit = handleSubmit(async (val, { resetForm }) => {
 });
 
 
+
 </script>
-
-
 
 <script>
 export default {
-  name: 'FormRegIsteredLogin',
+  name: 'FogorPassword',
 }
 </script>
 

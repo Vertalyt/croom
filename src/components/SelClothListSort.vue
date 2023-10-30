@@ -179,7 +179,8 @@ const otherInfo = [
   { image: '' },
   { class: '' },
   { typeid: '' },
-  { durability: '' }
+  { durability: '' },
+  { description: '' }
 ]
 // массив для отображение стоимостецй по вещи по вещи
 const priseInfo = [

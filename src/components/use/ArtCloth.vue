@@ -143,7 +143,6 @@ const filtersClasses = {
   typeid: []
 }
 
-
 const artParams = ref([])
 const store = useStore()
 const persParams = computed(() => store.getters['listManeken'](props.idMannequin).statModule)
@@ -160,12 +159,16 @@ const COUNT_POINGHTS = [
   { type: 'stat', count: 3, maxEl: 'maxStat' },
   { type: 'armor', count: 1, maxEl: 'maxArmor' },
   { type: 'protectionMagick', count: 2, maxEl: 'maxMagicProtect' },
-  { type: 'protectionMagick', count: 3, maxEl: 'astralmagicprotection' }
+  { type: 'protectionMagick', count: 3, maxEl: 'astralmagicprotection' },
+  { type: 'dstamina', count: 36, maxEl: 'maxDstamina' },
 ]
 
 const windowInnerHeight = document.documentElement.clientHeight
 
 let addParamPoint = arrayVariableStats
+addParamPoint.push({ key: 'dstamina', count: 0 })
+
+
 const artArrPersParams = ref(
   persParams.value.map((item) => {
     return {
@@ -173,8 +176,16 @@ const artArrPersParams = ref(
       summStatBase: 0,
       summStatBonusAndBase: 0
     }
-  }).filter(item => item.type !== 'dstamina')
+  })
 )
+const typeAtrWithDstamina = [40, 55];
+
+if (Array.isArray(props.cellOptions.typeid)) {
+  const shouldFilter = !props.cellOptions.typeid.some(value => typeAtrWithDstamina.includes(value));
+  if (shouldFilter) {
+    artArrPersParams.value = artArrPersParams.value.filter(item => item.type !== 'dstamina');
+  }
+}
 
 
 const typeWeapon = [
@@ -242,7 +253,6 @@ const loadingByFilters = () => {
 }
 
 function changeStat(p, count) {
-
   errorClassFlag.value = false
   const MIN_STAT_VALUE = 0;
   // определение ценность характеристики в очках
@@ -310,6 +320,9 @@ const MAX_EL = statWithType ? statWithType.maxEl : null;
 });
 
 }
+
+
+
 const putOnThing = () => {
   if(breedingPoints.value !== 0) {
     errorClassFlag.value = true

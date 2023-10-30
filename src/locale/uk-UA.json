@@ -104,7 +104,7 @@
   "master": "Мастер",
   "grandmaster": "Грандмастер",
 
-  "human": "Чоловік",
+  "human": "Людина",
   "gnom": "Гном",
   "elf": "Ельф",
   "vampire": "Вампир",
@@ -159,7 +159,8 @@
 "FillRangeLevels'" : "Заповни диапазон рівней",
 "AreNoResults" : "Нема результатів по фільтру",
 "UpdateImmediately" : "Відразу оновити",
-
+"art" : "Артефакт",
+"Things" : "Одяг",
 
 "ItemLevel": "Рівень одягу",  
 "MaxStrength": "Макс. міцність",
@@ -190,7 +191,8 @@
   "PERMISSION_DENIED": "Доступ заборонено",
   "auth/email-already-in-use": "Користувач з цією адресою електронної пошти вже зайнятий",
   "auth/requires-recent-login": "Для аутентифікації потрібний недавній вхід. Увійдіть знову",
-  "auth/provider-already-linked": "авторизація поставщик вже зв'язан"
+  "auth/provider-already-linked": "авторизація поставщик вже зв'язан",
+  "PermissionDenied" : "Будь ласка, авторизуйтесь для збережених манекенів та мов."
 
 
 }

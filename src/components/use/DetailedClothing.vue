@@ -14,6 +14,7 @@
         <div v-if="otherInfo" class="header">
           <h3>{{ otherInfo.name }}</h3>
         </div>
+        <p v-if="otherInfo && otherInfo.description" class="descriptionInfo">{{ otherInfo.description }}</p>
         <div class="otherInfo">
           <div v-if="otherInfo" class="clothImg">
             <img
@@ -25,19 +26,28 @@
           <div class="detailOtherInfo">
             <div class="prise">
               <p v-if="priseInfo.price">{{ getLocalizedText('Tall') }}: {{ priseInfo.price }}</p>
-              <p v-if="priseInfo.goldprice">{{ getLocalizedText('goldprice') }}: {{ priseInfo.goldprice }}</p>
-              <p v-if="priseInfo.ratnikprice">{{ getLocalizedText('Warrior') }}: {{ priseInfo.ratnikprice }}</p>
-              <p v-if="priseInfo.obmenprice">{{ getLocalizedText('Exchanges') }}: {{ priseInfo.obmenprice }}</p>
-              <p v-if="priseInfo.reliktprice">{{ getLocalizedText('Relics') }}: {{ priseInfo.reliktprice }}</p>
+              <p v-if="priseInfo.goldprice">
+                {{ getLocalizedText('goldprice') }}: {{ priseInfo.goldprice }}
+              </p>
+              <p v-if="priseInfo.ratnikprice">
+                {{ getLocalizedText('Warrior') }}: {{ priseInfo.ratnikprice }}
+              </p>
+              <p v-if="priseInfo.obmenprice">
+                {{ getLocalizedText('Exchanges') }}: {{ priseInfo.obmenprice }}
+              </p>
+              <p v-if="priseInfo.reliktprice">
+                {{ getLocalizedText('Relics') }}: {{ priseInfo.reliktprice }}
+              </p>
             </div>
             <p v-if="otherInfo">{{ getLocalizedText('ItemLevel') }}: {{ otherInfo.minlevel }}</p>
-            <p v-if="otherInfo">{{ getLocalizedText('MaxStrength') }}: {{ otherInfo.durability }}</p>
+            <p v-if="otherInfo">
+              {{ getLocalizedText('MaxStrength') }}: {{ otherInfo.durability }}
+            </p>
           </div>
         </div>
 
         <div class="bodyInfo">
-          <div               v-if="newBaseParam"
-          class="minParam">
+          <div v-if="newBaseParam" class="minParam">
             <SmallTableDetailCloth
               :items="newBaseParam"
               :nameTable="getLocalizedText('Requirements')"
@@ -46,7 +56,14 @@
           <div class="addParam">
             <SmallTableDetailCloth :items="addStat" :nameTable="getLocalizedText('Parameters')" />
             <SmallTableDetailCloth :items="armor" :nameTable="getLocalizedText('Armor')" />
+
+            <div class="group_detail_Cloth" >
             <SmallTableDetailCloth :items="protectionMagick" :nameTable="getLocalizedText('ProtectMagic')" />
+            <SmallTableDetailCloth v-if="dstamina.length > 0" :items="dstamina" :nameTable="getLocalizedText('dstamina')" />
+            </div>
+
+
+            
           </div>
         </div>
       </div>
@@ -81,7 +98,6 @@ let isModalBackground = true
 if ('ontouchstart' in window === false) {
   isModalBackground = false
 }
-
 const otherInfo = computed(() => props.elementParam.param.find((item) => item.otherInfo)?.otherInfo)
 const priseInfo = computed(() => props.elementParam.param.find((item) => item.priseInfo).priseInfo)
 
@@ -101,7 +117,7 @@ const normalizeNameStat = [
   { key: 'lefthandarmor', name: 'Ліва рука', type: 'armor' },
   { key: 'righthandarmor', name: 'Права рука', type: 'armor' },
   { key: 'lagsarmor', name: 'Ноги', type: 'armor' },
-  { key: 'dstamina', name: 'Енергія', type: 'armor' }
+  { key: 'dstamina', name: 'Енергія', type: 'dstamina' }
 ]
 
 const bonusAndBase = computed(
@@ -133,6 +149,7 @@ const newBonusAndBase = ref()
 const addStat = ref()
 const protectionMagick = ref()
 const armor = ref()
+const dstamina = ref()
 
 function parameterSeparation(params) {
   return newBonusAndBase.value.filter((item) => item.type === params)
@@ -143,6 +160,7 @@ if (bonusAndBase.value) {
   addStat.value = parameterSeparation('stat')
   protectionMagick.value = parameterSeparation('protectionMagick')
   armor.value = parameterSeparation('armor')
+  dstamina.value = parameterSeparation('dstamina')
 }
 
 const isClose = () => {
@@ -232,6 +250,10 @@ export default {
   flex-wrap: wrap;
 }
 
+.group_detail_Cloth {
+  display: grid;
+}
+
 @media only screen and (max-device-width: 600px) {
   .accordionFace {
     margin-bottom: 0;
@@ -249,5 +271,11 @@ export default {
   .minParam {
     width: 80px;
   }
+}
+
+.descriptionInfo {
+  font-size: 11px;
+  font-style: italic;
+  text-align-last: center;
 }
 </style>

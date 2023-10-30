@@ -42,7 +42,14 @@ export default {
         commit('setInfo', info)
         return info || undefined
       } catch (error) {
-        console.log(error)
+        if (error.message.includes("Permission denied")) {
+          // Обработка ошибки "Permission denied"
+          console.log(getLocalizedText('PermissionDenied'));
+        } else {
+          // Обработка других ошибок
+          console.log(error);
+        }
+        return undefined;
       }
     },
     async addManecken({ dispatch, commit }, idMarkManecken) {
@@ -71,34 +78,36 @@ export default {
       }
     },
     async addMarkSave({ dispatch, commit }) {
+
       try {
         const db = getDatabase()
         const uid = await dispatch('auth/getUid', null, { root: true })
-        const snapshot = await get(ref(db, 'users/' + uid + '/dateSaveMark/'))
-        const info = snapshot.val()
-
-        // максимальное количество сохранений
-        const MAX_LENGHT = 20
-        // массив с удалдяемыми
-        const deletedRecords = []
-
-        if(info) {
-        if (Object.keys(info).length > MAX_LENGHT) {
-          const keysToDelete = Object.keys(info)
-            .sort((a, b) => a - b)
-            .slice(0, Object.keys(info).length - MAX_LENGHT)
-          keysToDelete.forEach((key) => {
-            deletedRecords.push(info[key])
-            delete info[key]
-          })
-
-          deletedRecords.forEach(async item => {
-             await dispatch('deleteRecord', item.mark)
-          })
+        if(uid !== null) {
+          const snapshot = await get(ref(db, 'users/' + uid + '/dateSaveMark/'))
+          const info = snapshot.val()
+  
+          // максимальное количество сохранений
+          const MAX_LENGHT = 20
+          // массив с удалдяемыми
+          const deletedRecords = []
+  
+          if(info) {
+          if (Object.keys(info).length > MAX_LENGHT) {
+            const keysToDelete = Object.keys(info)
+              .sort((a, b) => a - b)
+              .slice(0, Object.keys(info).length - MAX_LENGHT)
+            keysToDelete.forEach((key) => {
+              deletedRecords.push(info[key])
+              delete info[key]
+            })
+  
+            deletedRecords.forEach(async item => {
+               await dispatch('deleteRecord', item.mark)
+            })
+          }
+          commit('markSave', info)
+          }
         }
-        commit('markSave', info)
-        }
-
       } catch (error) {
         console.log(error)
       }

@@ -10,8 +10,8 @@
     <input type="checkbox" id="bg-checkbox" v-model="checkboxType"/>
     <label id="bg-checkbox-button" for="bg-checkbox">
         <div id="knob"></div>
-        <div id="art">Артефакты</div>
-        <div id="cloth">Вещи</div>
+        <div id="art">{{  getLocalizedText('art')  }}</div>
+        <div id="cloth">{{  getLocalizedText('Things')  }}</div>
     </label>
         </div>
 
@@ -44,6 +44,8 @@ import { useStore } from 'vuex'
 import { ref, computed } from 'vue'
 import SelClothListSort from '../SelClothListSort.vue'
 import ArtCloth from './ArtCloth.vue';
+import { getLocalizedText } from '@/locale/index'
+
 
 const props = defineProps({
   cellOptions: {

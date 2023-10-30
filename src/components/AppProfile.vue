@@ -4,7 +4,7 @@
     <span @click="isClose" class="close">&times;</span>
 
     <AppLoader v-if="isLoading" />
-    
+
     <p v-if="clientInfo">{{ getLocalizedText('Profile') }} {{ clientInfo.name }}</p>
 
     <div v-if="!checkUser" class="accordeonContent">
@@ -40,51 +40,42 @@
       />
     </div>
 
-    <div 
-    v-if="checkUser"  
-    class="profile_content">
-      <button v-if="checkUser" class="button" @click.stop="saveManecken">{{ getLocalizedText('SaveDummy') }}</button>
+    <div v-if="checkUser" class="profile_content">
+      <button v-if="checkUser" class="button" @click.stop="saveManecken">
+        {{ getLocalizedText('SaveDummy') }}
+      </button>
     </div>
-    <h3>{{ getLocalizedText('MannequinsAvailable') }}</h3>
-    <div 
-    v-if="checkUser && markManeckenSave"
-    class="profile_content">
+    <h3 v-if="checkUser">{{ getLocalizedText('MannequinsAvailable') }}</h3>
+    <div v-if="checkUser && markManeckenSave" class="profile_content">
       <ul>
-        <div 
-        class="saveManecken"
-        v-for="m in markManeckenSave" :key="m.mark">
-          <li
-          class="li_saveManecken"
-          >{{ timeMarc(m.mark) }}</li>
-        <button 
-        @click="addManecken(m.mark)"
-        class="button btn_manecken" >{{ getLocalizedText('Download') }}</button>
-        <button 
-        @click="delManecken(m.mark)"
-        class="button btn_manecken" >{{ getLocalizedText('Remove') }}</button>
+        <div class="saveManecken" v-for="m in markManeckenSave" :key="m.mark">
+          <li class="li_saveManecken">{{ timeMarc(m.mark) }}</li>
+          <button @click="addManecken(m.mark)" class="button btn_manecken">
+            {{ getLocalizedText('Download') }}
+          </button>
+          <button @click="delManecken(m.mark)" class="button btn_manecken">
+            {{ getLocalizedText('Remove') }}
+          </button>
         </div>
       </ul>
     </div>
 
-    <div
-    v-if="Object.keys(markSave).length > 0"
-    class="saveManecken"
-    >
-          <button
-          class="button btn_manecken btn_currentPage"
-            v-if="currentPage > 1"
-            @click="currentPage = currentPage - 1"
-         >
-         {{ getLocalizedText('Back') }}
-          </button>
-          <button
-          class="button btn_manecken btn_currentPage"
-          v-if=hasNextPage
-            @click="currentPage = currentPage + 1"
-          >
-          {{ getLocalizedText('Next') }}
-          </button>
-      </div>
+    <div v-if="Object.keys(markSave).length > 0" class="saveManecken">
+      <button
+        class="button btn_manecken btn_currentPage"
+        v-if="currentPage > 1"
+        @click="currentPage = currentPage - 1"
+      >
+        {{ getLocalizedText('Back') }}
+      </button>
+      <button
+        class="button btn_manecken btn_currentPage"
+        v-if="hasNextPage"
+        @click="currentPage = currentPage + 1"
+      >
+        {{ getLocalizedText('Next') }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -99,14 +90,14 @@ import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   isClose: null,
-  refrech: null,
+  refrech: null
 })
 defineProps({})
 const store = useStore()
 const auth = getAuth()
 
 const authComputed = computed(() => auth)
-const checkUser = ref()
+const checkUser = ref(null)
 
 watch(
   authComputed,
@@ -116,46 +107,44 @@ watch(
   { immediate: true }
 )
 
-
-
 const clientInfo = ref([])
 const isLoading = ref(true)
 const localeSait = ref()
-const markSave = computed(() => store.getters['requests/markSave'] )
-
+const markSave = computed(() => store.getters['requests/markSave'])
 
 const markManeckenSave = ref()
 
 // режу обьект с маркировками сохранений на части длчя пагинации
 function slicedObject(obj, start, end) {
-    const sliced = {};
-    let count = 0;
-    for (const key in obj) {
-        if (count >= start && count < end) {
-            sliced[key] = obj[key];
-        }
-        count++;
+  const sliced = {}
+  let count = 0
+  for (const key in obj) {
+    if (count >= start && count < end) {
+      sliced[key] = obj[key]
     }
-    return sliced;
+    count++
+  }
+  return sliced
 }
-
 
 // сортирую, сначала новые
-const sortedData = {};
-watch(markSave, val => {
-
+const sortedData = {}
+watch(markSave, (val) => {
   // Получаем массив ключей (временных меток)
-const keys = Object.keys(val);
-// Сортируем массив ключей в порядке убывания (сначала самые новые)
-keys.sort((a, b) => b - a);
-// Создаем новый объект с отсортированными ключами
+  const keys = Object.keys(val)
+  // Сортируем массив ключей в порядке убывания (сначала самые новые)
+  keys.sort((a, b) => b - a)
+  // Создаем новый объект с отсортированными ключами
 
-for (const key of keys) {
-    sortedData[key] = val[key];
-}
-markManeckenSave.value = slicedObject(sortedData, currentPageData.value.start, currentPageData.value.end)
+  for (const key of keys) {
+    sortedData[key] = val[key]
+  }
+  markManeckenSave.value = slicedObject(
+    sortedData,
+    currentPageData.value.start,
+    currentPageData.value.end
+  )
 })
-
 
 const currentPage = ref(1)
 const hasNextPage = ref(true)
@@ -163,17 +152,20 @@ const hasNextPage = ref(true)
 // количество записей на странице
 const COUNT_RECORDS_IN_PAGE = 3
 const currentPageData = computed(() => {
-      const start = (currentPage.value - 1) * COUNT_RECORDS_IN_PAGE
-      const end = currentPage.value * COUNT_RECORDS_IN_PAGE
-      return { start, end }
-    })
+  const start = (currentPage.value - 1) * COUNT_RECORDS_IN_PAGE
+  const end = currentPage.value * COUNT_RECORDS_IN_PAGE
+  return { start, end }
+})
 
 // слежу за тем какая открыта страница, решаю можно ли показывать кнопку вперед и режу обьект с маркировками сохранений на части длчя пагинации
-watch(currentPage, _ => {
-      hasNextPage.value = currentPageData.value.end < Object.keys(sortedData).length;
-      markManeckenSave.value = slicedObject(sortedData, currentPageData.value.start, currentPageData.value.end)
-    })
-
+watch(currentPage, (_) => {
+  hasNextPage.value = currentPageData.value.end < Object.keys(sortedData).length
+  markManeckenSave.value = slicedObject(
+    sortedData,
+    currentPageData.value.start,
+    currentPageData.value.end
+  )
+})
 
 function timeMarc(time) {
   return new Date(time).toLocaleString('en-GB')
@@ -182,9 +174,6 @@ function timeMarc(time) {
 // гружу стартовые данные о клиенте и маркировках сохранений
 async function isLoadingParam() {
   clientInfo.value = store.getters['requests/clientInfo']
-  if (!clientInfo.value) {
-    clientInfo.value = await store.dispatch('requests/clientInfo')
-  }
   if (clientInfo.value) {
     localeSait.value = clientInfo.value.locale
     await store.dispatch('requests/addMarkSave')
@@ -200,7 +189,6 @@ onMounted(async () => {
   setInterval(() => {
     isLoading.value = false
   }, 400)
-
 })
 
 const isClose = () => {
@@ -253,9 +241,9 @@ const isCloseForm = () => {
 
 const delManecken = async (id) => {
   isLoading.value = true
- await store.dispatch('requests/deleteRecord', id)
- emits('refrech')
- isLoading.value = false
+  await store.dispatch('requests/deleteRecord', id)
+  emits('refrech')
+  isLoading.value = false
 }
 
 const addManecken = async (id) => {
@@ -266,10 +254,9 @@ const addManecken = async (id) => {
 }
 
 const saveManecken = async () => {
-await store.dispatch('requests/saveManecken')
-emits('refrech')
+  await store.dispatch('requests/saveManecken')
+  emits('refrech')
 }
-
 </script>
 
 <script>
@@ -279,9 +266,8 @@ export default {
 </script>
 
 <style scoped>
-
 .modal-content {
-  max-height: 90vH;
+  max-height: 90vh;
 }
 .profile_content {
   width: 100%;
@@ -364,14 +350,14 @@ export default {
 }
 
 .saveManecken {
-    display: flex;
-    width: 95%;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-around;
-    border-radius: 10px;
-    border: 2px solid #413e3e2f;
-    margin-bottom: 5px;
+  display: flex;
+  width: 95%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 10px;
+  border: 2px solid #413e3e2f;
+  margin-bottom: 5px;
 }
 
 .li_saveManecken {
