@@ -97,6 +97,9 @@
   "master": "Master",
   "grandmaster": "Grandmaster",
 
+  "type" : "Type",
+  "Category" : "Category",
+
   "human": "Human",
   "gnom": "Gnom",
   "elf": "Elf",

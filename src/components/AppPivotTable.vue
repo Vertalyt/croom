@@ -10,21 +10,21 @@
       <tbody class="options__tbody">
         <tr>
           <td></td>
-          <td colspan="2">{{ getLocalizedText('Dummy') }} 1</td>
-          <td colspan="2">{{ getLocalizedText('Dummy') }} 2</td>
+          <td colspan="2" aria-label="{{ getLocalizedText('Dummy') }}">{{ getLocalizedText('Dummy') }} 1</td>
+          <td colspan="2" aria-label="{{ getLocalizedText('Dummy') }}">{{ getLocalizedText('Dummy') }} 2</td>
         </tr>
         <tr>
-          <td>{{ getLocalizedText('Parameters') }}</td>
-          <td>{{ getLocalizedText('Sum') }}</td>
-          <td>{{ getLocalizedText('Base') }}</td>
-          <td>{{ getLocalizedText('Sum') }}</td>
-          <td>{{ getLocalizedText('Base') }}</td>
+          <th aria-label="{{ getLocalizedText('Parameters') }}">{{ getLocalizedText('Parameters') }}</th>
+          <th aria-label="{{ getLocalizedText('Sum') }}">{{ getLocalizedText('Sum') }}</th>
+          <th aria-label="{{ getLocalizedText('Base') }}">{{ getLocalizedText('Base') }}</th>
+          <th aria-label="{{ getLocalizedText('Sum') }}">{{ getLocalizedText('Sum') }}</th>
+          <th aria-label="{{ getLocalizedText('Base') }}">{{ getLocalizedText('Base') }}</th>
         </tr>
         <tr v-for="m in 7" :key="m">
 
-          <td><img :src="returnValue(1, m, 'link')" :alt="returnValue(1, m, 'name')"> {{ returnValue(1, m, 'name') }}</td>
-          <td> {{ returnValue(1, m, 'summStatBase') }} </td>
-          <td> {{ returnValue(1, m, 'summStatBonusAndBase') }} </td>
+          <td aria-label="{{ returnValue(1, m, 'name') }}"><img :src="returnValue(1, m, 'link')" :alt="returnValue(1, m, 'name')" width="18" height="18"> {{ returnValue(1, m, 'name') }}</td>
+          <td aria-label="{{ getLocalizedText('Base') }}"> {{ returnValue(1, m, 'summStatBase') }} </td>
+          <td aria-label="{{ getLocalizedText('Base') }}"> {{ returnValue(1, m, 'summStatBonusAndBase') }} </td>
 
 
           <td> {{ returnValue(2, m, 'summStatBase') }} </td>

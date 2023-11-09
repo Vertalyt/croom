@@ -31,7 +31,7 @@ export default {
     changeDummyEl(state, { idMannequin, imgLink, cellName, typeid, key }) {
       const img =
         key === 'artefact'
-          ? `https://sabzero.biz/croomTemplate/assets/img/art.png`
+          ? `https://sabzero.biz/croomTemplate/assets/img/art.webp`
           : `https://files.nura.biz/site/images/things100x100/${imgLink}.png`
       const foundItem = state.listsDummy.find((item) => item.idMannequin === idMannequin)
 

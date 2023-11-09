@@ -12,6 +12,7 @@ export default defineConfig({
     include: [], // Указать зависимости, которые нужно включить
   },
   build: {
+    base: 'https://sabzero.biz/croomTemplate/',
     chunkSizeWarningLimit: 1000, // Установите желаемый лимит в килобайтах
   },
 });

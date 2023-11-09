@@ -3,6 +3,7 @@
   font-family: 'Courier New', Courier, monospace;
   font-weight: 800;
   color: #444;
+  font-display: fallback;
 }
 
 body {
@@ -39,9 +40,7 @@ ul {
   width: 100vw;
   display: flex;
   justify-content: center;
-  background-image: url('./src/assets/img/AL.png');
-  /* background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL.png'); */
-  /* background-size: cover; */
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL.webp');
 }
 
 .conteiner {
@@ -129,7 +128,7 @@ small {
   color: antiquewhite;
   background: transparent;
   background-blend-mode: multiply;
-  background-image: url('./img/tab2.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/tab2.webp');
   background-size: 100% auto;
   border: none;
   cursor: pointer;
@@ -141,7 +140,7 @@ small {
   width: 25px;
   height: 26px;
   background: transparent;
-  background-image: url('./img/plus.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/plus.webp');
   background-size: cover;
   border: none;
   cursor: pointer;
@@ -152,7 +151,7 @@ small {
   width: 19px;
   height: 20px;
   background: transparent;
-  background-image: url(https://sabzero.biz/croomTemplate/assets/img/delete.png);
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/delete.webp');
   background-size: cover;
   border: none;
   cursor: pointer;
@@ -433,7 +432,7 @@ option:disabled {
   justify-content: center;
   align-items: center;
   background-blend-mode: multiply;
-  background-image: url('https://sabzero.biz/croomTemplate/assets/img/parameter_mat.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/parameter_mat.webp');
   background-size: cover;
   width: 90px;
   height: 90px;
@@ -481,7 +480,7 @@ option:disabled {
 }
 
 .dummy__center__center {
-  background-image: url('./img/center_img.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/center_img.webp');
   background-size: cover;
   border: none;
   width: 336px;
@@ -615,7 +614,7 @@ td img {
   overflow-x: hidden;
   padding: 20px;
   width: 360px;
-  background-image: url('./src/assets/img/AL_mobail.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL_mobail.webp');
 }
 
 /* Styles for the close button */
@@ -652,6 +651,18 @@ body.modal-open {
   background-color: #979fa700;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+
 @media only screen and (max-device-width: 899px) {
   .main-wrapper {
     display: grid;
@@ -679,7 +690,7 @@ body.modal-open {
 
 @media only screen and (max-device-width: 600px) {
   .wrapper {
-    background-image: url(https://sabzero.biz/croomTemplate/assets/img/AL_mobail.png);
+    background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL_mobail.webp');
     background-size: contain;
   }
 

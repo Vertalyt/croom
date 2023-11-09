@@ -55,7 +55,7 @@ export default {
   overflow-x: hidden;
   padding: 20px;
   width: 300px;
-  background-image: url('./src/assets/img/AL_mobail.png');
+  background-image: url('https://sabzero.biz/croomTemplate/assets/img/AL_mobail.webp');
   border: 3px solid rgb(97, 34, 34);
 }
 </style>

@@ -25,7 +25,9 @@
     </ManekenStatParams>
 
     <div class="form__items">
+      <label class="visually-hidden"  for="addLastElix">{{ getLocalizedText('SelectLastElix') }}</label>
       <select 
+      id="addLastElix"
       name="addLastElix"
       :disabled="hascountElix" v-model="lastElix" @change="addLastElix" class="select-css select-css-elix">
         <option value="change" disabled selected>{{ getLocalizedText('VipityForTheRest') }}</option>

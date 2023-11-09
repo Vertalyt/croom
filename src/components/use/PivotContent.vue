@@ -11,7 +11,7 @@
         class="detail_info">
         <img 
         v-if="i.link"
-        :src="i.link" :alt="i.name"><span>{{ getLocalizedText(i.key) }}</span>
+        :src="i.link" :alt="i.name" width="18" height="18"><span>{{ getLocalizedText(i.key) }}</span>
           <span>{{ i.summStatBonusAndBase}}{{i.count}}</span>
         </div>
 

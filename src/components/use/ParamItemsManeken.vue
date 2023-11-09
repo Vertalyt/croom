@@ -8,7 +8,7 @@
           <div class="armor__info"
           :class="{'full': !withItemsManecken }"
           >
-            <img :src="p.link" :alt="p.key" />
+            <img :src="p.link" :alt="p.key" width="20" height="20"/>
             {{ getLocalizedText(p.key) }}
           </div>
           <div class="armor__result">{{ p.summStatBonusAndBase }}</div>

@@ -70,7 +70,7 @@ export default {
   width: 130px;
   height: 28px;
     background-color: #31343ac2;
-    background-image: url('../assets//img/tab3.png');
+    background-image: url('https://sabzero.biz/croomTemplate/assets/img/tab3.webp');
     border-radius: 9px;
     transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
 }

@@ -3,11 +3,13 @@
     <table class="table">
       <tbody>
         <tr v-for="p in nameCost" :key="p.key">
-          <td>
-            <img :src="p.link" :alt="p.key" />
+          <td
+          aria-label="{{ getLocalizedText('p.key') }}"
+          >
+            <img :src="p.link" :alt="p.key" width="18" height="18"/>
             {{ getLocalizedText(p.key) }}
           </td>
-          <td>{{ p.count }}</td>
+          <td :aria-label="p.count">{{ p.count }}</td>
         </tr>
       </tbody>
     </table>

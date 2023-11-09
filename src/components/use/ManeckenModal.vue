@@ -128,7 +128,7 @@ export default {
 #bg-checkbox-button #knob {
 	width: 72px;
 	height: 72px;
-	background-image: url('../../assets//img//check/helm.png');
+	background-image: url('https://sabzero.biz/croomTemplate/assets/img/check/helm.webp');
 	background-size: 225px;
 	position: relative;
 	top: 7px;

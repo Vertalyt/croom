@@ -13,7 +13,7 @@
     @mouseleave="mouseLeaveHandler"
   >
     <div v-if="hideButton(d.name)" @click.stop="takeOff(d.name)" class="cl-btn-4"></div>
-    <img class="mat_img" :src="d.link" :alt="d.name" />
+    <img class="mat_img" :src="d.link" :alt="d.name" :width="sizeImg" :height="sizeImg" />
   </div>
 </template>
 
@@ -51,6 +51,9 @@ const takeOff = (el) => {
   })
 }
 
+
+
+
 const statNames = initialSetupEntries.map((entry) => entry.name)
 const selectedEl = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 const activeEl = ref([])
@@ -73,6 +76,13 @@ const classParametr = {
   big: 'parameter__mat__Armor__img'
 }
 
+const sizesImg = 
+  { 'small' : 65,
+   'norm' : 90,
+   'big' : 120 }
+
+
+const sizeImg = sizesImg[props.sizeClass] || sizesImg['norm']
 const addClass = classParametr[props.sizeClass] || ''
 
 let isOpen = false

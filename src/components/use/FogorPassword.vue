@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 body {
-  background: #DCDDDF url(https://cssdeck.com/uploads/media/items/7/7AF2Qzt.png);
+  background: #DCDDDF url(https://sabzero.biz/croomTemplate/assets/img/7AF2Qzt.webp);
   color: #000;
   font: 14px Arial;
   margin: 0 auto;
@@ -254,7 +254,7 @@ form:after {
   -ms-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
-  background: #eae7e7 url(https://cssdeck.com/uploads/media/items/8/8bcLQqF.png) no-repeat;
+  background: #eae7e7 url('https://sabzero.biz/croomTemplate/assets/img/8bcLQqF.webp') no-repeat;
   border: 1px solid #c8c8c8;
   color: #777;
   font: 13px Helvetica, Arial, sans-serif;
@@ -358,7 +358,7 @@ form:after {
 }
 
 .button a {
-  background: url(https://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;
+  background: url('https://sabzero.biz/croomTemplate/assets/img/8bcLQqF.webp') 0 -112px no-repeat;
   color: #7E7E7E;
   font-size: 17px;
   padding: 2px 0 2px 40px;

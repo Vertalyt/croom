@@ -1,7 +1,9 @@
 <template>
 
   <div class="artHeader">
+    <label class="visually-hidden" for="LevelArt">{{ getLocalizedText('Level') }}</label>
     <select 
+    id="LevelArt"
     :disabled="!selectionResolution"
     name="loadingByFilters" 
     v-model="lvlSelect" 
@@ -11,8 +13,11 @@
     <option v-for="l in lvlArt" :key="l">{{ l }}</option>
   </select>
 
+
+  <label class="visually-hidden" for="typeArt">{{ getLocalizedText('type') }}</label>
   <select 
   v-if="!selectionResolution"
+  id="typeArt"
   name="loadingByFilters" v-model="wSelect" @change="loadingByWeaponFilters" class="select-css">
     <option value="change" disabled selected>Тип</option>
     <option v-for="w in typeWeapon" :key="w.type" :value="w.type">{{ w.name }}</option>
@@ -41,13 +46,14 @@ v-if="isLoading"
       <thead>
         <tr>
           <td></td>
-          <td colspan="3">{{ getLocalizedText('MaximumPoint') }}</td>
+          <th :colspan="artParams.maxDstamina !== undefined ? 4 : 3">{{ getLocalizedText('MaximumPoint') }}</th>
         </tr>
         <tr>
-          <td>{{ getLocalizedText('DistributionPoints') }}</td>
-          <td>{{ getLocalizedText('Stats') }}</td>
-          <td>{{ getLocalizedText('Armor') }}</td>
-          <td>{{ getLocalizedText('ProtectMagic') }}</td>
+          <th>{{ getLocalizedText('DistributionPoints') }}</th>
+          <th>{{ getLocalizedText('Stats') }}</th>
+          <th>{{ getLocalizedText('Armor') }}</th>
+          <th>{{ getLocalizedText('ProtectMagic') }}</th>
+          <td v-if="artParams.maxDstamina">{{ getLocalizedText('dstamina') }}</td>
         </tr>
       </thead>
       <tbody class="options__tbody">
@@ -56,6 +62,7 @@ v-if="isLoading"
           <td>{{ artParams.maxStat }}</td>
           <td>{{ artParams.maxArmor }}</td>
           <td>{{ artParams.maxMagicProtect }}</td>
+          <td v-if="artParams.maxDstamina">{{ artParams.maxDstamina }}</td>
         </tr>
       </tbody>
     </table>
@@ -78,7 +85,9 @@ v-if="isLoading"
             {{ getLocalizedText(p.key) }}
           </td>
           <td>
+            
             <input
+            aria-label="{{ getLocalizedText(p.key) }}"
               type="number"
               :key="inputUpdate"
               :name="p.key"
@@ -341,7 +350,7 @@ const putOnThing = () => {
     typeid: props.cellOptions.typeid,
     imgLink: '',
     cellName: props.cellOptions.name,
-    key: 'artefact'
+    key: 'artefact',
   })
   }
   if(!errorClassFlag.value) {
@@ -349,7 +358,6 @@ const putOnThing = () => {
   }
 
 }
-
 
 const handleStatDecrease = (p) => {
   const findParamPoint = addParamPoint.find(item => item.key === p.key)

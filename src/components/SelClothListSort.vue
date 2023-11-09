@@ -13,7 +13,9 @@
   </div>
 
   <div class="form__items">
+    <label class="visually-hidden" for="minLvlFilters">{{ getLocalizedText('MinLevel') }}</label>
     <select
+      id="minLvlFilters"
       name="minMaxLvlFilters"
       :value="minLvl"
       @change="minMaxLvlFilters('minLvl', $event)"
@@ -24,7 +26,9 @@
       <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
     </select>
 
+    <label class="visually-hidden" for="MaxLvlFilters">{{ getLocalizedText('MaxLevel') }}</label>
     <select
+      id="MaxLvlFilters"
       name="minMaxLvlFilters"
       :value="maxLvl"
       @change="minMaxLvlFilters('maxLvl', $event)"

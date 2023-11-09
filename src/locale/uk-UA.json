@@ -90,12 +90,14 @@
   "blackmagicprotection": "Полнолуння",
   "astralmagicprotection": "Астрал",
 
-
+  "Category" : "Категорія",
 
   "life": "Життя",
   "mana": "Мана",
   "dstamina": "Енергія",
   "rating": "Рейтинг",
+
+  "type" : "Тип",
 
   "absent": "Ні",
   "newbie": "Новачок",

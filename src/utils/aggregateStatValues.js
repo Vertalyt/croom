@@ -38,6 +38,7 @@ export function aggregateStatValues({ baseUpdate, idMannequin }) {
     return sortedChangesByType.some((changeType) => item.type.includes(changeType))
   })
 ;
+
   // Обработка 'base' из массива sorted (необходимо для отбраковки базовых стат от вещей)
   processBase(sorted, bonusOllStats)
 

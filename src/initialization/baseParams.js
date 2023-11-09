@@ -1,25 +1,25 @@
 
 export const initialSetupEntries = [
-    { location: 'leftDummyPart', name: 'helmet', link: 'https://sabzero.biz/croomTemplate/assets/img/helmet.png', typeid: [1] },
-    { location: 'leftDummyPart', name: 'armor', link: 'https://sabzero.biz/croomTemplate/assets/img/armor.png', typeid: [3] },
-    { location: 'leftDummyPart', name: 'belt', link: 'https://sabzero.biz/croomTemplate/assets/img/belt.png', typeid: [6] }, //поЯс
-    { location: 'leftDummyPart', name: 'boots', link: 'https://sabzero.biz/croomTemplate/assets/img/boots.png', typeid: [11]  },
-    { location: 'leftDummyPart', name: 'earring1', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.png', typeid: [55]  },
-    { location: 'leftDummyPart', name: 'ring1', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
-    { location: 'leftDummyPart', name: 'ring2', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
-    { location: 'rightDummyPart', name: 'necklace', link: 'https://sabzero.biz/croomTemplate/assets/img/necklace.png', typeid: [2] },
-    { location: 'rightDummyPart', name: 'bracers', link: 'https://sabzero.biz/croomTemplate/assets/img/bracers.png', typeid: [5] }, //наручи
-    { location: 'rightDummyPart', name: 'gloves', link: 'https://sabzero.biz/croomTemplate/assets/img/gloves.png', typeid: [4] }, //перчатки
-    { location: 'rightDummyPart', name: 'leggings', link: 'https://sabzero.biz/croomTemplate/assets/img/leggings.png', typeid: [10] }, // поножи
-    { location: 'rightDummyPart', name: 'earring2', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.png', typeid: [55] }, //серьга
-    { location: 'rightDummyPart', name: 'ring3', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
-    { location: 'rightDummyPart', name: 'ring4', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.png', typeid: [7]  },
-    { location: 'centerTopDummyPart', name: 'relic1', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic2', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic3', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
-    { location: 'centerTopDummyPart', name: 'relic4', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.png', typeid: [40] },
-    { location: 'centerBottomDummyPart', name: 'weapons1', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
-    { location: 'centerBottomDummyPart', name: 'weapons2', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.png', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'leftDummyPart', name: 'helmet', link: 'https://sabzero.biz/croomTemplate/assets/img/helmet.webp', typeid: [1] },
+    { location: 'leftDummyPart', name: 'armor', link: 'https://sabzero.biz/croomTemplate/assets/img/armor.webp', typeid: [3] },
+    { location: 'leftDummyPart', name: 'belt', link: 'https://sabzero.biz/croomTemplate/assets/img/belt.webp', typeid: [6] }, //поЯс
+    { location: 'leftDummyPart', name: 'boots', link: 'https://sabzero.biz/croomTemplate/assets/img/boots.webp', typeid: [11]  },
+    { location: 'leftDummyPart', name: 'earring1', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.webp', typeid: [55]  },
+    { location: 'leftDummyPart', name: 'ring1', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.webp', typeid: [7]  },
+    { location: 'leftDummyPart', name: 'ring2', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.webp', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'necklace', link: 'https://sabzero.biz/croomTemplate/assets/img/necklace.webp', typeid: [2] },
+    { location: 'rightDummyPart', name: 'bracers', link: 'https://sabzero.biz/croomTemplate/assets/img/bracers.webp', typeid: [5] }, //наручи
+    { location: 'rightDummyPart', name: 'gloves', link: 'https://sabzero.biz/croomTemplate/assets/img/gloves.webp', typeid: [4] }, //перчатки
+    { location: 'rightDummyPart', name: 'leggings', link: 'https://sabzero.biz/croomTemplate/assets/img/leggings.webp', typeid: [10] }, // поножи
+    { location: 'rightDummyPart', name: 'earring2', link: 'https://sabzero.biz/croomTemplate/assets/img/earring.webp', typeid: [55] }, //серьга
+    { location: 'rightDummyPart', name: 'ring3', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.webp', typeid: [7]  },
+    { location: 'rightDummyPart', name: 'ring4', link: 'https://sabzero.biz/croomTemplate/assets/img/ring.webp', typeid: [7]  },
+    { location: 'centerTopDummyPart', name: 'relic1', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.webp', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic2', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.webp', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic3', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.webp', typeid: [40] },
+    { location: 'centerTopDummyPart', name: 'relic4', link: 'https://sabzero.biz/croomTemplate/assets/img/relic.webp', typeid: [40] },
+    { location: 'centerBottomDummyPart', name: 'weapons1', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.webp', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
+    { location: 'centerBottomDummyPart', name: 'weapons2', link: 'https://sabzero.biz/croomTemplate/assets/img/weapons.webp', typeid: [8, 9, 12, 14, 15, 30, 31, 32, 33, 35, 37, 38, 39] },
     // typeid: 8-пика, 9-топор, 12 меч, 15щит,30 посох, 31 молот,32 молот,33 топор, 35 клеймор, 37 жезл, 38 кастет, 39 кинжал,
   ]
 

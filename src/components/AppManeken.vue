@@ -16,7 +16,7 @@ import DetailedClothing from './use/DetailedClothing.vue'
 import { baseStatFromLvl } from '../utils/baseStatFromLvl'
 import { modifyStat, statInputChange } from '../utils/modifyStat'
 import { fetchAPIData } from '../api/fetchApi'
-import { fortressParam, raseParams, arrayVariableStats, armorMasteryParam } from '../initialization/baseParams'
+import { fortressParam, raseParams, armorMasteryParam } from '../initialization/baseParams'
 import { updatedBaseStats, recalculationValues } from '../utils/updatedStats'
 import { checkSubclassChangeFeasibilityWithGearRequirements } from '../utils/checkSubclassChangeFeasibilityWithGearRequirements'
 import { getLocalizedText } from '@/locale/index'
@@ -128,7 +128,7 @@ watch(fortressComputed, val => {
   if (val) {
     itemsNameFortress.value = availableFortressOptions.value.find(
       (item) => item.id === val.fortress
-    ).name
+    ).id
   } else {
     itemsNameFortress.value = getLocalizedText("ChooseSubclass")
   }
@@ -138,7 +138,7 @@ watch(armorMasteryComputed, val => {
   if (val) {
     itemsArmorMastery.value = availablearmorMasteryOptions.value.find(
       (item) => item.id === val.armorId
-    ).name
+    ).id
   } else {
     itemsArmorMastery.value = 'Мастерство брони'
   }
@@ -151,7 +151,7 @@ watch(controllIdManeken, (_) => {
   lvlSelect.value = lvlComputed.value
   raseModel.value = store.getters['listManekenSearch']({ id: props.idMannequin, element: 'raseName' })
   if (raseModel.value) {
-    itemsNameRase.value = availableRaces.find((item) => item.id === raseModel.value).name
+    itemsNameRase.value = availableRaces.find((item) => item.id === raseModel.value).id
   } else {
     raseModel.value = 'human'
     itemsNameRase.value = getLocalizedText("SelectRace")
@@ -186,7 +186,23 @@ const isLoading = ref(false)
 
 
 // массив с изменениями параметров
-const addParam = ref(arrayVariableStats)
+const addParam = ref([
+    { key: 'dstrength', count: 0 },
+    { key: 'ddexterity', count: 0 },
+    { key: 'dintel', count: 0 },
+    { key: 'dluck', count: 0 },
+    { key: 'dreaction', count: 0 },
+    { key: 'dwisdom', count: 0 },
+    { key: 'dconst', count: 0 },
+    { key: 'whitemagicprotection', count: 0 },
+    { key: 'blackmagicprotection', count: 0 },
+    { key: 'astralmagicprotection', count: 0 },
+    { key: 'headarmor', count: 0 },
+    { key: 'bodyarmor', count: 0 },
+    { key: 'lefthandarmor', count: 0 },
+    { key: 'righthandarmor', count: 0 },
+    { key: 'lagsarmor', count: 0 },
+  ])
 
 const filtersClasses = ref({
   category: 'classes'
@@ -402,6 +418,7 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
   classModel.value = 'none'
 }
 
+
 const modifyStatAndEmit = (statKey, increment) => {
   const { addParam: updatedAddParam, accessibleStats: updatedAccessibleStats } = modifyStat({
     accessibleStats: accessibleStats.value,
@@ -413,6 +430,8 @@ const modifyStatAndEmit = (statKey, increment) => {
 
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
+
+
   store.commit('statChange/statChange', {
     addParam: [{ base: addParam.value }],
     type: 'freeStats',
@@ -632,7 +651,9 @@ export default {
                 </template>
               </ManeckenSelectItems>
 
+              <label class="visually-hidden" for="lvlSelectChange">{{ getLocalizedText('SelectLevel') }}</label>
               <select
+                id="lvlSelectChange"
                 :key="refrech"
                 name="lvlSelectChange"
                 v-model="lvlSelect"

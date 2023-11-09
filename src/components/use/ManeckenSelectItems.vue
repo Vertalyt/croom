@@ -1,5 +1,7 @@
 <template>
+  <label class="visually-hidden" :for="itemsName">{{ itemsName }}</label>
   <select 
+  :id="itemsName"
   :name="itemsName"
   class="select-css"
   v-model="itemsvalue">

@@ -2,8 +2,11 @@
   <form @submit.prevent="onSubmit">
     <div class="locale">
       <div id="locale" class="locale_flag">
-
-        <select ref="selectCategory" v-model="locale">
+        <label class="visually-hidden" for="selectCategory">{{ getLocalizedText('Category') }}</label>
+        <select 
+        id="selectCategory"
+        ref="selectCategory" 
+        v-model="locale">
           <option v-for="l in localeFlag" :key="l.flag" :value="l.flag">{{ l.value }}</option>
         </select>
 

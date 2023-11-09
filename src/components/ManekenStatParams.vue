@@ -1,24 +1,24 @@
 
 <template>
-              <table class="table">
+              <table class="table" aria-label="Таблиця параметрів">
                 <thead>
                 </thead>
                 <tbody class="options__tbody">
                   <tr>
-                    <td>{{ getLocalizedText('Parameters') }}</td>
-                    <td>{{ getLocalizedText('Sum') }}</td>
-                    <td>{{ getLocalizedText('Base') }}</td>
-                    <td v-if="elixCheck">{{ getLocalizedText('Elixirs') }}</td>
-                    <td v-if="!additionalCheck"><span class="material-symbols-outlined">add</span></td>
-                    <td v-if="!additionalCheck"><span class="material-symbols-outlined">remove</span></td>
+                    <th aria-label="{{ getLocalizedText('Parameters') }}">{{ getLocalizedText('Parameters') }}</th>
+                    <th aria-label="{{ getLocalizedText('Sum') }}">{{ getLocalizedText('Sum') }}</th>
+                    <th aria-label="{{ getLocalizedText('Base') }}">{{ getLocalizedText('Base') }}</th>
+                    <th v-if="elixCheck" aria-label="{{ getLocalizedText('Elixirs') }}">{{ getLocalizedText('Elixirs') }}</th>
+                    <th v-if="!additionalCheck" aria-label="{{ getLocalizedText('Parameters') }}"><span class="material-symbols-outlined">add</span></th>
+                    <th v-if="!additionalCheck" aria-label="remove"><span class="material-symbols-outlined">remove</span></th>
                   </tr>
 
                   <tr v-for="p in statParams" :key="p.key">
-                  <td>
-                    <img :src="p.link" :alt="p.key" />
+                  <td aria-label="{{ getLocalizedText(p.key) }}">
+                    <img :src="p.link" :alt="p.key" width="18" height="18"/>
                     {{ getLocalizedText(p.key) }}
                   </td>
-                  <td>{{ p.summStatBonusAndBase }}</td>
+                  <td aria-label="{{ p.summStatBonusAndBase }} сумарний бонус та база">{{ p.summStatBonusAndBase }}</td>
                   <slot name="statManeken" :summBase="p" />
                 </tr>
                 <slot />

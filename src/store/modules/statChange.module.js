@@ -78,6 +78,7 @@ export default {
   },
   mutations: {
     statChange(state, { addParam, type, name, idMannequin, typeid }) {
+
       state.listStatChange.filter((item) => {
         if (item.idMannequin === idMannequin) {
           item.listStat = item.listStat.map((item) => {

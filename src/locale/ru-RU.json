@@ -64,7 +64,7 @@
 "Back" : "Назад",
 "Next" : "Вперед",
 
-
+"Category" : "Категория",
 "ProtectMagic" : "Защита от магии",
 "other" : "Иное",
 
@@ -97,7 +97,7 @@
 "astralmagicprotection" : "Астрал",
 
 
-
+"type" : "Тип",
 
 "life" : "Жизни",
 "mana" : "Манна",

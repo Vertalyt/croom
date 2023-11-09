@@ -1,5 +1,6 @@
 <template>
                   <td><input
+                    aria-label="{{ getLocalizedText(statParam.key) }}"
                     :disabled="accessibleStats === null || hasddisabledLastElix"
                     type="number"
                     :name="statParam.key"
