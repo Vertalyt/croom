@@ -4,7 +4,9 @@
   :id="itemsName"
   :name="itemsName"
   class="select-css"
-  v-model="itemsvalue">
+  v-model="itemsvalue"
+  :disabled="isDIsabled"
+  >
     <option value="none" disabled selected>{{ itemsName }}</option>
     <slot name="optionSelect"/>
 </select>
@@ -32,10 +34,17 @@ const props = defineProps({
   oldValueCheck: {
     type: Boolean,
     required: false
+  },
+  disabledSel: {
+    type: Boolean,
+    required: false
   }
-
 })
 const computedCheckOld = computed( () =>  props.oldValueCheck)
+
+const isDIsabled = computed( () =>  {
+  return props.disabledSel || false
+})
 
 watch(computedCheckOld, (val) => {
   if(val === false) {

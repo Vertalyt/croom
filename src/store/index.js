@@ -12,7 +12,6 @@ const initialState = { statModule: baseStatModule, raseName: 'human', lvl: 0, ra
 genСharVal: genСharVal,
 ollCoast : nameCost,
 };
-
 export default createStore({
   state() {
     return {

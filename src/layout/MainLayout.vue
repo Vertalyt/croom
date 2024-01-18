@@ -120,8 +120,8 @@ const minstats = computed(() => {
 })
 
 const lvlSearch = ref([
-  { id: 'minLvl', count: 'change' },
-  { id: 'maxLvl', count: 'change' }
+  { id: 'minLvl', count: 0 },
+  { id: 'maxLvl', count: 0 }
 ])
 
 const minLvl = ref(lvlSearch.value[0].count)

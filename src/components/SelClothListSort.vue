@@ -334,19 +334,18 @@ const checkDowland = computed(() => props.lvlSearch)
 watch(
   checkDowland,
   (val) => {
-    const ollLvlFalse = val.find((item) => item.count === 'change')
-    if (!ollLvlFalse) {
       // Находим значения count для minLvl и maxLvl
       const minCount = val.find((item) => item.id === 'minLvl').count
       const maxCount = val.find((item) => item.id === 'maxLvl').count
       // сортирую по возрастанию
       const sort = [minCount, maxCount].sort((a, b) => a - b)
       // Создаем массив чисел от минимального к максимальному
+      resultArray.length = 0
       for (let i = sort[0]; i <= sort[1]; i++) {
         resultArray.push(i)
       }
       readyDownload.value = true
-    }
+
   },
   { immediate: true, deep: true }
 )

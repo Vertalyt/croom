@@ -346,7 +346,7 @@ const handleParentClassSelectChange = async (parent) => {
     const totalSum = updatedStats.reduce((accumulator, item) => accumulator + item.count, 0)
     // считаю можно ли сменить уровень ниже, в зависимости от количества оставшихся очков распределения, что бы
     //выполнить минимальную проверку требований подкласса
-    if (accessibleStats.value > totalSum) {
+    if (accessibleStats.value >= totalSum) {
       accessibleStats.value -= totalSum
       store.commit('statChange/statChange', {
         addParam: [{ base: updatedStats }, { bonusAndBase: addClassParam }],
@@ -672,8 +672,7 @@ export default {
                 v-if="lvlSelect >= 8"
                 v-model="classModel"
                 :itemsName="itemsNameClass"
-                :disabled="!availabilityClassFlag"
-                :availabilityClassFlag="availabilityClassFlag"
+                :disabledSel="!availabilityClassFlag"
                 @update:modelValue="handleClassSelectChange"
               >
                 <template #optionSelect>
@@ -690,7 +689,7 @@ export default {
                 v-model="parentClassModel"
                 :itemsName="itemsNameSubClass"
                 :key="refrech + 3"
-                :disabled="!availabilityClassFlag"
+                :disabledSel="!availabilityClassFlag"
                 :oldValueCheck="oldValueSubclass"
                 @update:modelValue="handleParentClassSelectChange"
               >
