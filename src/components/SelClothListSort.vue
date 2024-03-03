@@ -1,44 +1,16 @@
 <template>
-  <div class="form__items">
-    <div class="form__items form__items_modal">
-      <input
-        class="custom-checkbox"
-        v-model="reqParameterVal"
-        @click.stop="clothesfilter"
-        id="cloth"
-        type="checkbox"
-      />
-      <label for="cloth">{{ getLocalizedText('ThoseCanBeDressed') }}</label>
-    </div>
-  </div>
 
-  <div class="form__items">
-    <label class="visually-hidden" for="minLvlFilters">{{ getLocalizedText('MinLevel') }}</label>
-    <select
-      id="minLvlFilters"
-      name="minMaxLvlFilters"
-      :value="minLvl"
-      @change="minMaxLvlFilters('minLvl', $event)"
-      class="select-css"
-    >
-      <option value="change" disabled selected>{{ getLocalizedText('MinLevel') }}</option>
-      <option>0</option>
-      <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
-    </select>
+  <WhatCanWear 
+  :modelValue="reqParameterVal"
+  @update:modelValue="(val) => reqParameterVal = val"
+  />
 
-    <label class="visually-hidden" for="MaxLvlFilters">{{ getLocalizedText('MaxLevel') }}</label>
-    <select
-      id="MaxLvlFilters"
-      name="minMaxLvlFilters"
-      :value="maxLvl"
-      @change="minMaxLvlFilters('maxLvl', $event)"
-      class="select-css"
-    >
-      <option value="change" disabled selected>{{ getLocalizedText('MaxLevel') }}</option>
-      <option>0</option>
-      <option v-for="l in lvlPerson" :key="l">{{ l }}</option>
-    </select>
-  </div>
+  <MinMaxChoice 
+  :lvlSearch="lvlSearch"
+  :lvlPerson="lvlPerson"
+  @updateLvl="emits('lvlMinMaxChange', $event)"
+  />
+
   <div class="form__items">
     <button
       @click="loadingByFilters"
@@ -50,29 +22,20 @@
     </button>
   </div>
 
-  <div class="checkboxWrapper">
-    <div class="checkbox" v-for="t in rarity" :key="t.key">
-      <input
-        class="custom-checkbox"
-        type="checkbox"
-        :checked="t.checked"
-        :id="t.key"
-        :name="t.name"
-        :value="t.name"
-        v-model="t.checked"
-        @click="toggleCheckbox(t.key)"
-      />
-      <label :for="t.key" class="labelChexpox">{{ t.name }}</label>
-    </div>
-  </div>
+  <CheckClothList 
+  :rarity="rarity"
+  @update="(val) => rarity = val"
+  />
 
-  <AppLoader v-if="isloading" />
-  <div class="wrapperSeachCloth">
+
+  <AppLoader v-if="isLoading" />
+  
+  <div class="wrapperSearchCloth">
     <input
       v-if="newResult"
       :placeholder="getLocalizedText('Search3Letters')"
-      v-model="seachCloth"
-      class="seachCloth"
+      v-model="searchCloth"
+      class="searchCloth"
     />
   </div>
 
@@ -92,9 +55,14 @@
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { fetchAPIData } from '../api/fetchApi'
-import AppLoader from '../components/AppLoader.vue'
-import ListCloth from '../components/use/ListCloth.vue'
 import { getLocalizedText } from '@/locale/index'
+
+import AppLoader from '../components/AppLoader.vue'
+import ListCloth from './modalCloth/ListCloth.vue'
+import CheckClothList from './modalCloth/CheckClothList.vue'
+import MinMaxChoice from './modalCloth/MinMaxChoice.vue'
+import WhatCanWear from './modalCloth/WhatCanWear.vue'
+
 
 const props = defineProps({
   cellOptions: {
@@ -113,14 +81,6 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  minLvl: {
-    type: [String, Number],
-    required: true
-  },
-  maxLvl: {
-    type: [String, Number],
-    required: true
-  }
 })
 
 const emits = defineEmits({
@@ -129,11 +89,11 @@ const emits = defineEmits({
 })
 
 const newResult = ref(null)
-const isloading = ref(false)
+const isLoading = ref(false)
 const spanErrorText = ref()
 const openAccordion = ref(false)
 const reqParameterVal = ref(true)
-const fullrequests = ref()
+const fullRequests = ref()
 
 const store = useStore()
 const lvlPerson = computed(() => store.getters['listManeken'](props.idMannequin).lvl)
@@ -186,7 +146,7 @@ const otherInfo = [
   { durability: '' },
   { description: '' }
 ]
-// массив для отображение стоимостецй по вещи по вещи
+// массив для отображение стоимостей по вещи
 const priseInfo = [
   { price: '' },
   { goldprice: '' },
@@ -203,38 +163,24 @@ const dataSets = [
   { key: 'priseInfo', array: priseInfo }
 ]
 
+// типы вещей
 const rarity = ref([
   { key: 'goss', id: '1', name: getLocalizedText('goss'), checked: true },
-  { key: 'craft', id: '2', name: getLocalizedText('craft'), checked: true },
-  { key: 'rarity', id: '3', name: getLocalizedText('rarity'), checked: true },
-  { key: 'reward', id: '5', name: getLocalizedText('reward'), checked: true },
-  { key: 'epic', id: '6', name: getLocalizedText('epic'), checked: true },
-  { key: 'ratnic', id: '7', name: getLocalizedText('ratnic'), checked: true },
-  { key: 'mythical', id: '8', name: getLocalizedText('mythical'), checked: true }
+  { key: 'craft', id: '2', name: getLocalizedText('craft'), checked: false },
+  { key: 'rarity', id: '3', name: getLocalizedText('rarity'), checked: false },
+  { key: 'reward', id: '5', name: getLocalizedText('reward'), checked: false },
+  { key: 'epic', id: '6', name: getLocalizedText('epic'), checked: false },
+  { key: 'ratnic', id: '7', name: getLocalizedText('ratnic'), checked: false },
+  { key: 'mythical', id: '8', name: getLocalizedText('mythical'), checked: false }
   // { key: 'unique', id: '9', name: 'Уникальна річ', checked: false }
 ])
 
-//меняем в массиве rarity состояние включенности в чекбоксе
-const toggleCheckbox = (key) => {
-  rarity.value = rarity.value.map((item) => {
-    if (item.key === key) {
-      return {
-        ...item,
-        checked: !item.checked
-      }
-    } else {
-      return {
-        ...item
-      }
-    }
-  })
-}
 
 // фильтруем готовый массив вещей от значений содержащих undefined и '0'
-function filterArr(rezultArr, request, compareWithZero = true) {
+function filterArr(resultArr, request, compareWithZero = true) {
   return request.map((requestItem) => {
     const newData = {}
-    rezultArr.forEach((item) => {
+    resultArr.forEach((item) => {
       const key = Object.keys(item)[0] // Получаем ключ из объекта
       if (requestItem[key] !== undefined && (compareWithZero ? requestItem[key] !== '0' : true)) {
         newData[key] = requestItem[key]
@@ -252,19 +198,20 @@ function suitableThings() {
   })
 }
 
-const seachCloth = ref()
+const searchCloth = ref()
 
-watch(seachCloth, (val) => {
+watch(searchCloth, (val) => {
   if (val.length > 2) {
-    newResult.value = fullrequests.value.filter((item) => item.otherInfo.name.includes(val))
+    newResult.value = fullRequests.value.filter((item) => item.otherInfo.name.includes(val))
   } else {
-    newResult.value = fullrequests.value
+    newResult.value = fullRequests.value
   }
 })
 
 const rarityId = []
 
 function rarityFilter() {
+  rarityId.length = 0
   rarity.value.map((item) => {
     if (item.checked === true) {
       rarityId.push(item.id)
@@ -273,13 +220,13 @@ function rarityFilter() {
 
   if (rarityId.length === 0) {
     spanErrorText.value = getLocalizedText('FillOneFilter')
-    isloading.value = false
+    isLoading.value = false
     openAccordion.value = true
     return
   }
 }
 
-function sanitizedTypeids() {
+function sanitizedTypeIds() {
   return props.cellOptions.typeid.map((item) => {
     if (typeof item === 'string' && !isNaN(item)) {
       return parseInt(item)
@@ -335,8 +282,10 @@ watch(
   checkDowland,
   (val) => {
       // Находим значения count для minLvl и maxLvl
-      const minCount = val.find((item) => item.id === 'minLvl').count
-      const maxCount = val.find((item) => item.id === 'maxLvl').count
+      const minCount = val.find(s => s.id === 'minLvl').count
+       
+      const maxCount = val.find(s => s.id === 'maxLvl').count
+       
       // сортирую по возрастанию
       const sort = [minCount, maxCount].sort((a, b) => a - b)
       // Создаем массив чисел от минимального к максимальному
@@ -350,36 +299,26 @@ watch(
   { immediate: true, deep: true }
 )
 
-// загружаем данные с севера
-const minMaxLvlFilters = async (id, event) => {
-  const lvlMinMax = props.lvlSearch
-  const ollLvl = lvlMinMax.find((item) => item.id === id)
-  ollLvl.count = Number(event.target.value)
-  emits('lvlMinMaxChange', { lvlMinMax, id })
-  const ollLvlFalse = lvlMinMax.find((item) => item.count === 'change')
-  if (ollLvlFalse) {
-    return
-  }
-}
-
 async function loadingByFilters() {
   if (!readyDownload.value) {
     store.dispatch('setMessage', getLocalizedText('FillRangeLevels'))
     return
   }
   spanErrorText.value = null
-  isloading.value = true
+  isLoading.value = true
   openAccordion.value = false
   // записываем в массив название выбранных ключей раритетности
   rarityFilter()
-
-  const filtersClasses = {
+  if(rarityId.length) {
+    const filtersClasses = {
     category: 'items',
-    typeid: sanitizedTypeids(), // очищаем от пустых строк
+    typeid: sanitizedTypeIds(), // очищаем от пустых строк
     // minlevel: parseInt(lvlSelect.value),
     minlevel: resultArray,
     rarity: rarityId
   }
+
+  newResult.value = null
   const request = await fetchAPIData(filtersClasses)
 
   if (request.length !== 0) {
@@ -387,36 +326,38 @@ async function loadingByFilters() {
     newResult.value = request.map((requestItem) => {
       return filterDataSets(requestItem, dataSets)
     })
-    fullrequests.value = newResult.value
+    fullRequests.value = newResult.value
     // добавляю каждой строчке newResult класс
     processMinStats(newResult, props.minStats)
 
     // если стоит чекбокс, фильтрую массив по статам
     if (reqParameterVal.value === true) {
       newResult.value = suitableThings()
-      fullrequests.value = newResult.value
+      fullRequests.value = newResult.value
     }
 
     // Отсортировать по возрастанию параметра "minlevel"
     newResult.value = newResult.value.sort((a, b) => {
-      const minlevelA = parseInt(a.otherInfo.minlevel, 10)
-      const minlevelB = parseInt(b.otherInfo.minlevel, 10)
-      return minlevelA - minlevelB
+      const minLevelA = parseInt(a.otherInfo.minlevel, 10)
+      const minLevelB = parseInt(b.otherInfo.minlevel, 10)
+      return minLevelA - minLevelB
     })
 
     if (newResult.value.length === 0) {
       spanErrorText.value = getLocalizedText('AreNoResults')
     }
+  } else {
+    store.dispatch('setMessage', getLocalizedText('AreNoResults'))
   }
+  }
+
   setTimeout(() => {
-    isloading.value = false
+    isLoading.value = false
     openAccordion.value = true
   }, 500)
 }
 
-const clothesfilter = () => {
-  reqParameterVal.value = !reqParameterVal.value
-}
+
 </script>
 
 <script>
@@ -426,13 +367,13 @@ export default {
 </script>
 
 <style>
-.wrapperSeachCloth {
+.wrapperSearchCloth {
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
 }
 
-.seachCloth {
+.searchCloth {
   border-radius: 10px;
   padding-left: 10px;
 }
@@ -530,9 +471,6 @@ export default {
     flex-wrap: wrap;
   }
 
-  .select-css {
-    margin-bottom: 10px;
-  }
 
   .tabLvlButton {
     height: 32px;

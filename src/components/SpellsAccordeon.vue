@@ -44,15 +44,15 @@ const emits = defineEmits({
 const props = defineProps({
   openPanel: {
     type: String,
-    requared: true
+    required: true
   },
   ollSpells: {
     type: Object,
-    requared: true
+    required: true
   },
   nextBlockSpells:{
     type: Array,
-    requared: true
+    required: true
   }
 })
 

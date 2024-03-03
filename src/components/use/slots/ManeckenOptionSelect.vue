@@ -10,7 +10,7 @@
 const props = defineProps({
   items : {
   type: Array,
-  requared: true
+  required: true
   },
   lvlSelect: {
     type: Number,

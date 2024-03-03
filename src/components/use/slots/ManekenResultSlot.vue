@@ -8,7 +8,7 @@
 defineProps({
   statParam:{
     type: Object,
-    requared: true
+    required: true
   },
 })
 </script>

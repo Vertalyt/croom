@@ -69,6 +69,7 @@ const nameCost = ref([
   {key: 'ratnikprice', count: 0},
   {key: 'obmenprice', count: 0},
   {key: 'reliktprice', count: 0},
+  {key: 'artcrystalsprice', count: 0},
 ])
 
 watch(nameCost, val => {

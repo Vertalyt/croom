@@ -5,7 +5,7 @@ import AppManekenResult from '@/components/AppManekenResult.vue'
 import AppPivotTable from '../components/AppPivotTable.vue'
 import AppLoader from '../components/AppLoader.vue'
 
-import { basickParamsRase, baseStatModule } from '@/initialization/baseParams'
+import { basicParamsRase, baseStatModule } from '@/initialization/baseParams'
 import ManeckenModal from '@/components/use/ManeckenModal.vue'
 import { aggregateStatValues } from '@/utils/aggregateStatValues'
 import { useStore } from 'vuex'
@@ -17,15 +17,15 @@ defineEmits({
 const props = defineProps({
   idMannequin: {
     type: Number,
-    requared: true
+    required: true
   },
   openPivot: {
     type: Boolean,
-    requared: true
+    required: true
   }
 })
 
-const basickParams = ref(basickParamsRase) // поиск значений по расе
+const basickParams = ref(basicParamsRase) // поиск значений по расе
 const store = useStore()
 const updatedStatConfigurations = ref(baseStatModule) // передаю в таблицу итоговый суммарный результат
 const isOpen = ref(false)
@@ -37,12 +37,12 @@ const baseStatConfigurations = ref(baseManekenConfig.value.statModule)
 
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin)) // слежу за массивом, который хранит в себе все обьекты изменения стат
 
-const localeSait = ref()
+const localeSite = ref()
 const clientInfo = ref(null)
 async function isLoadingParam() {
   clientInfo.value = await store.dispatch('requests/clientInfo')
   if (clientInfo.value) {
-    localeSait.value = clientInfo.value.locale
+    localeSite.value = clientInfo.value.locale
   }
 }
 
@@ -124,18 +124,7 @@ const lvlSearch = ref([
   { id: 'maxLvl', count: 0 }
 ])
 
-const minLvl = ref(lvlSearch.value[0].count)
-const maxLvl = ref(lvlSearch.value[1].count)
 
-const handleLvlMinMaxChange = ({ lvlMinMax, id }) => {
-  lvlSearch.value = lvlMinMax
-  const foundTypeLvl = lvlMinMax.find((item) => item.id === id)
-  if (foundTypeLvl.id === 'minLvl') {
-    minLvl.value = foundTypeLvl.count
-  } else {
-    maxLvl.value = foundTypeLvl.count
-  }
-}
 </script>
 
 <template>
@@ -146,11 +135,9 @@ const handleLvlMinMaxChange = ({ lvlMinMax, id }) => {
     :cellOptions="cellOptions"
     :minStats="minstats"
     :idMannequin="props.idMannequin"
-    :minLvl="minLvl"
-    :maxLvl="maxLvl"
     :lvlSearch="lvlSearch"
     @isClose="isClose"
-    @lvlMinMaxChange="handleLvlMinMaxChange"
+    @lvlMinMaxChange="(val) => lvlSearch = val"
   />
 
   <main 

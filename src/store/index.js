@@ -5,8 +5,8 @@ import spells from './modules/spells.module'
 import auth from './modules/auth.module'
 import requests from './modules/requests.module'
 
-import { baseStatModule, basickParamsRase, genСharVal, nameCost } from '../initialization/baseParams'
-const raseParams = basickParamsRase.find(item => item.availableRaces === 'human').date
+import { baseStatModule, basicParamsRase, genСharVal, nameCost } from '../initialization/baseParams'
+const raseParams = basicParamsRase.find(item => item.availableRaces === 'human').date
 
 const initialState = { statModule: baseStatModule, raseName: 'human', lvl: 0, raseParams: [...raseParams], accessibleStats: null, 
 genСharVal: genСharVal,

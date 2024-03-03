@@ -1,4 +1,5 @@
 import store from '../store/index'
+import { distributedStatuses } from '../utils/index'
 
 function checkingStatAvailability(id) {
   const minParamRase = store.getters['listManeken'](id)
@@ -26,18 +27,26 @@ function checkingStatAvailability(id) {
 
 // флаг разрешения на понижения стат
 let availabilityFlag = true
-let avaiStatFlag = true
+let waitStatFlag = true
 
 // функция расчета изменения статов.
-export const modifyStat = ({ accessibleStats, addParam, statKey, increment, id }) => {
+export const modifyStat = ({ accessibleStats, statKey, increment, id }) => {
   if (accessibleStats === null) {
     store.dispatch('setMessage', `Выберите уровень персонажа`)
-    return { addParam, accessibleStats }
+    return { accessibleStats }
   }
 
+  // получаю значение уже распределенных свободных стат, если таковые есть
+  const statChange = store.getters['statChange/listStat'](id)
+  const addParam = distributedStatuses(statChange)
+
+  // получаю распределенные базовые статы по всем критериям (подкласс, свободные статы, от магии)
   const minParamCloth = store.getters['statChange/minParamCloth'](id)
+
+  // получаю значение распределенных базовых стат без учета расового бонуса
   const minParamsWithoutRaceBonus = checkingStatAvailability(id)
 
+  // нахожу конкретный стат который меняю
   const foundOllParam = minParamsWithoutRaceBonus.find((p) => p.key === statKey)
   const foundParam = addParam.find((p) => p.key === statKey)
 
@@ -96,27 +105,20 @@ function handleDecrement(
   if (minParamCloth.length > 0) {
     // ищу записи о подклассе
     let minParamSubclass = minParamCloth.find((item) => item.type === 'subclass')?.base
+
         // ищу записи о эликсирах
     const elixStats = minParamCloth.find((item) => item.type === 'elixStats')?.base
+
+    // если есть, суммирую
       if(elixStats && minParamSubclass) {
-        minParamSubclass = minParamSubclass.map(item => {
-          const coincidence = elixStats.find(e => e.key === item.key)
-          if(coincidence) {
-            return {
-              ...item,
-              count: item.count + coincidence.count
-            }
-          } else {
-            return item
-          }
-        })
+        minParamSubclass = sumParam(minParamSubclass, elixStats)
       }
       //получаю сами распредленные базовые статы
       const baseParamManecken = store.getters['listManekenBase'](id)
-    // тут же делать подобную проверку для вещей-------
-    avaiStatFlag = checkStatRequirementsForClothing(id, baseParamManecken, statKey)
 
-
+// беру базовые статы персонажа, сравниваю их с требованиями надетой одежды, 
+// и если требования ниже, запрещаю понижать базовые характеристики персонажа
+    waitStatFlag = checkStatRequirementsForClothing(id, baseParamManecken, statKey)
 
     if (minParamSubclass) {
       availabilityFlag = handleDecrementSubclass(
@@ -125,7 +127,7 @@ function handleDecrement(
         statKey
       )
     }
-    if (availabilityFlag === true && avaiStatFlag === true) {
+    if (availabilityFlag === true && waitStatFlag === true) {
       // смотрю в foundOllParam все распределенные статы,
       if (foundOllParam.count < 1) {
         if (foundOllParam.count === 0) {
@@ -166,7 +168,6 @@ export function checkStatRequirementsForClothing(id, baseParamManecken, statKey 
   let flag = true
   const listClothName = store.getters['dummy/clothName'];
   const minParamBase = store.getters['statChange/minParamCloth'](id);
-
   const sorted = minParamBase.filter((item) => {
     return listClothName.some((changeType) => item.type.includes(changeType));
   });
@@ -212,4 +213,18 @@ export function statInputChange({ stat, statParams, accessibleStats, idMannequin
   }
 
   return {key: stat.key , statChange  }
+}
+
+function sumParam(minParamSubclass, elixStats) {
+  return minParamSubclass.map(item => {
+    const coincidence = elixStats.find(e => e.key === item.key)
+    if(coincidence) {
+      return {
+        ...item,
+        count: item.count + coincidence.count
+      }
+    } else {
+      return item
+    }
+  })
 }

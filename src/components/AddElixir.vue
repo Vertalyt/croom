@@ -12,7 +12,7 @@
         <ManekenSlot
           :hasddisabledLastElix="hasddisabledLastElix"
           :key="idrebut"
-          :elixShow="true"
+          :elixirShow="true"
           :classCheck="availabilityFlag"
           :statParam="summBase"
           :addElix="addParam"
@@ -73,19 +73,19 @@ import { getLocalizedText } from '@/locale/index'
 const props = defineProps({
   statParams: {
     type: Object,
-    requared: true
+    required: true
   },
   idMannequin: {
     type: Number,
-    requared: true
+    required: true
   },
   summBase: {
     type: Object,
-    requared: true
+    required: true
   },
   classMinParam: {
     type: Object,
-    requared: true
+    required: true
   }
 })
 const emits = defineEmits({
@@ -121,7 +121,7 @@ const hasddisabledLastElix = ref(false)
 const lastElix = ref('change')
 const COUNT_STAT_MIXTURE = 3
 let availabilityFlag = true
-let avaiStatFlag = true
+let waitStatFlag = true
 
 const listStat = computed(() => store.getters['statChange/listStat'](props.idMannequin))
 const elixStats = computed(() => listStat.value.find((item) => item.type === 'elixStats'))
@@ -265,9 +265,9 @@ const handleStatDecrease = (val) => {
     val
   )
   // проверка на минимальные параметры подкласса
-  avaiStatFlag = subclassChecking(val)
+  waitStatFlag = subclassChecking(val)
 
-  if (availabilityFlag && avaiStatFlag && availabilityElixFlag) {
+  if (availabilityFlag && waitStatFlag && availabilityElixFlag) {
     handleStatChange(val, 'decrease', 1)
   }
 }
@@ -322,10 +322,10 @@ const handleStatInputChange = (stat) => {
     // высчитываю необходимость понижения очков в statChange от количества в availabilityQuantity
     statChange = maxiAvailableValueElixirs(statChange, key)
     availabilityFlag = subclassChecking(key)
-    avaiStatFlag = checkStatRequirementsForClothing(props.idMannequin, baseParamManecken.value, key)
+    waitStatFlag = checkStatRequirementsForClothing(props.idMannequin, baseParamManecken.value, key)
   }
 
-  if (availabilityFlag && avaiStatFlag) {
+  if (availabilityFlag && waitStatFlag) {
     const editCoastElix = countElix.value - statChange
     if (editCoastElix < 0) {
       statChange = statChange - editCoastElix

@@ -1,5 +1,6 @@
 <template>
   <div class="accordionWrap" :class="{ active: openAccordion }">
+   
     <template v-for="(c, idx) in newResult" :key="c.otherInfo.id">
       <div @click="accordionOpen(idx)" class="accordion">
         <div class="accordionFace">
@@ -14,41 +15,37 @@
               {{ getLocalizedText('Level') }}: <small>{{ c.otherInfo.minlevel }}</small>
             </p>
           </div>
-          <div class="dressAddGrup">
+
+          <div class="dressAddGroup">
             <button 
             v-if="ringsAndRelics || earrings"
-            class="button buttonx4" @click.stop="dressX(c)">{{ nameX }}</button>
+            class="button buttonX4" @click.stop="dressX(c)">{{ nameX }}</button>
             <button class="button" @click.stop="dress(c)">{{ getLocalizedText('Dress') }}</button>
           </div>
         </div>
-        <div class="priseInfo">
-          <p v-if="c.priseInfo.price">
-            {{ getLocalizedText('Tall') }}: <small>{{ c.priseInfo.price }}</small>
-          </p>
-          <p v-if="c.priseInfo.goldprice">
-            {{ getLocalizedText('goldprice') }}: <small>{{ c.priseInfo.goldprice }}</small>
-          </p>
-          <p v-if="c.priseInfo.ratnikprice">
-            {{ getLocalizedText('Warrior') }}: <small>{{ c.priseInfo.ratnikprice }}</small>
-          </p>
-          <p v-if="c.priseInfo.obmenprice">
-            {{ getLocalizedText('Exchanges') }}: <small>{{ c.priseInfo.obmenprice }}</small>
-          </p>
-          <p v-if="c.priseInfo.reliktprice">
-            {{ getLocalizedText('Relics') }}: <small>{{ c.priseInfo.reliktprice }}</small>
+
+        <div 
+        v-for="(value, key) in c.priseInfo"
+        :key="key" 
+        class="priseInfo" >
+        <p v-if="value" >
+          {{ getLocalizedText(key) }}: <small>{{ value }}</small>
           </p>
         </div>
+
       </div>
 
       <div class="panel" :class="{ open: openPanel === idx }">
         <div v-if="foundShortageDifference(c.minParam)" class="addRequiredParameters">
-          <p class="smollText error">
+          <p class="smallText error">
             {{ getLocalizedText('distributeDress') }}
           </p>
           <button @click.stop="addMinParamCloth(c)" class="button">
             {{ getLocalizedText('DistributeAndDress') }}
           </button>
         </div>
+
+        
         <p class="descriptionInfo">{{ c.otherInfo.description }}</p>
         <ChildAccordeonItem
           v-if="Object.entries(c.minParam).length > 0"
@@ -68,6 +65,8 @@
         />
       </div>
     </template>
+
+
   </div>
 </template>
 
@@ -75,7 +74,8 @@
 import { ref, computed, watch } from 'vue'
 import ChildAccordeonItem from './ChildAccordeonItem.vue'
 import { useStore } from 'vuex'
-import { arrayVariableStats } from '../../initialization/baseParams'
+import { distributedStatuses } from '../../utils/index'
+
 import { getLocalizedText } from '@/locale/index'
 
 const props = defineProps({
@@ -96,6 +96,8 @@ const props = defineProps({
     required: true
   }
 })
+
+
 const emits = defineEmits({
   modalClose: null
 })
@@ -161,9 +163,11 @@ function checkingForImpossibility(item) {
   // Если есть ключи с "class": "error", выведите сообщение и завершите проверку
   if (errorKeys.length > 0) {
     store.dispatch('setMessage', `Ваши параметры ниже минимальных`)
-    return
+    return false
+  } else {
+    return true
   }
-  return true
+
 }
 
 function preparingRequestArray(item) {
@@ -171,6 +175,8 @@ function preparingRequestArray(item) {
   const minBaseParam = item.minParam
   const priseInfo = item.priseInfo
   const otherInfo = item.otherInfo
+
+
   // Создаем новый массив для хранения преобразованных минимальных базовых значений
   const transformedMinBaseParam = Object.keys(minBaseParam).map((key) => {
     return {
@@ -179,9 +185,11 @@ function preparingRequestArray(item) {
       class: minBaseParam[key].class
     }
   })
+
   // Преобразовываем данные с addParam
   const convertedAdd = parameterConversion(addParam)
   //     addParam: [{ base: transformedMinBaseParam }, { bonusAndBase: convertedAdd }, { priseInfo }, { otherInfo }],
+
   return [
     { base: transformedMinBaseParam },
     { bonusAndBase: convertedAdd },
@@ -191,8 +199,8 @@ function preparingRequestArray(item) {
 }
 
 const dressX = (item) => {
-  checkingForImpossibility(item)
-  if (checkingForImpossibility) {
+  const check = checkingForImpossibility(item)
+  if (check) {
     store.dispatch('dummy/changeDummyElX', {
       idMannequin: props.idMannequin,
       addParam: preparingRequestArray(item),
@@ -205,9 +213,9 @@ const dressX = (item) => {
 }
 
 const dress = (item) => {
-  checkingForImpossibility(item)
 
-  if (checkingForImpossibility) {
+  const check = checkingForImpossibility(item)
+  if (check) {
     store.dispatch('dummy/changeDummyEl', {
       idMannequin: props.idMannequin,
       addParam: preparingRequestArray(item),
@@ -223,11 +231,11 @@ const accessibleStats = computed(
   () => store.getters['listManeken'](props.idMannequin).accessibleStats
 )
 
-const foundShortageDifference = (ollparam) => {
+const foundShortageDifference = (ollParam) => {
   let sumShortageDifference = 0
-  for (const key in ollparam) {
-    if (Object.prototype.hasOwnProperty.call(ollparam, key)) {
-      sumShortageDifference += ollparam[key].shortageDifference
+  for (const key in ollParam) {
+    if (Object.prototype.hasOwnProperty.call(ollParam, key)) {
+      sumShortageDifference += ollParam[key].shortageDifference
     }
   }
   if (accessibleStats.value >= Math.abs(sumShortageDifference) && sumShortageDifference !== 0) {
@@ -237,40 +245,37 @@ const foundShortageDifference = (ollparam) => {
   }
 }
 
-function mofifyAddParam(key, addParam, item) {
+function modifyAddParam(key, addParam, item) {
   const modifiedKey = key.replace(/^min/, 'd')
-  const statAddparam = addParam.find((item) => item.key === modifiedKey)
-  if (statAddparam) {
-    statAddparam.count += Math.abs(item.shortageDifference)
+  const statAddParam = addParam.find((item) => item.key === modifiedKey)
+  if (statAddParam) {
+    statAddParam.count += Math.abs(item.shortageDifference)
   }
 }
 
-const statChange = computed(() => store.getters['statChange/listStat'](props.idMannequin))
+
+
 
 const addMinParamCloth = (cloth) => {
-  let summShortageDifference = 0
+  let sumShortageDifference = 0
   const updatedMinParam = {}
   let addParam = []
 
-  const freestatFound = statChange.value.find((item) => item.type === 'freeStats')
-  // Массив с изменениями параметров
-  if (freestatFound) {
-    addParam = freestatFound.param[0].base
-  } else {
-    addParam = arrayVariableStats
-  }
-
+    // проверяю, добавлялись ли ранее статы шмотками или статами
+  const statChange = store.getters['statChange/listStat'](props.idMannequin)
+    addParam = distributedStatuses(statChange)
+  
   // Переберите ключи в новом объекте minParam и обновите соответствующие элементы
   for (const key in cloth.minParam) {
     const item = cloth.minParam[key]
 
     if (item.shortageDifference < 0) {
-      mofifyAddParam(key, addParam, item)
-      summShortageDifference += Math.abs(item.shortageDifference)
+      modifyAddParam(key, addParam, item)
+      sumShortageDifference += Math.abs(item.shortageDifference)
 
       updatedMinParam[key] = {
         ...item,
-        value: String(parseInt(item.value) + Math.abs(item.shortageDifference)),
+        value: String(item.value),
         shortageDifference: 0,
         class: 'norm'
       }
@@ -285,7 +290,7 @@ const addMinParamCloth = (cloth) => {
     idMannequin: props.idMannequin
   })
 
-  const newAccessibleStats = Number(accessibleStats.value) - Number(summShortageDifference)
+  const newAccessibleStats = Number(accessibleStats.value) - Number(sumShortageDifference)
 
   store.commit('updateManekenInfo', {
     accessibleStats: newAccessibleStats,
@@ -294,6 +299,8 @@ const addMinParamCloth = (cloth) => {
 
   // Сохраните обновленные minParam в cloth
   cloth.minParam = updatedMinParam
+
+
   dress(cloth)
 }
 </script>
@@ -312,7 +319,7 @@ export default {
   margin-bottom: 15px;
 }
 
-.smollText {
+.smallText {
   font-size: 12px;
 }
 
@@ -388,14 +395,14 @@ small {
   color: #9f6426;
 }
 
-.dressAddGrup {
+.dressAddGroup {
   display: grid;
 
   align-items: center;
   justify-items: center;
 }
 
-.buttonx4 {
+.buttonX4 {
   border-radius: 20px;
   padding: 8px;
   margin-bottom: 20px;

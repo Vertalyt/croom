@@ -44,7 +44,8 @@
 "Spells" : "Заклинания",
 "DrinkElixir" : "Выпить эликсир",
 "Drink" : "Выпито",
-"Reseteverything" : "Сбросить все",
+"resetEverything" : "Сбросить все",
+"ChooseAll" : "Выбрать все",
 "Armor": "Броня",
 "Cost" : "Стоимость",
 
@@ -73,6 +74,8 @@
 "ratnikprice" : "Ратник",
 "obmenprice" : "Обмены",
 "reliktprice" : "Реликты",
+"artcrystalsprice": "Арт. кристалы",
+
 "distributeDress" : "Ваших параметров недостаточно, но количество баллов дистрибьютору достаточно. Распределить?",
 "DistributeAndDress" : "Распределить и одеть",
 
@@ -164,8 +167,8 @@
 "Things" : "Вещи",
 
 
-"FillOneFilter'" : "Заполни хотя бы один фильтр",
-"FillRangeLevels'" : "Заполните диапазон уровней",
+"FillOneFilter" : "Заполни хотя бы один фильтр",
+"FillRangeLevels" : "Заполните диапазон уровней",
 "AreNoResults" : "Нет результатат по фильтру",
 "UpdateImmediately" : "Сразу обновить",
 

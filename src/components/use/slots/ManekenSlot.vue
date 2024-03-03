@@ -11,7 +11,7 @@
 
 
                   <td
-                  v-if="elixShow">
+                  v-if="elixirShow">
                       {{ addElixParam.count }}
                   </td>
                 
@@ -45,27 +45,27 @@ import { computed, watch, ref } from 'vue'
 const props = defineProps({
   statParam:{
     type: Object,
-    requared: true
+    required: true
   },
   accessibleStats: {
-    type: Number,
-    requared: true
+    type: [Number, null],
+    required: true
   },
-  elixShow: {
+  elixirShow: {
     type: Boolean,
-    requared: false
+    required: false
   },
   addElix: {
     type: Object,
-    requared: false
+    required: false
   },
   classCheck:{
     type: Boolean,
-    requared: false
+    required: false
   },
   hasddisabledLastElix: {
     type: Boolean,
-    requared: false
+    required: false
   }
 })
 const emits = defineEmits({

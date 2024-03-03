@@ -33,19 +33,19 @@ import { getLocalizedText } from '@/locale/index'
 defineProps({
   statParams: {
     type: Array,
-    requared: true
+    required: true
   },
   additionalCheck: {
     type: Boolean,
-    requared: false
+    required: false
   },
   inputShow: {
     type: Boolean,
-    requared: false
+    required: false
   },
   elixCheck: {
     type: Boolean,
-    requared: false
+    required: false
   },
 })
 

@@ -13,10 +13,10 @@ const closeOpenProfileChange = () => {
 }
 
 const isProfileInfo = computed(() => store.getters['requests/clientInfo'])
-const refrechProfile = ref(0)
+const refreshProfile = ref(0)
 
 watch(isProfileInfo, (_) => {
-  refrechProfile.value++
+  refreshProfile.value++
 })
 
 const idMannequin = ref(1)
@@ -32,9 +32,9 @@ const openPivot = ref(false)
 
   <AppProfile
     v-if="closeOpenProfile"
-    :key="refrechProfile"
+    :key="refreshProfile"
     @isClose="closeOpenProfileChange"
-    @refrech="refrechProfile = refrechProfile + 1"
+    @refresh="refreshProfile = refreshProfile + 1"
   />
 
   <div class="room-container">

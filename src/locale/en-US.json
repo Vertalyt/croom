@@ -41,7 +41,8 @@
   "Spells": "Spells",
   "DrinkElixir": "Drink elixir",
   "Drink": "Drink",
-  "Reseteverything": "Reset everything",
+  "resetEverything": "Reset everything",
+  "ChooseAll" : "Choose all",
   "Armor": "Armor",
   "Cost": "Cost",
 
@@ -68,6 +69,8 @@
   "ratnikprice": "Ratnik",
   "obmenprice": "Exchange",
   "reliktprice": "Relikt",
+  "artcrystalsprice": "Art crystals",
+
 
   "headarmor": "Head",
   "bodyarmor": "Torso",
@@ -147,8 +150,8 @@
   "ratnic": "Warrior's item",
   "mythical": "Mythical item",
 
-  "FillOneFilter'": "Fill at least one filter",
-  "FillRangeLevels'": "Fill in the range of levels",
+  "FillOneFilter": "Fill at least one filter",
+  "FillRangeLevels": "Fill in the range of levels",
   "AreNoResults": "There are no results for the filter",
   "UpdateImmediately": "Update immediately",
 

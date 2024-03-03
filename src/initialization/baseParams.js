@@ -45,7 +45,7 @@ export const baseStatModule = [
   { type: 'dstamina', key: 'dstamina', summStatBase: 0, summStatBonusAndBase: 100, link: 'https://sabzero.biz/croomTemplate/assets/img/icon/svg/power.svg' },
 ]
 
-export const basickParamsRase = [
+export const basicParamsRase = [
   {
     availableRaces: 'human', date: [
       {key: 'dstrength', count: 3 },

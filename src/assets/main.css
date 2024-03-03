@@ -32,7 +32,7 @@ ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 930px;
+  width: 960px;
   margin-top: 15px;
 }
 
@@ -48,13 +48,12 @@ ul {
 }
 
 /* Отключаем стрелочки для полей ввода с типом "number" */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
 }
-
 
 .armor_Item:nth-child(1),
 .armor_Item:nth-child(2),
@@ -68,7 +67,6 @@ tr:nth-child(even) {
   background-color: #81797969; /* фон четных столбцов */
 }
 
-
 .armor_Item,
 td {
   min-width: 15px;
@@ -78,7 +76,6 @@ td {
 small {
   font-style: italic;
 }
-
 
 .room-container {
   display: flex;
@@ -133,7 +130,10 @@ small {
   border: none;
   cursor: pointer;
   margin-right: 15px;
-  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    width 0.3s ease,
+    height 0.3s ease;
 }
 
 .add-tab-button {
@@ -178,13 +178,11 @@ small {
   transform: scale(1.1);
 }
 
-
-.tab-button-disabled, .tab-button-disabled:hover {
+.tab-button-disabled,
+.tab-button-disabled:hover {
   transform: scale(0.9);
   opacity: 0.5;
 }
-
-
 
 .p__tab-button {
   font-size: 13px;
@@ -237,7 +235,10 @@ option:disabled {
   border-radius: 8px;
   box-shadow: 0px 5px 0px #d9d9d9;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  transition:
+    background-color 0.3s,
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .button:hover {
@@ -252,15 +253,12 @@ option:disabled {
   transform: translateY(4px);
 }
 
-
-
 .button .disabled {
   opacity: 0.6;
-  cursor: not-allowed;  
+  cursor: not-allowed;
   box-shadow: 0px 1px 0px #207cca;
   transform: translateY(4px);
 }
-
 
 .checkboxWrapper {
   display: flex;
@@ -331,12 +329,12 @@ option:disabled {
   background-color: #e9ecef;
 }
 
-.labelChexpox {
+.labelCheckBox {
   padding: 5px;
   cursor: pointer;
 }
 
-.labelChexpox:hover {
+.labelCheckBox:hover {
   border-radius: 10px;
   outline: 1px solid #80808094;
 }
@@ -423,7 +421,7 @@ option:disabled {
   flex-wrap: wrap;
   padding: 10px;
   min-height: 475px;
-  width: 370px;
+  width: 400px;
   background-color: rgba(245, 245, 220, 0.6);
 }
 
@@ -662,7 +660,6 @@ body.modal-open {
   border: 0;
 }
 
-
 @media only screen and (max-device-width: 899px) {
   .main-wrapper {
     display: grid;
@@ -671,12 +668,12 @@ body.modal-open {
   }
 
   .options__itemBlock_button {
-    width: calc(50% - 20px);
-    margin-right: 10px;
+    width: 90vw;
+    margin: 2vw 5vw;
   }
 
-  .options__itemBlock_button:nth-child(2n) {
-    margin-right: 0px;
+  .dummy__part {
+    margin: 30px;
   }
 
   .dummy__rezult {
@@ -685,6 +682,12 @@ body.modal-open {
     width: calc(100% - 20px);
     background-color: rgba(245, 245, 220, 0.6);
     justify-content: space-between;
+  }
+}
+
+@media only screen and (max-device-width: 700px) {
+  .dummy__part {
+    margin: 30px 15px 0 15px;
   }
 }
 
@@ -738,20 +741,15 @@ body.modal-open {
   }
 
   .dummy__center__top {
-    width: 90vW;
+    width: 90vw;
   }
 
   .dummy__center__buttom {
-    width: 90vW;
+    width: 90vw;
   }
 
   .options__itemBlock {
     margin: 5px 15px;
-  }
-
-  .options__itemBlock_button {
-    width: 90vW;
-    margin: 0;
   }
 
   .modal-content {
@@ -759,11 +757,8 @@ body.modal-open {
   }
 }
 
-
 @media only screen and (max-device-width: 400px) {
-
   .tab-button {
-      margin: 5px 5px 10px 3px;
+    margin: 5px 5px 10px 3px;
   }
-
 }

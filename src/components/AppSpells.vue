@@ -36,7 +36,7 @@ const emits = defineEmits({
 const props = defineProps({
   idMannequin: {
     type: Number,
-    requared: true
+    required: true
   }
 })
 

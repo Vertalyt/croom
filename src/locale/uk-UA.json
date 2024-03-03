@@ -42,7 +42,8 @@
   "Spells": "Закляття",
   "DrinkElixir": "Випити еліксир",
   "Drink": "Випито",
-  "Reseteverything": "Скинути все",
+  "resetEverything": "Скинути все",
+  "ChooseAll" : "Вибрати все",
   "Armor": "Броня",
   "Cost": "Вартість",
 
@@ -73,6 +74,7 @@
   "ratnikprice": "Ратник",
   "obmenprice": "Обміни",
   "reliktprice": "Реликти",
+  "artcrystalsprice": "Арт. кристали",
 
   "headarmor": "Голова",
   "bodyarmor": "Тулуб",
@@ -157,8 +159,8 @@
   "ratnic" : "Річ ратника",
   "mythical" : "Міфічна річ",
 
-"FillOneFilter'" : "Заповни хоча б один фільтр",
-"FillRangeLevels'" : "Заповни диапазон рівней",
+"FillOneFilter" : "Заповни хоча б один фільтр",
+"FillRangeLevels" : "Заповни диапазон рівней",
 "AreNoResults" : "Нема результатів по фільтру",
 "UpdateImmediately" : "Відразу оновити",
 "art" : "Артефакт",

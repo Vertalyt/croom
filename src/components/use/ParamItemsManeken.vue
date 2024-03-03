@@ -23,13 +23,13 @@ import { getLocalizedText } from '@/locale/index'
 defineProps({
   paramItems: {
     type: Array,
-    requared: true
+    required: true
   },
   withItemsManecken: {
     type: Boolean
   },
   full: {
-    requared: false,
+    required: false,
     type: Boolean
   }
 })

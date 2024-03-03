@@ -30,10 +30,8 @@
      :cellOptions="cellOptions"
      :minStats="minStats"
      :idMannequin="idMannequin"
-     :minLvl="minLvl"
-     :maxLvl="maxLvl"
      @isClose="$emit('isClose')"
-     @lvlMinMaxChange="handleLvlMinMaxChange"
+     @lvlMinMaxChange="(emits('lvlMinMaxChange', $event))"
     />
 
   </div>
@@ -64,22 +62,10 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  minLvl: {
-    type: [String, Number],
-    required: true
-  },
-  maxLvl: {
-    type: [String, Number],
-    required: true
-  },
 })
 const store = useStore()
 const lvlPerson = computed(() =>
   store.getters['listManekenSearch']({ id: props.idMannequin, element: 'lvl' }))
-
-const handleLvlMinMaxChange = ({ lvlMinMax, id }) => {
-  emits('lvlMinMaxChange', { lvlMinMax, id })
-}
 
 const emits =defineEmits({
   isClose: null,

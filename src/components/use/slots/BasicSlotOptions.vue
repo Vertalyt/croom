@@ -15,7 +15,7 @@ import { getLocalizedText } from '@/locale/index'
 defineProps({
   items : {
   type: Array,
-  requared: true
+  required: true
   },
 })
 

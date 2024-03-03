@@ -29,13 +29,13 @@ const emits = defineEmits({
   onChangeLocale: String
 })
 const props = defineProps({
-  localeSait: {
+  localeSite: {
     type: String
   }
 })
 
 const locale = ref()
-const localeComputed = computed( () => props.localeSait )
+const localeComputed = computed( () => props.localeSite )
 
 watch(localeComputed, val => {
   locale.value = val

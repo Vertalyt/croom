@@ -420,9 +420,9 @@ const updateStatsAndEmitEvent = (difference, newCountStat) => {
 
 
 const modifyStatAndEmit = (statKey, increment) => {
+
   const { addParam: updatedAddParam, accessibleStats: updatedAccessibleStats } = modifyStat({
     accessibleStats: accessibleStats.value,
-    addParam: addParam.value,
     statKey,
     increment,
     id: props.idMannequin
@@ -430,7 +430,6 @@ const modifyStatAndEmit = (statKey, increment) => {
 
   addParam.value = updatedAddParam
   accessibleStats.value = updatedAccessibleStats
-
 
   store.commit('statChange/statChange', {
     addParam: [{ base: addParam.value }],
@@ -761,7 +760,7 @@ export default {
 
             <div class="form__items">
               <p>{{ getLocalizedText('Drink') }}: {{ drinksElix }}</p>
-              <a @click="handleResetManecken" href="#" class="form__link">{{ getLocalizedText('Reseteverything') }}</a>
+              <a @click="handleResetManecken" href="#" class="form__link">{{ getLocalizedText('resetEverything') }}</a>
             </div>
           </div>
         </div>

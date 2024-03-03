@@ -33,9 +33,9 @@
       <button v-if="checkUser" class="button" @click.stop="logout">Вийти</button>
 
       <LocaleChange
-        v-if="localeSait"
-        :key="refrech"
-        :localeSait="localeSait"
+        v-if="localeSite"
+        :key="refresh"
+        :localeSite="localeSite"
         @onChangeLocale="onChangeLocale"
       />
     </div>
@@ -90,7 +90,7 @@ import { getLocalizedText } from '@/locale/index'
 
 const emits = defineEmits({
   isClose: null,
-  refrech: null
+  refresh: null
 })
 defineProps({})
 const store = useStore()
@@ -109,7 +109,7 @@ watch(
 
 const clientInfo = ref([])
 const isLoading = ref(true)
-const localeSait = ref()
+const localeSite = ref()
 const markSave = computed(() => store.getters['requests/markSave'])
 
 const markManeckenSave = ref()
@@ -175,10 +175,10 @@ function timeMarc(time) {
 async function isLoadingParam() {
   clientInfo.value = store.getters['requests/clientInfo']
   if (clientInfo.value) {
-    localeSait.value = clientInfo.value.locale
+    localeSite.value = clientInfo.value.locale
     await store.dispatch('requests/addMarkSave')
   } else {
-    localeSait.value = 'uk-UA'
+    localeSite.value = 'uk-UA'
   }
 }
 
@@ -195,12 +195,12 @@ const isClose = () => {
   emits('isClose')
 }
 
-const refrech = ref(0)
+const refresh = ref(0)
 
 const logout = () => {
   store.dispatch('auth/logout')
-  localeSait.value = 'uk-UA'
-  refrech.value++
+  localeSite.value = 'uk-UA'
+  refresh.value++
   checkUser.value = null
 }
 
@@ -242,7 +242,7 @@ const isCloseForm = () => {
 const delManecken = async (id) => {
   isLoading.value = true
   await store.dispatch('requests/deleteRecord', id)
-  emits('refrech')
+  emits('refresh')
   isLoading.value = false
 }
 
@@ -255,7 +255,7 @@ const addManecken = async (id) => {
 
 const saveManecken = async () => {
   await store.dispatch('requests/saveManecken')
-  emits('refrech')
+  emits('refresh')
 }
 </script>
 
